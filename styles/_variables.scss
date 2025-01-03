@@ -1,0 +1,51 @@
+/* Primary Colors */
+$primary-color: #003399;
+$secondary-color: #FF7A00;
+
+/* Status Colors */
+$success-color: #28a745; 
+$warning-color: #ffc107; 
+$info-color: #17a2b8; 
+$error-color: #dc3545; 
+
+/* Text Colors */
+$light-text-color: #333333;
+$light-heading-color: #495057;
+$dark-text-color: #828690;
+$dark-heading-color: #ced4da;
+
+/* Black & White Colors */
+$black-color: #000000;
+$white-color: #FFFFFF;
+
+/* Background Colors */
+$light-bg-color: #f1f1f1;
+$light-card-color: #ededed;
+$dark-bg-color: #0a0a0a;
+$dark-card-color: #14171c;
+
+/* Border Color */
+$light-border-color: #D1D1D1;
+$dark-border-color: #2d2d2d;
+
+/* Form Input Colors */
+$light-input-bg-color: #FFFFFF;
+$dark-input-bg-color: #333333;
+$light-input-text-color: #333333;
+$dark-input-text-color: #E0E0E0;
+
+/* Border Radius */
+$border-radius-small: 4px;
+$border-radius-medium: 8px;
+$border-radius-large: 16px;
+
+/* Transition Variables */
+$all-transition: all 0.3s ease-in-out;
+$btn-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+                 box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+                 border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+                 color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+
+$box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 
+0px 1px 1px 0px rgba(0, 0, 0, 0.14), 
+0px 1px 3px 0px rgba(0, 0, 0, 0.12);
