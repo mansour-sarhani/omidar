@@ -69,6 +69,55 @@ export const CLIENT_LOGIN = createAsyncThunk(
     }
 );
 
+export const GET_CLIENT_CONTRACTS = createAsyncThunk(
+    'client/GET_CLIENT_CONTRACTS',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await http.get('/api/client/contract');
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const GET_CLIENT_NOTIFICATIONS = createAsyncThunk(
+    'client/GET_CLIENT_NOTIFICATIONS',
+    async (type, { rejectWithValue }) => {
+        try {
+            const response = await http.get(
+                `/api/client/notification?type=` + type
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const CLIENT_READ_NOTIFICATION = createAsyncThunk(
+    'client/CLIENT_READ_NOTIFICATION',
+    async (notificationId, { rejectWithValue }) => {
+        try {
+            const response = await http.put(
+                `/api/client/notification?notificationId=` + notificationId
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
 export const clientSlice = createSlice({
     name: 'client',
     initialState,
@@ -84,6 +133,15 @@ export const clientSlice = createSlice({
 
         //CLIENT_LOGIN
         handleAsyncActions(builder, CLIENT_LOGIN);
+
+        //GET_CLIENT_CONTRACTS
+        handleAsyncActions(builder, GET_CLIENT_CONTRACTS);
+
+        //GET_CLIENT_NOTIFICATIONS
+        handleAsyncActions(builder, GET_CLIENT_NOTIFICATIONS);
+
+        //CLIENT_READ_NOTIFICATION
+        handleAsyncActions(builder, CLIENT_READ_NOTIFICATION);
     },
 });
 

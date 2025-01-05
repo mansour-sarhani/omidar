@@ -1,14 +1,25 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
+import useCommonHooks from '@/hooks/useCommonHooks';
+import useContract from '@/hooks/useContract';
+import setStatusLabel from '@/utils/setStatusLabel';
+import getContractDataByType from '@/functions/contract/getContractDataByType';
+import removeDocumentFromContract from '@/functions/contract/removeDocumentFromContract';
+import DeleteModal from '@/components/modals/DeleteModal';
+import UpdateDocumentForm from '@/components/forms/UpdateDocumentForm';
+import DocumentCommentModal from '@/components/modals/DocumentCommentModal';
 import ContractNavigation from '@/components/common/ContractNavigation';
 import IsLoading from '@/components/common/IsLoading';
 import PanelModal from '@/components/modals/PanelModal';
-import useContract from '@/hooks/useContract';
-import { Button, Typography } from '@mui/material';
-import { useSnackbar } from 'notistack';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
 import NoData from '@/components/common/NoData';
+import OmProgress from '@/components/common/OmProgress';
+import OmTableFooter from '@/components/common/OmTableFooter';
+import AddDocumentForm from '@/components/forms/AddDocumentForm';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -18,19 +29,9 @@ import TableRow from '@mui/material/TableRow';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Paper from '@mui/material/Paper';
-import OmProgress from '@/components/common/OmProgress';
-import OmTableFooter from '@/components/common/OmTableFooter';
-import getContractDataByType from '@/functions/contract/getContractDataByType';
-import AddDocumentForm from '@/components/forms/AddDocumentForm';
-import Download from '@mui/icons-material/Download';
 import Box from '@mui/material/Box';
 import Popover from '@mui/material/Popover';
-import PropTypes from 'prop-types';
-import DeleteModal from '@/components/modals/DeleteModal';
-import setStatusLabel from '@/utils/setStatusLabel';
-import removeDocumentFromContract from '@/functions/contract/removeDocumentFromContract';
-import UpdateDocumentForm from '@/components/forms/UpdateDocumentForm';
-import DocumentCommentModal from '@/components/modals/DocumentCommentModal';
+import Download from '@mui/icons-material/Download';
 import InfoIcon from '@mui/icons-material/Info';
 
 function TabPanel(props) {
@@ -67,8 +68,7 @@ export default function ContractDocumentsPage({ contractNo }) {
     const { contract } = useContract(contractNo);
     const user = useSelector((state) => state.user.data);
 
-    const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
+    const { dispatch, enqueueSnackbar } = useCommonHooks();
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shops.length) : 0;
@@ -161,7 +161,6 @@ export default function ContractDocumentsPage({ contractNo }) {
                             <AddDocumentForm
                                 setDoReload={setDoReload}
                                 contractId={contract._id}
-                                uploader="user"
                                 uploaderId={user._id}
                                 isCheckList={true}
                             />

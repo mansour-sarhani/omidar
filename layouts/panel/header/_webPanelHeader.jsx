@@ -2,14 +2,33 @@ import Link from 'next/link';
 import Logo from '@/components/common/Logo';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import Badge from '@mui/material/Badge';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import { useEffect, useState } from 'react';
+import useCommonHooks from '@/hooks/useCommonHooks';
+import getClientNotifications from '@/functions/client/getClientNotifications';
 
 export default function WebPanelHeader(props) {
+    const [notifications, setNotifications] = useState([]);
     const { client, isDarkMode, toggleDarkMode, handleLogout } = props;
+
+    const { dispatch, enqueueSnackbar } = useCommonHooks();
+
+    useEffect(() => {
+        async function getUnreadNotifications() {
+            await getClientNotifications(
+                dispatch,
+                enqueueSnackbar,
+                setNotifications,
+                'unread'
+            );
+        }
+        getUnreadNotifications();
+    }, [dispatch, enqueueSnackbar]);
 
     return (
         <header className="header panel-header">
@@ -19,7 +38,7 @@ export default function WebPanelHeader(props) {
                         <li className="menu-item link-item">
                             <Link href="/">
                                 <HomeOutlinedIcon />
-                                خانه
+                                صفحه اصلی
                             </Link>
                         </li>
                     </ul>
@@ -46,12 +65,21 @@ export default function WebPanelHeader(props) {
                             </Button>
                         </li>
                         <li className="menu-item link-item">
-                            <Link href="/panel/profile">
-                                <DashboardCustomizeOutlinedIcon />
-                                پنل کاربری
-                            </Link>
+                            <Tooltip title="پیام ها">
+                                <Button
+                                    variant="text"
+                                    className="header-util-button"
+                                    href="/panel/notification"
+                                >
+                                    <Badge
+                                        badgeContent={notifications.length}
+                                        color="error"
+                                    >
+                                        <NotificationsIcon color="action" />
+                                    </Badge>
+                                </Button>
+                            </Tooltip>
                         </li>
-
                         <li
                             className="menu-item button-item"
                             style={{ marginLeft: 0 }}

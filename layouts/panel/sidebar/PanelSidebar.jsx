@@ -1,8 +1,8 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { getMenuItemClass } from '@/utils/getMenuItemClass';
-import Typography from '@mui/material/Typography';
 import OmAvatar from '@/components/common/OmAvatar';
+import Typography from '@mui/material/Typography';
 
 export default function PanelSidebar({ client }) {
     const path = usePathname();
@@ -26,6 +26,17 @@ export default function PanelSidebar({ client }) {
                     </div>
                     <li className={getMenuItemClass(path, '/panel/dashboard')}>
                         <Link href="/panel/dashboard">پیشخوان</Link>
+                    </li>
+                    <li className={getMenuItemClass(path, '/panel/contract')}>
+                        <Link href="/panel/contract">قراردادها</Link>
+                    </li>
+                    <li
+                        className={getMenuItemClass(
+                            path,
+                            '/panel/notification'
+                        )}
+                    >
+                        <Link href="/panel/notification">پیام ها</Link>
                     </li>
                 </ul>
             </div>

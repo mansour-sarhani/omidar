@@ -219,6 +219,11 @@ button a {
 	max-width: 100% !important;
 }
 
+.MuiTab-root > .MuiTab-icon {
+    margin-right: 0 !important;
+    margin-left: 8px;
+}
+
 /* FORM */
 .om-form {
     display: flex;
@@ -797,6 +802,30 @@ input::-webkit-inner-spin-button {
     gap: 10px;
 }
 
+.table-avatar-chips {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.om-avatar-chip {
+    height: 36px !important;
+
+    .om-avatar {
+        height: 30px;
+        margin-right: 8px;
+    }
+}
+
+.om-country-chip {
+    height: 36px !important;
+
+    img {
+        margin-right: 8px;
+    }
+}
+
 .panel-filters {
     display: flex;
     align-items: center;
@@ -948,5 +977,32 @@ input::-webkit-inner-spin-button {
             align-items: center;
             justify-content: space-between;
         }
+    }
+}
+
+.notifications-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .notification-item {
+        background-color: var(--white-color);
+        padding: 15px;
+        border-radius: var(--border-radius-medium);
+        box-shadow: var(--box-shadow);
+
+        .notification-item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    }
+
+    .notification-item.is-read {
+        border-right: 8px solid var(--success-color);
+    }
+
+    .notification-item.is-unread {
+        border-right: 8px solid var(--secondary-color);
     }
 }

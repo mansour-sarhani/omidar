@@ -1,15 +1,14 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useSnackbar } from 'notistack';
+import { useEffect, useState } from 'react';
+import useCommonHooks from '@/hooks/useCommonHooks';
+import getAllUsers from '@/functions/users/getAllUsers';
+import addUserToContract from '@/functions/contract/addUserToContract';
 import { Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
-import { useEffect, useState } from 'react';
-import getAllUsers from '@/functions/users/getAllUsers';
-import addUserToContract from '@/functions/contract/addUserToContract';
+import AddIcon from '@mui/icons-material/Add';
 
 const initialValues = {
     userId: '',
@@ -22,12 +21,9 @@ const validationSchema = Yup.object({
 export default function AddUserToContractForm(props) {
     const [users, setUsers] = useState(null);
 
-    const { handleClose, setDoReload, contractId } = props;
+    const { handleClose, setDoReload, contractId, userId } = props;
 
-    const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
-
-    const user = useSelector((state) => state.user.data);
+    const { dispatch, enqueueSnackbar } = useCommonHooks();
 
     const validate = (values) => {
         const errors = {};
@@ -58,7 +54,7 @@ export default function AddUserToContractForm(props) {
             onSubmit={async (values, { setSubmitting, resetForm }) => {
                 const data = {
                     userId: values.userId,
-                    performedBy: user._id,
+                    performedBy: userId,
                     contractId: contractId,
                 };
                 await addUserToContract(dispatch, enqueueSnackbar, data);

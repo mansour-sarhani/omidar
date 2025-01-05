@@ -1,17 +1,17 @@
-import { useDispatch } from 'react-redux';
-import { useSnackbar } from 'notistack';
-import { Formik, Form } from 'formik';
-import Button from '@mui/material/Button';
+import useCommonHooks from '@/hooks/useCommonHooks';
+import updateOffer from '@/functions/contract/updateOffer';
 import OmTextInput from '@/components/inputs/OmTextInput';
+import OmTextArea from '@/components/inputs/OmTextArea';
+import OmDatePicker from '@/components/inputs/OmDatePicker';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import Button from '@mui/material/Button';
 import Check from '@mui/icons-material/Check';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
-import OmTextArea from '../inputs/OmTextArea';
-import OmDatePicker from '../inputs/OmDatePicker';
-import updateOffer from '@/functions/contract/updateOffer';
 
 const initialValues = {
     title: '',
@@ -27,15 +27,34 @@ const initialValues = {
     status: '',
 };
 
+const validationSchema = Yup.object({
+    title: Yup.string().required('وارد کردن عنوان ضروری است'),
+});
+
 export default function UpdateOfferForm(props) {
     const { handleClose, setDoReload, userId, contractId, currentData } = props;
 
-    const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
+    const { dispatch, enqueueSnackbar } = useCommonHooks();
+
+    const validate = (values) => {
+        const errors = {};
+        try {
+            validationSchema.validateSync(values, { abortEarly: false });
+        } catch (validationErrors) {
+            validationErrors.inner.forEach((error) => {
+                errors[error.path] = error.message;
+                enqueueSnackbar(error.message, { variant: 'error' });
+            });
+        }
+        return errors;
+    };
 
     return (
         <Formik
             initialValues={currentData || initialValues}
+            validate={validate}
+            validateOnChange={false}
+            validateOnBlur={false}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
                 const data = {
                     title:
@@ -107,6 +126,7 @@ export default function UpdateOfferForm(props) {
                     ...filtered,
                     userId: userId,
                     contractId: contractId,
+                    offerId: currentData._id,
                 };
 
                 await updateOffer(dispatch, enqueueSnackbar, finalData);
@@ -135,8 +155,8 @@ export default function UpdateOfferForm(props) {
                             className="om-select"
                         >
                             <option value="">وضعیت آفر را انتخاب نمایید</option>
-                            <option value="active">فعال</option>
-                            <option value="inactive">غیر فعال</option>
+                            <option value="approved">تایید شده</option>
+                            <option value="rejected">رد شده</option>
                             <option value="pending">در انتظار متقاضی</option>
                         </NativeSelect>
                     </FormControl>
@@ -242,7 +262,7 @@ export default function UpdateOfferForm(props) {
                     <OmTextArea name="description" label="توضیحات" />
 
                     <Button
-                        clientComment="submit"
+                        type="submit"
                         variant="contained"
                         color="primary"
                         disabled={isSubmitting}

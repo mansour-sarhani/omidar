@@ -45,8 +45,8 @@ export async function POST(req) {
 
         await contract.save();
 
-        const updater = await User.findOne({ _id: performedBy });
-        const user = await User.findOne({ _id: userId });
+        const updater = await User.findById(performedBy);
+        const user = await User.findById(userId);
 
         const updaterName = updater.firstName + ' ' + updater.lastName;
         const userName = user.firstName + ' ' + user.lastName;
@@ -62,6 +62,10 @@ export async function POST(req) {
 
         const newActivity = new Activity(activityRecord);
         await newActivity.save();
+
+        contract.activities.push(newActivity._id);
+        contract.markModified('activities');
+        contract.save();
 
         return NextResponse.json({
             success: true,
@@ -131,6 +135,10 @@ export async function PUT(req) {
 
         const newActivity = new Activity(activityRecord);
         await newActivity.save();
+
+        contract.activities.push(newActivity._id);
+        contract.markModified('activities');
+        contract.save();
 
         return NextResponse.json({ success: true, contract });
     } catch (error) {

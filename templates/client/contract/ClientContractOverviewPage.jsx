@@ -5,13 +5,11 @@ import useCommonHooks from '@/hooks/useCommonHooks';
 import { dateFormatter } from '@/utils/dateFormatter';
 import setStatusLabel from '@/utils/setStatusLabel';
 import getContractByContractNo from '@/functions/contract/getContractByContractNo';
-import ContractNavigation from '@/components/common/ContractNavigation';
+import ClientContractNavigation from '@/components/common/ClientContractNavigation';
 import IsLoading from '@/components/common/IsLoading';
-import PanelModal from '@/components/modals/PanelModal';
-import UpdateContractForm from '@/components/forms/UpdateContractForm';
 import Typography from '@mui/material/Typography';
 
-export default function ContractOverviewPage({ contractNo }) {
+export default function ClientContractOverviewPage({ contractNo }) {
     const [contract, setContract] = useState(null);
     const [doReload, setDoReload] = useState(true);
 
@@ -38,21 +36,10 @@ export default function ContractOverviewPage({ contractNo }) {
 
     return (
         <div className="contract-page">
-            <ContractNavigation contractNo={contractNo} />
+            <ClientContractNavigation contractNo={contractNo} />
             <div className="contract-page-content">
                 <div className="contract-page-heading">
                     <Typography variant="h4">اطلاعات قرارداد</Typography>
-                    <PanelModal
-                        data={contract}
-                        buttonLabel="ویرایش اطلاعات اولیه"
-                        modalHeader="ویرایش قرارداد"
-                        type="table"
-                        icon="edit"
-                        tooltipTitle="ویرایش قرارداد"
-                        variant="outlined"
-                    >
-                        <UpdateContractForm setDoReload={setDoReload} />
-                    </PanelModal>
                 </div>
                 <div className="contract-info-wrapper">
                     <div className="contract-info-row">

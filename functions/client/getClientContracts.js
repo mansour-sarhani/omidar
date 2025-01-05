@@ -1,14 +1,9 @@
-import { GET_CONTRACT_BY_CONTRACT_NO } from '@/redux/features/contractSlice';
+import { GET_CLIENT_CONTRACTS } from '@/redux/features/clientSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 
-async function getContractByContractNo(
-    dispatch,
-    enqueueSnackbar,
-    setState,
-    contractNo
-) {
+async function getClientContracts(dispatch, enqueueSnackbar, setState) {
     try {
-        const result = await dispatch(GET_CONTRACT_BY_CONTRACT_NO(contractNo));
+        const result = await dispatch(GET_CLIENT_CONTRACTS());
         const response = unwrapResult(result);
 
         setState(response.data);
@@ -21,4 +16,4 @@ async function getContractByContractNo(
     }
 }
 
-export default getContractByContractNo;
+export default getClientContracts;

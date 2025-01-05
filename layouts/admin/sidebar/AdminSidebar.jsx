@@ -3,8 +3,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import FA from '@/utils/localizationFa';
 import { getMenuItemClass } from '@/utils/getMenuItemClass';
-import Typography from '@mui/material/Typography';
 import OmImage from '@/components/common/OmIamge';
+import Typography from '@mui/material/Typography';
 
 export default function AdminSidebar({ user }) {
     const path = usePathname();

@@ -1,8 +1,5 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/utils/dbConnect';
-import fs from 'fs';
-import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
 import { authMiddleware } from '@/utils/authMiddleware';
 import Counter from '@/models/Counter';
 import Contract from '@/models/Contract';
@@ -33,6 +30,7 @@ export async function POST(req) {
         const countryId = formData.get('countryId');
         const contractNo = formData.get('contractNo');
         const clientId = formData.get('clientId');
+        const createdBy = formData.get('createdBy');
 
         const contractExists = await Contract.findOne({ contractNo });
 
@@ -48,8 +46,8 @@ export async function POST(req) {
 
         const contractData = {
             contractNo,
-            createdBy: formData.get('createdBy'),
-            lastUpdatedBy: formData.get('createdBy'),
+            createdBy,
+            lastUpdatedBy: createdBy,
             client: clientId,
             lastUpdatedByModel: 'User',
             countries: [],
@@ -67,13 +65,14 @@ export async function POST(req) {
         const newContract = new Contract(contractData);
         await newContract.save();
 
-        const savedContract = await Contract({ contractNo });
+        const savedContract = await Contract.findOne({ contractNo });
 
-        const client = await Client.findOne({ _id: clientId });
-        client.contract = savedContract._id;
+        const client = await Client.findById(clientId);
+        client.contracts.push(savedContract._id);
+        client.markModified('contracts');
         await client.save();
 
-        const user = await User.findOne({ _id: contractData.createdBy });
+        const user = await User.findById(createdBy);
         const userName = user.firstName + ' ' + user.lastName;
 
         const activityRecord = {
@@ -81,12 +80,16 @@ export async function POST(req) {
             performedBy: contractData.createdBy,
             performedByModel: 'User',
             details: `قرارداد با شماره قرارداد ${newContract.contractNo} توسط ${userName} ایجاد شد.`,
-            contractId: newContract._id,
+            contractId: savedContract._id,
             timestamp: new Date(),
         };
 
         const newActivity = new Activity(activityRecord);
         await newActivity.save();
+
+        savedContract.activities.push(newActivity._id);
+        savedContract.markModified('activities');
+        savedContract.save();
 
         return NextResponse.json({
             success: true,
@@ -127,7 +130,6 @@ export async function GET(req) {
             pickups: contract.pickups,
             visas: contract.visas,
             messages: contract.messages,
-            activities: contract.activities,
             createdBy: contract.createdBy,
             lastUpdatedBy: contract.lastUpdatedBy,
             lastUpdatedByModel: contract.lastUpdatedByModel,
@@ -169,8 +171,8 @@ export async function GET(req) {
                 .populate('payments')
                 .populate('pickups')
                 .populate('visas')
-                .populate('messages')
-                .populate('activities');
+                .populate('activities')
+                .populate('messages');
 
             if (!contract) {
                 return NextResponse.json(
@@ -195,8 +197,8 @@ export async function GET(req) {
                 .populate('payments')
                 .populate('pickups')
                 .populate('visas')
-                .populate('messages')
-                .populate('activities');
+                .populate('activities')
+                .populate('messages');
 
             if (!contracts) {
                 return NextResponse.json(
@@ -225,8 +227,8 @@ export async function GET(req) {
                 .populate('payments')
                 .populate('pickups')
                 .populate('visas')
-                .populate('messages')
-                .populate('activities');
+                .populate('activities')
+                .populate('messages');
 
             if (!contract) {
                 return NextResponse.json(
@@ -300,8 +302,8 @@ export async function GET(req) {
                 .populate('payments')
                 .populate('pickups')
                 .populate('visas')
-                .populate('messages')
-                .populate('activities');
+                .populate('activities')
+                .populate('messages');
 
             const filteredContracts = contracts
                 .filter((contract) => !contract.deleted)
@@ -333,7 +335,7 @@ export async function PUT(req) {
         const { searchParams } = new URL(req.url);
         const contractId = searchParams.get('contractId');
 
-        const contract = await Contract.findOne({ _id: contractId });
+        const contract = await Contract.findById(contractId);
 
         if (!contract) {
             return NextResponse.json(
@@ -343,11 +345,18 @@ export async function PUT(req) {
         }
 
         const formData = await req.formData();
-        const lastUpdatedBy = formData.get('lastUpdatedBy');
+        const userId = formData.get('userId');
+        const contractNo = formData.get('contractNo');
         const visaExpiryDate = formData.get('visaExpiryDate');
         const arrivalDate = formData.get('arrivalDate');
+        const clientId = formData.get('clientId');
+        const countryId = formData.get('countryId');
         const status = formData.get('status');
 
+        if (contractNo !== null) {
+            contract.contractNo = contractNo;
+            contract.markModified('contractNo');
+        }
         if (visaExpiryDate !== null) {
             contract.visaExpiryDate = visaExpiryDate;
             contract.markModified('visaExpiryDate');
@@ -356,85 +365,60 @@ export async function PUT(req) {
             contract.arrivalDate = arrivalDate;
             contract.markModified('arrivalDate');
         }
+        if (clientId !== null) {
+            contract.client = clientId;
+            contract.markModified('client');
+        }
+        if (countryId !== null) {
+            contract.countries[0] = countryId;
+            contract.markModified('countries');
+        }
         if (status !== null) {
             contract.status = status;
             contract.markModified('status');
         }
 
-        const contractFile = formData.get('contractFile');
-
-        if (
-            contractFile &&
-            (contractFile.type === 'image/jpeg' ||
-                contractFile.type === 'image/png' ||
-                contractFile.type === 'image/webp' ||
-                contractFile.type === 'application/pdf' ||
-                contractFile.type === 'image/svg+xml')
-        ) {
-            const uniqueName = uuidv4() + path.extname(contractFile.name);
-            const savePath = path.join(
-                process.cwd(),
-                'public/assets/storage/contracts/',
-                uniqueName
-            );
-
-            const directories = [
-                'public',
-                'public/assets',
-                'public/assets/storage',
-                'public/assets/storage/contracts',
-            ];
-
-            directories.forEach((dir) => {
-                if (!fs.existsSync(dir)) {
-                    fs.mkdirSync(dir, { recursive: true });
-                }
-            });
-
-            const buffer = Buffer.from(await contractFile.arrayBuffer());
-            fs.writeFileSync(savePath, buffer);
-
-            if (contract.contractFile.url) {
-                const oldImagePath = path.join(
-                    process.cwd(),
-                    'public/assets/storage/contracts/',
-                    contract.contractFile.url
-                );
-                if (fs.existsSync(oldImagePath)) {
-                    fs.unlinkSync(oldImagePath);
-                }
-            }
-
-            contract.contractFile.url = uniqueName;
-            contract.markModified('contractFile');
-        }
-
-        contract.lastUpdatedBy = lastUpdatedBy;
-        contract.markModified('lastUpdatedBy');
-
-        contract.lastUpdatedByModel = 'User';
-        contract.markModified('lastUpdatedByModel');
+        contract.lastUpdatedBy = userId;
+        contract.markModified('userId');
 
         await contract.save();
 
-        const user = await User.findOne({ _id: lastUpdatedBy });
+        const user = await User.findById(userId);
 
         const userName = user.firstName + ' ' + user.lastName;
 
         const activityRecord = {
             action: 'update',
-            performedBy: lastUpdatedBy,
+            performedBy: userId,
             performedByModel: 'User',
             details: `قرارداد توسط ${userName} به روزرسانی شد.`,
-            contractId: contract._id,
+            contractId: contractId,
             timestamp: new Date(),
         };
 
         const newActivity = new Activity(activityRecord);
         await newActivity.save();
 
-        contract.history.push(newHistory._id);
-        await contract.save();
+        contract.activities.push(newActivity._id);
+        contract.markModified('activities');
+        contract.save();
+
+        const newNotification = {
+            subject: 'اطلاعیه',
+            body: `قرارداد شماره ${contract.contractNo} توسط ${userName} به روزرسانی شد.`,
+            type: 'info',
+            sender: userId,
+            receiver: [contract.client],
+            receiverModel: 'Client',
+        };
+
+        const notification = new Notification(newNotification);
+        await notification.save();
+
+        const client = await Client.findById(contract.client);
+        client.notifications.push(notification._id);
+        client.markModified('notifications');
+        await client.save();
 
         return NextResponse.json({ success: true, contract });
     } catch (error) {

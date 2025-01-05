@@ -1,19 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useSnackbar } from 'notistack';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toggleTheme } from '@/redux/features/settingsSlice';
-import { useRouter } from 'next/navigation';
 import clientLogout from '@/functions/client/clientLogout';
-import WebPanelHeader from './_webPanelHeader';
+import useCommonHooks from '@/hooks/useCommonHooks';
+import WebPanelHeader from '@/layouts/panel/header/_webPanelHeader';
 
 export default function PanelHeader({ client }) {
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     const viewPort = useSelector((state) => state.public.viewPort);
 
-    const router = useRouter();
-    const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
+    const { dispatch, enqueueSnackbar, router } = useCommonHooks();
 
     const handleLogout = async () => {
         await clientLogout(enqueueSnackbar, router);

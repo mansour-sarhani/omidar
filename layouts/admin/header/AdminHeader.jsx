@@ -1,19 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useSnackbar } from 'notistack';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toggleTheme } from '@/redux/features/settingsSlice';
-import { useRouter } from 'next/navigation';
+import useCommonHooks from '@/hooks/useCommonHooks';
 import userLogout from '@/functions/user/userLogout';
-import WebAdminHeader from './_webAdminHeader';
+import WebAdminHeader from '@/layouts/admin/header/_webAdminHeader';
 
 export default function AdminHeader({ user }) {
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     const viewPort = useSelector((state) => state.public.viewPort);
 
-    const router = useRouter();
-    const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
+    const { dispatch, enqueueSnackbar, router } = useCommonHooks();
 
     const handleLogout = async () => {
         await userLogout(enqueueSnackbar, router);

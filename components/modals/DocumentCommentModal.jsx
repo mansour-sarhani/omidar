@@ -1,18 +1,17 @@
+import { useState } from 'react';
+import useCommonHooks from '@/hooks/useCommonHooks';
+import { dateFormatter } from '@/utils/dateFormatter';
+import { timeFormatter } from '@/utils/timeFormatter';
+import addCommentToDocument from '@/functions/contract/addCommentToDocument';
+import OmTextArea from '@/components/inputs/OmTextArea';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Note from '@mui/icons-material/Note';
-import { useState } from 'react';
-import OmTextArea from '../inputs/OmTextArea';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
 import AddIcon from '@mui/icons-material/Add';
-import { useDispatch } from 'react-redux';
-import { useSnackbar } from 'notistack';
-import addCommentToDocument from '@/functions/contract/addCommentToDocument';
-import { dateFormatter } from '@/utils/dateFormatter';
-import { timeFormatter } from '@/utils/timeFormatter';
 
 const style = {
     position: 'absolute',
@@ -39,8 +38,7 @@ export default function DocumentCommentModal(props) {
 
     const { document, userId, setDoReload } = props;
 
-    const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
+    const { dispatch, enqueueSnackbar } = useCommonHooks();
 
     const validate = (values) => {
         const errors = {};
