@@ -1,14 +1,23 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import useContract from '@/hooks/useContract';
+import useCommonHooks from '@/hooks/useCommonHooks';
+import { dateFormatter } from '@/utils/dateFormatter';
+import setStatusLabel from '@/utils/setStatusLabel';
+import removeOfferFromContract from '@/functions/contract/removeOfferFromContract';
+import getContractDataByType from '@/functions/contract/getContractDataByType';
+import NoData from '@/components/common/NoData';
+import OmProgress from '@/components/common/OmProgress';
+import OmTableFooter from '@/components/common/OmTableFooter';
+import DeleteModal from '@/components/modals/DeleteModal';
+import AddOfferForm from '@/components/forms/AddOfferForm';
+import UpdateOfferForm from '@/components/forms/UpdateOfferForm';
 import ContractNavigation from '@/components/common/ContractNavigation';
 import IsLoading from '@/components/common/IsLoading';
 import PanelModal from '@/components/modals/PanelModal';
-import useContract from '@/hooks/useContract';
-import { Typography } from '@mui/material';
-import { useSnackbar } from 'notistack';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-import NoData from '@/components/common/NoData';
+import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -16,17 +25,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import OmProgress from '@/components/common/OmProgress';
-import FA from '@/utils/localizationFa';
-import OmTableFooter from '@/components/common/OmTableFooter';
-import DeleteModal from '@/components/modals/DeleteModal';
-import getContractDataByType from '@/functions/contract/getContractDataByType';
-import AddOfferForm from '@/components/forms/AddOfferForm';
-import { dateFormatter } from '@/utils/dateFormatter';
-import setStatusLabel from '@/utils/setStatusLabel';
-import removeOfferFromContract from '@/functions/contract/removeOfferFromContract';
-import { set } from 'lodash';
-import UpdateOfferForm from '@/components/forms/UpdateOfferForm';
 
 export default function ContractOffersPage({ contractNo }) {
     const [offers, setOffers] = useState(null);
@@ -37,8 +35,7 @@ export default function ContractOffersPage({ contractNo }) {
     const { contract } = useContract(contractNo);
     const user = useSelector((state) => state.user.data);
 
-    const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
+    const { dispatch, enqueueSnackbar } = useCommonHooks();
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shops.length) : 0;
@@ -220,9 +217,7 @@ export default function ContractOffersPage({ contractNo }) {
                                                             contractId={
                                                                 contract._id
                                                             }
-                                                            uploaderId={
-                                                                user._id
-                                                            }
+                                                            userId={user._id}
                                                         />
                                                     </PanelModal>
                                                     <DeleteModal

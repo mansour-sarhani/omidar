@@ -8,6 +8,7 @@ import Document from '@/models/Document';
 import User from '@/models/User';
 import Activity from '@/models/Activity';
 import Client from '@/models/Client';
+import Notification from '@/models/Notification';
 import { authMiddleware } from '@/utils/authMiddleware';
 import FA from '@/utils/localizationFa';
 
@@ -24,7 +25,7 @@ export async function POST(req) {
         const { searchParams } = new URL(req.url);
         const contractId = searchParams.get('contractId');
 
-        const contract = await Contract.findOne({ _id: contractId });
+        const contract = await Contract.findById(contractId);
 
         if (!contract) {
             return NextResponse.json(
@@ -168,11 +169,7 @@ export async function POST(req) {
         const newDocument = new Document(documentData);
         await newDocument.save();
 
-        const savedDocument = await Document.findOne({
-            documentNo,
-        });
-
-        contract.documents.push(savedDocument._id);
+        contract.documents.push(newDocument._id);
         contract.markModified('documents');
 
         contract.lastUpdatedBy = uploadBy;
@@ -183,12 +180,7 @@ export async function POST(req) {
 
         contract.save();
 
-        var uploader = null;
-        if (uploadByModel === 'User') {
-            uploader = await User.findOne({ _id: uploadBy });
-        } else {
-            uploader = await Client.findOne({ _id: uploadBy });
-        }
+        const uploader = await User.findById(uploadBy);
 
         const uploaderName = uploader.firstName + ' ' + uploader.lastName;
 
@@ -203,6 +195,27 @@ export async function POST(req) {
 
         const newActivity = new Activity(activityRecord);
         await newActivity.save();
+
+        contract.activities.push(newActivity._id);
+        contract.markModified('activities');
+        contract.save();
+
+        const newNotification = {
+            subject: 'اطلاعیه',
+            body: `چک لیست مدرک جدید با شماره${documentNo} توسط ${uploaderName} به قرارداد اضافه شد.`,
+            type: 'info',
+            sender: uploadBy,
+            receiver: [contract.client],
+            receiverModel: 'Client',
+        };
+
+        const notification = new Notification(newNotification);
+        await notification.save();
+
+        const client = await Client.findById(contract.client);
+        client.notifications.push(notification._id);
+        client.markModified('notifications');
+        await client.save();
 
         return NextResponse.json({
             success: true,
@@ -243,7 +256,12 @@ export async function PUT(req) {
         const documentId = formData.get('documentId');
         const userId = formData.get('userId');
 
-        const document = await Document.findOne({ _id: documentId });
+        const user = await User.findOne({ _id: userId });
+        const userName = user.firstName + ' ' + user.lastName;
+
+        const document = await Document.findById(documentId);
+
+        const client = await Client.findById(contract.client);
 
         if (!document) {
             return NextResponse.json(
@@ -263,7 +281,6 @@ export async function PUT(req) {
             contract.documents = contract.documents.filter(
                 (document) => document._id.toString() !== documentId
             );
-
             contract.markModified('documents');
 
             contract.lastUpdatedBy = userId;
@@ -272,15 +289,25 @@ export async function PUT(req) {
             contract.lastUpdatedByModel = 'User';
             contract.markModified('lastUpdatedByModel');
 
-            await contract.save();
+            const activityRecord = {
+                action: 'upload',
+                performedBy: userId,
+                performedByModel: 'User',
+                details: `چک لیست فایل با شماره ${document.documentNo} توسط ${userName} از قرارداد حذف شد.`,
+                contractId: contractId,
+                timestamp: new Date(),
+            };
 
-            return NextResponse.json({ success: true, document });
+            const newActivity = new Activity(activityRecord);
+            await newActivity.save();
+
+            contract.activities.push(newActivity._id);
+            contract.markModified('activities');
+            contract.save();
+
+            return NextResponse.json({ success: true, data: document });
         } else if (action === 'comment') {
             const comment = formData.get('comment');
-
-            const user = await User.findOne({ _id: userId });
-            const userName = user.firstName + ' ' + user.lastName;
-
             if (comment !== null) {
                 const newComment = {
                     userId,
@@ -305,7 +332,27 @@ export async function PUT(req) {
                 const newActivity = new Activity(activityRecord);
                 await newActivity.save();
 
-                return NextResponse.json({ success: true, document });
+                contract.activities.push(newActivity._id);
+                contract.markModified('activities');
+                contract.save();
+
+                const newNotification = {
+                    subject: 'اطلاعیه',
+                    body: `پیام جدید توسط ${userName} به چک لیست فایل با شماره ${document.documentNo} اضافه شد.`,
+                    type: 'info',
+                    sender: userId,
+                    receiver: [contract.client],
+                    receiverModel: 'Client',
+                };
+
+                const notification = new Notification(newNotification);
+                await notification.save();
+
+                client.notifications.push(notification._id);
+                client.markModified('notifications');
+                await client.save();
+
+                return NextResponse.json({ success: true, data: document });
             }
         } else if (action === 'update') {
             const documentNo = formData.get('documentNo');
@@ -457,9 +504,6 @@ export async function PUT(req) {
 
             await document.save();
 
-            const user = await User.findOne({ _id: userId });
-            const userName = user.firstName + ' ' + user.lastName;
-
             if (status !== null) {
                 const activityRecord = {
                     action: 'update',
@@ -472,8 +516,28 @@ export async function PUT(req) {
 
                 const newActivity = new Activity(activityRecord);
                 await newActivity.save();
+
+                contract.activities.push(newActivity._id);
+                contract.markModified('activities');
+                contract.save();
+
+                const newNotification = {
+                    subject: 'اطلاعیه',
+                    body: `وضعیت چک لیست فایل ${document.documentNo} توسط ${userName} به ${FA.status[status]} تغییر یافت.`,
+                    type: 'info',
+                    sender: userId,
+                    receiver: [contract.client],
+                    receiverModel: 'Client',
+                };
+
+                const notification = new Notification(newNotification);
+                await notification.save();
+
+                client.notifications.push(notification._id);
+                client.markModified('notifications');
+                await client.save();
             }
-            return NextResponse.json({ success: true, document });
+            return NextResponse.json({ success: true, data: document });
         }
     } catch (error) {
         return NextResponse.json(

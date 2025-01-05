@@ -43,12 +43,6 @@ const contractSchema = new Schema(
                 ref: 'User',
             },
         ],
-        countries: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'Country',
-            },
-        ],
         admissions: [
             {
                 type: Schema.Types.ObjectId,

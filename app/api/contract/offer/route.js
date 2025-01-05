@@ -6,6 +6,8 @@ import User from '@/models/User';
 import Activity from '@/models/Activity';
 import { authMiddleware } from '@/utils/authMiddleware';
 import Counter from '@/models/Counter';
+import Client from '@/models/Client';
+import Notification from '@/models/Notification';
 
 //ADD OFFER TO CONTRACT => "/api/contract/offer?contractId=66bf44d3d02d846c4368ced0"
 export async function POST(req) {
@@ -20,7 +22,7 @@ export async function POST(req) {
         const { searchParams } = new URL(req.url);
         const contractId = searchParams.get('contractId');
 
-        const contract = await Contract.findOne({ _id: contractId });
+        const contract = await Contract.findById(contractId);
 
         if (!contract) {
             return NextResponse.json(
@@ -45,6 +47,11 @@ export async function POST(req) {
         const test = formData.get('test');
         const testDate = formData.get('testDate');
         const deadline = formData.get('deadline');
+
+        const user = await User.findById(userId);
+        const userName = user.firstName + ' ' + user.lastName;
+
+        const client = await Client.findById(contract.client);
 
         const offerData = {
             title,
@@ -72,11 +79,7 @@ export async function POST(req) {
         const newOffer = new Offer(offerData);
         await newOffer.save();
 
-        const savedOffer = await Offer.findOne({
-            title,
-        });
-
-        contract.offers.push(savedOffer._id);
+        contract.offers.push(newOffer._id);
         contract.markModified('offers');
 
         contract.lastUpdatedBy = userId;
@@ -84,11 +87,6 @@ export async function POST(req) {
 
         contract.lastUpdatedByModel = 'User';
         contract.markModified('lastUpdatedByModel');
-
-        contract.save();
-
-        const user = await User.findOne({ _id: userId });
-        const userName = user.firstName + ' ' + user.lastName;
 
         const activityRecord = {
             action: 'update',
@@ -102,9 +100,29 @@ export async function POST(req) {
         const newActivity = new Activity(activityRecord);
         await newActivity.save();
 
+        contract.activities.push(newActivity._id);
+        contract.markModified('activities');
+        contract.save();
+
+        const newNotification = {
+            subject: 'اطلاعیه',
+            body: `آفر جدید با عنوان ${offerData.title} توسط ${userName} به قرارداد اضافه شد.`,
+            type: 'info',
+            sender: userId,
+            receiver: [contract.client],
+            receiverModel: 'Client',
+        };
+
+        const notification = new Notification(newNotification);
+        await notification.save();
+
+        client.notifications.push(notification._id);
+        client.markModified('notifications');
+        await client.save();
+
         return NextResponse.json({
             success: true,
-            newOffer,
+            data: newOffer,
         });
     } catch (error) {
         return NextResponse.json(
@@ -141,7 +159,12 @@ export async function PUT(req) {
         const offerId = formData.get('offerId');
         const userId = formData.get('userId');
 
-        const offer = await Offer.findOne({ _id: offerId });
+        const user = await User.findById(userId);
+        const userName = user.firstName + ' ' + user.lastName;
+
+        const client = await Client.findById(contract.client);
+
+        const offer = await Offer.findById(offerId);
 
         if (!offer) {
             return NextResponse.json(
@@ -170,9 +193,24 @@ export async function PUT(req) {
             contract.lastUpdatedByModel = 'User';
             contract.markModified('lastUpdatedByModel');
 
+            const activityRecord = {
+                action: 'upload',
+                performedBy: userId,
+                performedByModel: 'User',
+                details: `آفر با عنوان ${offer.title} توسط ${userName} از قرارداد حذف شد.`,
+                contractId: contractId,
+                timestamp: new Date(),
+            };
+
+            const newActivity = new Activity(activityRecord);
+            await newActivity.save();
+
+            contract.activities.push(newActivity._id);
+            contract.markModified('activities');
+
             await contract.save();
 
-            return NextResponse.json({ success: true, offer });
+            return NextResponse.json({ success: true, data: offer });
         } else if (action === 'update') {
             const title = formData.get('title');
             const university = formData.get('university');
@@ -248,23 +286,35 @@ export async function PUT(req) {
 
             await offer.save();
 
-            const user = await User.findOne({ _id: userId });
-            const userName = user.firstName + ' ' + user.lastName;
+            const activityRecord = {
+                action: 'update',
+                performedBy: userId,
+                performedByModel: 'User',
+                details: `آفر با عنوان ${offer.title} توسط ${userName} به روزرسانی شد.`,
+                contractId: offer.contractId,
+                timestamp: new Date(),
+            };
 
-            if (status !== null) {
-                const activityRecord = {
-                    action: 'update',
-                    performedBy: userId,
-                    performedByModel: 'User',
-                    details: `آفر با عنوان ${offer.title} توسط ${userName} به روزرسانی شد.`,
-                    contractId: offer.contractId,
-                    timestamp: new Date(),
-                };
+            const newActivity = new Activity(activityRecord);
+            await newActivity.save();
 
-                const newActivity = new Activity(activityRecord);
-                await newActivity.save();
-            }
-            return NextResponse.json({ success: true, offer });
+            const newNotification = {
+                subject: 'اطلاعیه',
+                body: `آفر با عنوان ${offer.title} توسط ${userName} به روزرسانی شد.`,
+                type: 'info',
+                sender: userId,
+                receiver: [contract.client],
+                receiverModel: 'Client',
+            };
+
+            const notification = new Notification(newNotification);
+            await notification.save();
+
+            client.notifications.push(notification._id);
+            client.markModified('notifications');
+            await client.save();
+
+            return NextResponse.json({ success: true, data: offer });
         }
     } catch (error) {
         return NextResponse.json(

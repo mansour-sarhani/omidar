@@ -1,15 +1,22 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import useCommonHooks from '@/hooks/useCommonHooks';
+import useContract from '@/hooks/useContract';
+import FA from '@/utils/localizationFa';
+import getContractDataByType from '@/functions/contract/getContractDataByType';
+import removeUserFromContract from '@/functions/contract/removeUserFromContract';
+import NoData from '@/components/common/NoData';
 import ContractNavigation from '@/components/common/ContractNavigation';
 import IsLoading from '@/components/common/IsLoading';
 import AddUserToContractForm from '@/components/forms/AddUserToContractForm';
 import PanelModal from '@/components/modals/PanelModal';
-import useContract from '@/hooks/useContract';
-import { Typography } from '@mui/material';
-import { useSnackbar } from 'notistack';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-import NoData from '@/components/common/NoData';
+import OmProgress from '@/components/common/OmProgress';
+import DeleteModal from '@/components/modals/DeleteModal';
+import OmTableFooter from '@/components/common/OmTableFooter';
+import OmAvatar from '@/components/common/OmAvatar';
+import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -17,14 +24,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import OmProgress from '@/components/common/OmProgress';
-import FA from '@/utils/localizationFa';
-import OmTableFooter from '@/components/common/OmTableFooter';
-import OmImage from '@/components/common/OmIamge';
-import { Box } from '@mui/system';
-import removeUserFromContract from '@/functions/contract/removeUserFromContract';
-import DeleteModal from '@/components/modals/DeleteModal';
-import getContractDataByType from '@/functions/contract/getContractDataByType';
 
 export default function ContractUsersPage({ contractNo }) {
     const [users, setUsers] = useState(null);
@@ -33,10 +32,9 @@ export default function ContractUsersPage({ contractNo }) {
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
     const { contract } = useContract(contractNo);
-    const updater = useSelector((state) => state.user.data);
+    const user = useSelector((state) => state.user.data);
 
-    const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
+    const { dispatch, enqueueSnackbar } = useCommonHooks();
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shops.length) : 0;
@@ -54,7 +52,7 @@ export default function ContractUsersPage({ contractNo }) {
         const data = {
             contractId: contract._id,
             userId: userId,
-            performedBy: updater._id,
+            performedBy: user._id,
         };
         async function removeUser() {
             await removeUserFromContract(dispatch, enqueueSnackbar, data);
@@ -103,6 +101,7 @@ export default function ContractUsersPage({ contractNo }) {
                         <AddUserToContractForm
                             setDoReload={setDoReload}
                             contractId={contract._id}
+                            userId={user._id}
                         />
                     </PanelModal>
                 </div>
@@ -145,20 +144,9 @@ export default function ContractUsersPage({ contractNo }) {
                                                 {user.Id}
                                             </TableCell>
                                             <TableCell align="center">
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        justifyContent:
-                                                            'center',
-                                                    }}
-                                                >
-                                                    <OmImage
-                                                        name={user.avatar}
-                                                        variant="circle"
-                                                        width={50}
-                                                        height={50}
-                                                    />
-                                                </Box>
+                                                <div className="panel-table-image-wrapper">
+                                                    <OmAvatar person={user} />
+                                                </div>
                                             </TableCell>
                                             <TableCell align="center">
                                                 {user.firstName +

@@ -49,7 +49,7 @@ export default function setStatusLabel(status) {
                 <Chip
                     icon={<PendingIcon />}
                     label={FA.status.processing}
-                    color="info"
+                    color="warning"
                 />
             );
 
@@ -58,7 +58,7 @@ export default function setStatusLabel(status) {
                 <Chip
                     icon={<PendingIcon />}
                     label={FA.status.pending}
-                    color="info"
+                    color="warning"
                 />
             );
 

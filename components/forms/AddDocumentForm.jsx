@@ -1,19 +1,18 @@
-import { useDispatch } from 'react-redux';
-import { useSnackbar } from 'notistack';
-import { Formik, Form, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-import Button from '@mui/material/Button';
+import { useEffect, useState } from 'react';
+import useCommonHooks from '@/hooks/useCommonHooks';
+import addDocumentToContract from '@/functions/contract/addDocumentToContract';
+import getAllDocTemplates from '@/functions/document/getAllDocTemplates';
+import OmImage from '@/components/common/OmIamge';
+import OmTextArea from '@/components/inputs/OmTextArea';
 import OmTextInput from '@/components/inputs/OmTextInput';
 import FileUploader from '@/components/inputs/FileUploader';
-import AddIcon from '@mui/icons-material/Add';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
-import OmTextArea from '../inputs/OmTextArea';
-import { useEffect, useState } from 'react';
-import getAllDocTemplates from '@/functions/document/getAllDocTemplates';
-import { Box } from '@mui/system';
-import OmImage from '../common/OmIamge';
-import addDocumentToContract from '@/functions/contract/addDocumentToContract';
+import AddIcon from '@mui/icons-material/Add';
 
 const initialValues = {
     documentNo: '',
@@ -45,8 +44,7 @@ export default function AddDocumentForm(props) {
         isCheckList,
     } = props;
 
-    const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
+    const { dispatch, enqueueSnackbar } = useCommonHooks();
 
     async function handleSelectTemplate(e) {
         const templateId = e.target.value;

@@ -1,16 +1,15 @@
-import { useDispatch } from 'react-redux';
-import { useSnackbar } from 'notistack';
+import useCommonHooks from '@/hooks/useCommonHooks';
+import addOfferToContract from '@/functions/contract/addOfferToContract';
+import OmTextInput from '@/components/inputs/OmTextInput';
+import OmTextArea from '@/components/inputs/OmTextArea';
+import OmDatePicker from '@/components/inputs/OmDatePicker';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import Button from '@mui/material/Button';
-import OmTextInput from '@/components/inputs/OmTextInput';
-import AddIcon from '@mui/icons-material/Add';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
-import OmTextArea from '../inputs/OmTextArea';
-import addOfferToContract from '@/functions/contract/addOfferToContract';
-import OmDatePicker from '../inputs/OmDatePicker';
+import AddIcon from '@mui/icons-material/Add';
 
 const initialValues = {
     title: '',
@@ -26,14 +25,13 @@ const initialValues = {
 };
 
 const validationSchema = Yup.object({
-    title: Yup.string().required('وارد کردن شماره فایل ضروری است'),
+    title: Yup.string().required('وارد کردن عنوان ضروری است'),
 });
 
 export default function AddOfferForm(props) {
     const { handleClose, setDoReload, userId, contractId } = props;
 
-    const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
+    const { dispatch, enqueueSnackbar } = useCommonHooks();
 
     const validate = (values) => {
         const errors = {};

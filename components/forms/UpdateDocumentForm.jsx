@@ -1,16 +1,14 @@
-import { useDispatch } from 'react-redux';
-import { useSnackbar } from 'notistack';
-import { Formik, Form } from 'formik';
-import Button from '@mui/material/Button';
+import useCommonHooks from '@/hooks/useCommonHooks';
+import updateDocument from '@/functions/contract/updateDocument';
 import OmTextInput from '@/components/inputs/OmTextInput';
 import FileUploader from '@/components/inputs/FileUploader';
-import Check from '@mui/icons-material/Check';
+import OmImage from '@/components/common/OmIamge';
+import OmTextArea from '@/components/inputs/OmTextArea';
+import { Formik, Form } from 'formik';
+import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
-import OmTextArea from '../inputs/OmTextArea';
-import { Box } from '@mui/system';
-import OmImage from '../common/OmIamge';
-import updateDocument from '@/functions/contract/updateDocument';
+import Check from '@mui/icons-material/Check';
 
 const initialValues = {
     documentNo: '',
@@ -34,10 +32,7 @@ export default function UpdateDocumentForm(props) {
         currentData,
     } = props;
 
-    const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
-
-    console.log(isCheckList);
+    const { dispatch, enqueueSnackbar } = useCommonHooks();
 
     return (
         <Formik
@@ -237,7 +232,7 @@ export default function UpdateDocumentForm(props) {
                     <OmTextArea name="description" label="توضیحات" />
 
                     {!isCheckList ? (
-                        <Box className="panel-new-img-container">
+                        <div className="panel-new-img-container">
                             <OmImage
                                 name={values.file}
                                 variant="rounded"
@@ -249,9 +244,9 @@ export default function UpdateDocumentForm(props) {
                                 name="newFile"
                                 number={1}
                             />
-                        </Box>
+                        </div>
                     ) : (
-                        <Box className="panel-new-img-container">
+                        <div className="panel-new-img-container">
                             <OmImage
                                 name={values.sample}
                                 variant="rounded"
@@ -263,7 +258,7 @@ export default function UpdateDocumentForm(props) {
                                 name="newSample"
                                 number={1}
                             />
-                        </Box>
+                        </div>
                     )}
 
                     <Button
