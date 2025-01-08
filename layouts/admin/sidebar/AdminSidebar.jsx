@@ -58,7 +58,9 @@ export default function AdminSidebar({ user }) {
                                     '/admin/user'
                                 )}
                             >
-                                <Link href="/admin/user">مدیریت کارکنان</Link>
+                                <Link href="/admin/user">
+                                    مدیریت افراد مجموعه
+                                </Link>
                             </li>
                             <li
                                 className={getMenuItemClass(
@@ -97,6 +99,14 @@ export default function AdminSidebar({ user }) {
                                 <Link href="/admin/document-template">
                                     نمونه قالب فایل ها
                                 </Link>
+                            </li>
+                            <li
+                                className={getMenuItemClass(
+                                    path,
+                                    '/admin/notification'
+                                )}
+                            >
+                                <Link href="/admin/notification">اعلان ها</Link>
                             </li>
                         </>
                     )}

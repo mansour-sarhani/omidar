@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import useCommonHooks from '@/hooks/useCommonHooks';
 import useContract from '@/hooks/useContract';
@@ -66,9 +65,8 @@ export default function ContractDocumentsPage({ contractNo }) {
     const [description, setDescription] = useState('');
 
     const { contract } = useContract(contractNo);
-    const user = useSelector((state) => state.user.data);
 
-    const { dispatch, enqueueSnackbar } = useCommonHooks();
+    const { dispatch, enqueueSnackbar, userData } = useCommonHooks();
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shops.length) : 0;
@@ -95,7 +93,7 @@ export default function ContractDocumentsPage({ contractNo }) {
         async function deleteItem() {
             const data = {
                 contractId: contract._id,
-                userId: user._id,
+                userId: userData._id,
                 documentId: id,
             };
             await removeDocumentFromContract(dispatch, enqueueSnackbar, data);
@@ -161,7 +159,7 @@ export default function ContractDocumentsPage({ contractNo }) {
                             <AddDocumentForm
                                 setDoReload={setDoReload}
                                 contractId={contract._id}
-                                uploaderId={user._id}
+                                uploaderId={userData._id}
                                 isCheckList={true}
                             />
                         </PanelModal>
@@ -316,7 +314,7 @@ export default function ContractDocumentsPage({ contractNo }) {
                                                                 size="small"
                                                                 onClick={() =>
                                                                     handleDownload(
-                                                                        document.sample
+                                                                        document.file
                                                                     )
                                                                 }
                                                             >
@@ -335,7 +333,9 @@ export default function ContractDocumentsPage({ contractNo }) {
                                                     <TableCell align="center">
                                                         <DocumentCommentModal
                                                             document={document}
-                                                            userId={user._id}
+                                                            userId={
+                                                                userData._id
+                                                            }
                                                             setDoReload={
                                                                 setDoReload
                                                             }
@@ -360,7 +360,7 @@ export default function ContractDocumentsPage({ contractNo }) {
                                                                         contract._id
                                                                     }
                                                                     uploaderId={
-                                                                        user._id
+                                                                        userData._id
                                                                     }
                                                                     isCheckList={
                                                                         true
@@ -419,7 +419,7 @@ export default function ContractDocumentsPage({ contractNo }) {
                                 setDoReload={setDoReload}
                                 contractId={contract._id}
                                 uploader="user"
-                                uploaderId={user._id}
+                                uploaderId={userData._id}
                                 isCheckList={false}
                             />
                         </PanelModal>
@@ -570,7 +570,9 @@ export default function ContractDocumentsPage({ contractNo }) {
                                                     <TableCell align="center">
                                                         <DocumentCommentModal
                                                             document={document}
-                                                            userId={user._id}
+                                                            userId={
+                                                                userData._id
+                                                            }
                                                             setDoReload={
                                                                 setDoReload
                                                             }
@@ -595,7 +597,7 @@ export default function ContractDocumentsPage({ contractNo }) {
                                                                         contract._id
                                                                     }
                                                                     uploaderId={
-                                                                        user._id
+                                                                        userData._id
                                                                     }
                                                                     isCheckList={
                                                                         false

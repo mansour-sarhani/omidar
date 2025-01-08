@@ -155,9 +155,9 @@ const FileUploader = ({ title, name, number, stain }) => {
                         }}
                     >
                         <Typography color="textSecondary">
-                            برای بارگذاری تصویر کلیک کنید{' '}
+                            فایل مورد نظر خود را اینجا بکشید یا اینجا{' '}
                             <Link href="/pages" onClick={handleLinkClick}>
-                                جستجو
+                                کلیک کنید
                             </Link>{' '}
                         </Typography>
                         {number !== 1 && (

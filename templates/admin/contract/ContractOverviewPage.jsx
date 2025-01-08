@@ -41,10 +41,13 @@ export default function ContractOverviewPage({ contractNo }) {
             <ContractNavigation contractNo={contractNo} />
             <div className="contract-page-content">
                 <div className="contract-page-heading">
-                    <Typography variant="h4">اطلاعات قرارداد</Typography>
+                    <Typography variant="h4">
+                        اطلاعات قرارداد
+                        {'   '}
+                    </Typography>
                     <PanelModal
                         data={contract}
-                        buttonLabel="ویرایش اطلاعات اولیه"
+                        buttonLabel="ویرایش قرارداد"
                         modalHeader="ویرایش قرارداد"
                         type="table"
                         icon="edit"
@@ -62,8 +65,6 @@ export default function ContractOverviewPage({ contractNo }) {
                             </label>
                             <span className="contract-info-value">
                                 {contract.contractNo}
-                                {'   '}
-                                {setStatusLabel(contract.status)}
                             </span>
                         </div>
                         <div className="contract-info-line">
@@ -76,12 +77,10 @@ export default function ContractOverviewPage({ contractNo }) {
                         </div>
                         <div className="contract-info-line">
                             <label className="contract-info-label">
-                                آخرین به روزرسانی:
+                                وضعیت:
                             </label>
                             <span className="contract-info-value">
-                                {contract.updatedAt
-                                    ? dateFormatter(contract.updatedAt)
-                                    : dateFormatter(contract.createdAt)}
+                                {setStatusLabel(contract.status)}
                             </span>
                         </div>
                     </div>
@@ -92,9 +91,9 @@ export default function ContractOverviewPage({ contractNo }) {
                             </label>
                             <span className="contract-info-value">
                                 {contract.client.sex &&
-                                contract.client.sex === 'male'
-                                    ? 'آقای'
-                                    : 'خانم'}{' '}
+                                    (contract.client.sex === 'male'
+                                        ? 'آقای'
+                                        : 'خانم')}{' '}
                                 {contract.client.firstName}{' '}
                                 {contract.client.lastName}
                             </span>

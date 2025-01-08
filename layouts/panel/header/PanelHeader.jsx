@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toggleTheme } from '@/redux/features/settingsSlice';
+import { useSocket } from '@/providers/SocketProvider';
 import clientLogout from '@/functions/client/clientLogout';
 import useCommonHooks from '@/hooks/useCommonHooks';
 import WebPanelHeader from '@/layouts/panel/header/_webPanelHeader';
@@ -11,6 +12,8 @@ export default function PanelHeader({ client }) {
     const viewPort = useSelector((state) => state.public.viewPort);
 
     const { dispatch, enqueueSnackbar, router } = useCommonHooks();
+
+    const socket = useSocket();
 
     const handleLogout = async () => {
         await clientLogout(enqueueSnackbar, router);
@@ -44,6 +47,36 @@ export default function PanelHeader({ client }) {
         }
     }, [isDarkMode]);
 
+    useEffect(() => {
+        if (socket.connected) {
+            onConnect();
+        }
+
+        function onConnect() {
+            console.log('Connected to socket server:', socket.id);
+            socket.emit('joinRoom', client._id);
+        }
+
+        function onDisconnect() {
+            console.log('socket is disconnected.');
+        }
+
+        socket.on('connect', onConnect);
+
+        socket.on('disconnect', onDisconnect);
+
+        socket.on('notification', (data) => {
+            if (data.receiver.includes(client._id)) {
+                enqueueSnackbar(data.message, { variant: 'info' });
+            }
+        });
+
+        return () => {
+            socket.off('connect', onConnect);
+            socket.off('disconnect', onDisconnect);
+        };
+    }, [client, enqueueSnackbar, socket]);
+
     if (viewPort === 'desktop') {
         return (
             <WebPanelHeader
@@ -51,6 +84,7 @@ export default function PanelHeader({ client }) {
                 isDarkMode={isDarkMode}
                 toggleDarkMode={toggleDarkMode}
                 handleLogout={handleLogout}
+                socket={socket}
             />
         );
     } else {
@@ -60,6 +94,7 @@ export default function PanelHeader({ client }) {
                 isDarkMode={isDarkMode}
                 toggleDarkMode={toggleDarkMode}
                 handleLogout={handleLogout}
+                socket={socket}
             />
         );
     }

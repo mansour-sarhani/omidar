@@ -60,7 +60,7 @@ export async function POST(req) {
         );
         newUser.Id = counter.seq;
 
-        const token = generateToken(newUser, 'user');
+        const token = generateToken('user');
         newUser.token = token;
 
         await newUser.save();
@@ -74,7 +74,7 @@ export async function POST(req) {
     }
 }
 
-export async function GET(req) {
+export async function GET(req, NextApiResponse) {
     await dbConnect();
 
     const authError = await authMiddleware(req);
@@ -191,7 +191,9 @@ export async function PUT(req) {
             user.markModified('username');
         }
         if (password !== null) {
-            user.password = password;
+            const hashedPassword = await hashPassword(password);
+
+            user.password = hashedPassword;
             user.markModified('password');
         }
         if (email !== null) {

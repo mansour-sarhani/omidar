@@ -2,24 +2,19 @@
 
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { usePathname, useRouter } from 'next/navigation';
-import { useSnackbar } from 'notistack';
 import { setViewPort } from '@/redux/features/settingsSlice';
-import IsLoading from '@/components/common/IsLoading';
-import { useMediaQuery } from '@mui/system';
+import useCommonHooks from '@/hooks/useCommonHooks';
 import getCurrentUser from '@/functions/user/getCurrentUser';
 import AdminHeader from '@/layouts/admin/header/AdminHeader';
 import AdminSidebar from '@/layouts/admin/sidebar/AdminSidebar';
+import IsLoading from '@/components/common/IsLoading';
+import { useMediaQuery } from '@mui/system';
 
 export default function AdminTemplate({ children }) {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    const router = useRouter();
-    const pathname = usePathname();
-    const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
+    const { router, pathname, dispatch, enqueueSnackbar } = useCommonHooks();
 
     const isDesktop = useMediaQuery('(min-width:992px)');
     const isTablet = useMediaQuery('(min-width:768px) and (max-width:991px)');
@@ -67,9 +62,7 @@ export default function AdminTemplate({ children }) {
     ) : (
         <div className="main">
             <div className="panel-page-wrapper">
-                <div className="panel-header">
-                    <AdminHeader user={user} />
-                </div>
+                <AdminHeader user={user} />
                 {isDesktop && user && (
                     <div className="panel-sidebar">
                         <AdminSidebar user={user} />

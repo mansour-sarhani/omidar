@@ -56,7 +56,7 @@ export async function POST(req) {
         );
         client.Id = counter.seq;
 
-        const token = generateToken(client, 'client');
+        const token = generateToken('client');
         client.token = token;
 
         await client.save();
@@ -219,7 +219,9 @@ export async function PUT(req) {
             client.markModified('username');
         }
         if (password !== null) {
-            client.password = password;
+            const hashedPassword = await hashPassword(password);
+
+            client.password = hashedPassword;
             client.markModified('password');
         }
         if (email !== null) {

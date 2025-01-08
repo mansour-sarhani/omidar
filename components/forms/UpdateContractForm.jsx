@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import useCommonHooks from '@/hooks/useCommonHooks';
 import updateContract from '@/functions/contract/updateContract';
 import adminGetAllClients from '@/functions/admin/clients/adminGetAllClients';
@@ -34,9 +33,7 @@ export default function UpdateContractForm(props) {
 
     const { handleClose, setDoReload, currentData } = props;
 
-    const { dispatch, enqueueSnackbar } = useCommonHooks();
-
-    const user = useSelector((state) => state.user.data);
+    const { dispatch, enqueueSnackbar, userData } = useCommonHooks();
 
     initialValues.contractNo = currentData.contractNo;
     initialValues.visaExpiryDate = currentData.visaExpiryDate;
@@ -121,7 +118,7 @@ export default function UpdateContractForm(props) {
                 const finalData = {
                     ...filtered,
                     contractId: currentData._id,
-                    userId: user._id,
+                    userId: userData._id,
                 };
 
                 await updateContract(dispatch, enqueueSnackbar, finalData);
@@ -152,6 +149,9 @@ export default function UpdateContractForm(props) {
                             >
                                 <option value="active">فعال</option>
                                 <option value="inactive">غیر فعال</option>
+                                <option value="processing">در حال اجرا</option>
+                                <option value="canceled">کنسل شده</option>
+                                <option value="done">انجام شده</option>
                             </NativeSelect>
                         </FormControl>
                         <OmTextInput name="contractNo" label="شماره قرارداد*" />

@@ -19,6 +19,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import ChangePasswordModal from '@/components/modals/ChangePasswordModal';
 
 export default function ClientManagementPage() {
     const [clients, setClients] = useState(null);
@@ -56,7 +57,8 @@ export default function ClientManagementPage() {
                 <div className="panel-inner-header-text">
                     <Typography variant="h5">مدیریت متقاضیان</Typography>
                     <Typography variant="body2">
-                        در این قسمت میتوانید متقاضیان را مدیریت نمایید.
+                        در این قسمت میتوانید متقاضیان را مدیریت کنید و یا متقاضی
+                        جدیدی اضافه نمایید.
                     </Typography>
                 </div>
                 <PanelModal
@@ -137,6 +139,10 @@ export default function ClientManagementPage() {
                                                         }
                                                     />
                                                 </PanelModal>
+                                                <ChangePasswordModal
+                                                    type="client"
+                                                    data={client}
+                                                />
                                             </div>
                                         </TableCell>
                                     </TableRow>

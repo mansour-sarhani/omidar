@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import useCommonHooks from '@/hooks/useCommonHooks';
 import { dateFormatter } from '@/utils/dateFormatter';
 import setStatusLabel from '@/utils/setStatusLabel';
@@ -29,9 +28,7 @@ export default function DocTemplateManagementPage() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    const { dispatch, enqueueSnackbar, router } = useCommonHooks();
-
-    const user = useSelector((state) => state.user.data);
+    const { dispatch, enqueueSnackbar } = useCommonHooks();
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shops.length) : 0;
@@ -79,10 +76,7 @@ export default function DocTemplateManagementPage() {
                     modalHeader="اضافه کردن نمونه قالب"
                     icon="add"
                 >
-                    <AddDocTemplateForm
-                        setDoReload={setDoReload}
-                        uploaderId={user._id}
-                    />
+                    <AddDocTemplateForm setDoReload={setDoReload} />
                 </PanelModal>
             </div>
 

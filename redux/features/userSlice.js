@@ -4,6 +4,7 @@ import { handleAsyncActions } from '@/utils/handleAsyncActions';
 
 const initialState = {
     data: null,
+    userData: null,
     role: null,
     status: 'idle',
 };
@@ -70,19 +71,53 @@ export const USER_LOGIN = createAsyncThunk(
     }
 );
 
+export const GET_USER_NOTIFICATIONS = createAsyncThunk(
+    'user/GET_USER_NOTIFICATIONS',
+    async (type, { rejectWithValue }) => {
+        try {
+            const response = await http.get(
+                `/api/user/notification?type=` + type
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const USER_READ_NOTIFICATION = createAsyncThunk(
+    'user/USER_READ_NOTIFICATION',
+    async (notificationId, { rejectWithValue }) => {
+        try {
+            const response = await http.put(
+                `/api/user/notification?notificationId=` + notificationId
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
-            //GET_USER
+            //GET_CURRENT_USER
             .addCase(GET_CURRENT_USER.pending, (state) => {
                 state.status = 'loading';
             })
             .addCase(GET_CURRENT_USER.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.data = action.payload.data;
+                state.userData = action.payload.data;
                 state.role = action.payload.data.role;
             })
             .addCase(GET_CURRENT_USER.rejected, (state, action) => {
@@ -95,6 +130,12 @@ export const userSlice = createSlice({
 
         //USER_LOGIN
         handleAsyncActions(builder, USER_LOGIN);
+
+        //GET_USER_NOTIFICATIONS
+        handleAsyncActions(builder, GET_USER_NOTIFICATIONS);
+
+        //USER_READ_NOTIFICATION
+        handleAsyncActions(builder, USER_READ_NOTIFICATION);
     },
 });
 

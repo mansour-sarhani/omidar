@@ -113,7 +113,9 @@ export async function PUT(req) {
         }
 
         notification.isRead = true;
+        notification.readAt = new Date();
         notification.markModified('isRead');
+        notification.markModified('readAt');
 
         await notification.save();
 

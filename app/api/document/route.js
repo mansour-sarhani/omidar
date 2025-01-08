@@ -72,6 +72,8 @@ export async function POST(req) {
                 uploadedFile.type === 'application/pdf' ||
                 uploadedFile.type === 'image/svg+xml' ||
                 uploadedFile.type === 'application/zip' ||
+                uploadedFile.type === 'application/x-zip-compressed' ||
+                uploadedFile.type === 'multipart/x-zip' ||
                 uploadedFile.type === 'application/x-rar-compressed')
         ) {
             const uniqueName = uuidv4() + path.extname(uploadedFile.name);
@@ -113,6 +115,8 @@ export async function POST(req) {
                 sampleFile.type === 'application/pdf' ||
                 sampleFile.type === 'image/svg+xml' ||
                 sampleFile.type === 'application/zip' ||
+                sampleFile.type === 'application/x-zip-compressed' ||
+                sampleFile.type === 'multipart/x-zip' ||
                 sampleFile.type === 'application/x-rar-compressed')
         ) {
             const uniqueName = uuidv4() + path.extname(sampleFile.name);

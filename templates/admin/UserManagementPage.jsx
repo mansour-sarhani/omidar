@@ -21,6 +21,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { Box } from '@mui/system';
+import ChangePasswordModal from '@/components/modals/ChangePasswordModal';
 
 export default function UserManagementPage() {
     const [users, setUsers] = useState(null);
@@ -56,9 +58,10 @@ export default function UserManagementPage() {
         <div className="panel-content-container">
             <div className="panel-inner-header">
                 <div className="panel-inner-header-text">
-                    <Typography variant="h5">مدیریت کارکنان</Typography>
+                    <Typography variant="h5">مدیریت افراد مجموعه</Typography>
                     <Typography variant="body2">
-                        در این قسمت میتوانید افراد مجموعه را مدیریت نمایید.
+                        در این قسمت میتوانید افراد مجموعه را مدیریت کنید یا
+                        همکار جدید اضافه نمایید.
                     </Typography>
                 </div>
                 <PanelModal
@@ -78,11 +81,16 @@ export default function UserManagementPage() {
                         <Table aria-label="users table">
                             <TableHead sx={{ backgroundColor: '#ccc' }}>
                                 <TableRow>
-                                    <TableCell align="center">شناسه</TableCell>
-                                    <TableCell align="center">تصویر</TableCell>
-                                    <TableCell align="center">
+                                    <TableCell align="center" width={50}>
+                                        شناسه
+                                    </TableCell>
+                                    <TableCell align="right">
                                         نام و نام خانوادگی
                                     </TableCell>
+                                    <TableCell align="center">
+                                        شماره تماس
+                                    </TableCell>
+                                    <TableCell align="center">ایمیل</TableCell>
                                     <TableCell align="center">نقش</TableCell>
                                     <TableCell align="center">وضعیت</TableCell>
                                     <TableCell align="center">
@@ -103,15 +111,27 @@ export default function UserManagementPage() {
                                         <TableCell align="center">
                                             {user.Id}
                                         </TableCell>
-                                        <TableCell align="center">
-                                            <div className="panel-table-image-wrapper">
-                                                <OmAvatar person={user} />
-                                            </div>
+                                        <TableCell align="right">
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '10px',
+                                                }}
+                                            >
+                                                <div className="panel-table-image-wrapper">
+                                                    <OmAvatar person={user} />
+                                                </div>
+                                                {user.firstName +
+                                                    ' ' +
+                                                    user.lastName}
+                                            </Box>
                                         </TableCell>
                                         <TableCell align="center">
-                                            {user.firstName +
-                                                ' ' +
-                                                user.lastName}
+                                            {user.mobile}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            {user.email}
                                         </TableCell>
                                         <TableCell align="center">
                                             {FA.role[user.role]}
@@ -139,6 +159,10 @@ export default function UserManagementPage() {
                                                         }
                                                     />
                                                 </PanelModal>
+                                                <ChangePasswordModal
+                                                    type="user"
+                                                    data={user}
+                                                />
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -147,7 +171,7 @@ export default function UserManagementPage() {
                                     <TableRow
                                         style={{ height: 53 * emptyRows }}
                                     >
-                                        <TableCell colSpan={7} />
+                                        <TableCell colSpan={8} />
                                     </TableRow>
                                 )}
                             </TableBody>
@@ -155,7 +179,7 @@ export default function UserManagementPage() {
                                 rows={users}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
-                                colSpan={7}
+                                colSpan={8}
                                 handleChangePage={handleChangePage}
                                 handleChangeRowsPerPage={
                                     handleChangeRowsPerPage

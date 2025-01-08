@@ -58,7 +58,8 @@ export default function ContractManagementPage() {
                 <div className="panel-inner-header-text">
                     <Typography variant="h5">مدیریت قراردادها</Typography>
                     <Typography variant="body2">
-                        در این قسمت میتوانید قراردادها را مدیریت نمایید.
+                        در این قسمت میتوانید قراردادها را مدیریت کنید و یا
+                        قرارداد جدید ایجاد نمایید.
                     </Typography>
                 </div>
                 <PanelModal
@@ -129,6 +130,7 @@ export default function ContractManagementPage() {
                                                     <Button
                                                         variant="outlined"
                                                         color="primary"
+                                                        size="small"
                                                     >
                                                         <Settings />
                                                         مدیریت قرارداد

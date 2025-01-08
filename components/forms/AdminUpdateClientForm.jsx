@@ -12,6 +12,7 @@ import Check from '@mui/icons-material/Check';
 const initialValues = {
     firstName: '',
     lastName: '',
+    username: '',
     nationalId: '',
     fatherName: '',
     zipCode: '',
@@ -27,6 +28,7 @@ const validationSchema = Yup.object({
     nationalId: Yup.string().required('وارد کردن کد ملی ضروری است'),
     firstName: Yup.string().required('وارد کردن نام ضروری است'),
     lastName: Yup.string().required('وارد کردن نام خانوادگی ضروری است'),
+    username: Yup.string().required('وارد کردن نام کاربری ضروری است'),
     email: Yup.string().required('وارد کردن ایمیل ضروری است'),
     mobile: Yup.string().required('وارد کردن شماره موبایل ضروری است'),
 });
@@ -64,6 +66,10 @@ export default function AdminUpdateClientForm(props) {
                     lastName:
                         values.lastName !== currentData.lastName
                             ? values.lastName
+                            : null,
+                    username:
+                        values.username !== currentData.username
+                            ? values.username
                             : null,
                     nationalId:
                         values.nationalId !== currentData.nationalId
@@ -148,13 +154,6 @@ export default function AdminUpdateClientForm(props) {
                                 <option value="banned">مسدود شده</option>
                             </NativeSelect>
                         </FormControl>
-                        <OmTextInput name="nationalId" label="کد ملی*" />
-                    </div>
-                    <div className="panel-grid-two">
-                        <OmTextInput name="firstName" label="نام*" />
-                        <OmTextInput name="lastName" label="نام خانوادگی*" />
-                    </div>
-                    <div className="panel-grid-two">
                         <FormControl className="om-form-control">
                             <label htmlFor="sex-select" className="om-label">
                                 جنسیت
@@ -178,18 +177,29 @@ export default function AdminUpdateClientForm(props) {
                                 <option value="female">خانم</option>
                             </NativeSelect>
                         </FormControl>
+                    </div>
+                    <div className="panel-grid-two">
+                        <OmTextInput name="nationalId" label="کد ملی*" />
+                        <OmTextInput name="username" label="نام کاربری*" />
+                    </div>
+                    <div className="panel-grid-two">
+                        <OmTextInput name="firstName" label="نام*" />
+                        <OmTextInput name="lastName" label="نام خانوادگی*" />
+                    </div>
+                    <div className="panel-grid-two">
                         <OmTextInput name="fatherName" label="نام پدر" />
+                        <OmDatePicker
+                            name="dateOfBirth"
+                            label="تاریخ تولد"
+                            setFieldValue={setFieldValue}
+                            savedValue={values.dateOfBirth}
+                        />
                     </div>
                     <div className="panel-grid-two">
                         <OmTextInput name="email" label="ایمیل*" />
                         <OmTextInput name="mobile" label="شماره موبایل*" />
                     </div>
-                    <OmDatePicker
-                        name="dateOfBirth"
-                        label="تاریخ تولد"
-                        setFieldValue={setFieldValue}
-                        savedValue={values.dateOfBirth}
-                    />
+
                     <OmTextInput name="zipCode" label="کد پستی" />
                     <OmTextInput name="address" label="آدرس" />
 

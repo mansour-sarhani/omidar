@@ -36,7 +36,7 @@ const validationSchema = Yup.object({
 export default function DocumentCommentModal(props) {
     const [open, setOpen] = useState(false);
 
-    const { document, userId, setDoReload } = props;
+    const { document, userId, type, setDoReload } = props;
 
     const { dispatch, enqueueSnackbar } = useCommonHooks();
 
@@ -65,7 +65,7 @@ export default function DocumentCommentModal(props) {
                 onClick={handleOpen}
             >
                 <Note />
-                پیام ها
+                اعلان ها
             </Button>
             <Modal
                 open={open}
@@ -74,7 +74,7 @@ export default function DocumentCommentModal(props) {
                 aria-describedby="document-comment-modal-description"
             >
                 <Box sx={style}>
-                    <Typography variant="h6">پیام های چک لیست فایل</Typography>
+                    <Typography variant="h6">اعلان های چک لیست فایل</Typography>
                     <div className="document-comments-wrapper">
                         {document.comments.length > 0 ? (
                             document.comments.map((comment, index) => (
@@ -109,66 +109,67 @@ export default function DocumentCommentModal(props) {
                             </Typography>
                         )}
                     </div>
-
-                    <Formik
-                        initialValues={initialValues}
-                        validate={validate}
-                        validateOnChange={false}
-                        validateOnBlur={false}
-                        onSubmit={async (
-                            values,
-                            { setSubmitting, resetForm }
-                        ) => {
-                            const data = {
-                                comment: values.comment,
-                                documentId: document._id,
-                                contractId: document.contractId,
-                                userId: userId,
-                            };
-                            await addCommentToDocument(
-                                dispatch,
-                                enqueueSnackbar,
-                                data
-                            );
-                            setSubmitting(false);
-                            resetForm();
-                            setDoReload(true);
-                            handleClose(true);
-                        }}
-                    >
-                        {({ isSubmitting }) => (
-                            <Form className="om-form panel-form">
-                                <OmTextArea
-                                    name={'comment'}
-                                    label={' پیام جدید'}
-                                />
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        gap: 1,
-                                    }}
-                                >
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        color="primary"
-                                        disabled={isSubmitting}
+                    {type !== 'view' && (
+                        <Formik
+                            initialValues={initialValues}
+                            validate={validate}
+                            validateOnChange={false}
+                            validateOnBlur={false}
+                            onSubmit={async (
+                                values,
+                                { setSubmitting, resetForm }
+                            ) => {
+                                const data = {
+                                    comment: values.comment,
+                                    documentId: document._id,
+                                    contractId: document.contractId,
+                                    userId: userId,
+                                };
+                                await addCommentToDocument(
+                                    dispatch,
+                                    enqueueSnackbar,
+                                    data
+                                );
+                                setSubmitting(false);
+                                resetForm();
+                                setDoReload(true);
+                                handleClose(true);
+                            }}
+                        >
+                            {({ isSubmitting }) => (
+                                <Form className="om-form panel-form">
+                                    <OmTextArea
+                                        name={'comment'}
+                                        label={' پیام جدید'}
+                                    />
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            gap: 1,
+                                        }}
                                     >
-                                        <AddIcon />
-                                        ارسال
-                                    </Button>
-                                    <Button
-                                        variant="outlined"
-                                        color="error"
-                                        onClick={handleClose}
-                                    >
-                                        بستن
-                                    </Button>
-                                </Box>
-                            </Form>
-                        )}
-                    </Formik>
+                                        <Button
+                                            type="submit"
+                                            variant="contained"
+                                            color="primary"
+                                            disabled={isSubmitting}
+                                        >
+                                            <AddIcon />
+                                            ارسال
+                                        </Button>
+                                        <Button
+                                            variant="outlined"
+                                            color="error"
+                                            onClick={handleClose}
+                                        >
+                                            بستن
+                                        </Button>
+                                    </Box>
+                                </Form>
+                            )}
+                        </Formik>
+                    )}
                 </Box>
             </Modal>
         </div>

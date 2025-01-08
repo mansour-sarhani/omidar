@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toggleTheme } from '@/redux/features/settingsSlice';
 import useCommonHooks from '@/hooks/useCommonHooks';
+import { useSocket } from '@/providers/SocketProvider';
 import userLogout from '@/functions/user/userLogout';
 import WebAdminHeader from '@/layouts/admin/header/_webAdminHeader';
 
@@ -11,6 +12,8 @@ export default function AdminHeader({ user }) {
     const viewPort = useSelector((state) => state.public.viewPort);
 
     const { dispatch, enqueueSnackbar, router } = useCommonHooks();
+
+    const socket = useSocket();
 
     const handleLogout = async () => {
         await userLogout(enqueueSnackbar, router);
@@ -44,6 +47,35 @@ export default function AdminHeader({ user }) {
         }
     }, [isDarkMode]);
 
+    useEffect(() => {
+        if (socket.connected) {
+            onConnect();
+        }
+
+        function onConnect() {
+            console.log('Connected to socket server:', socket.id);
+            socket.emit('joinRoom', user._id);
+        }
+
+        function onDisconnect() {
+            console.log('socket is disconnected.');
+        }
+
+        socket.on('connect', onConnect);
+        socket.on('disconnect', onDisconnect);
+
+        socket.on('notification', (data) => {
+            if (data.receiver.includes(user._id)) {
+                enqueueSnackbar(data.message, { variant: 'info' });
+            }
+        });
+
+        return () => {
+            socket.off('connect', onConnect);
+            socket.off('disconnect', onDisconnect);
+        };
+    }, [enqueueSnackbar, socket, user]);
+
     if (viewPort === 'desktop') {
         return (
             <WebAdminHeader
@@ -51,6 +83,7 @@ export default function AdminHeader({ user }) {
                 isDarkMode={isDarkMode}
                 toggleDarkMode={toggleDarkMode}
                 handleLogout={handleLogout}
+                socket={socket}
             />
         );
     } else {
@@ -60,6 +93,7 @@ export default function AdminHeader({ user }) {
                 isDarkMode={isDarkMode}
                 toggleDarkMode={toggleDarkMode}
                 handleLogout={handleLogout}
+                socket={socket}
             />
         );
     }
