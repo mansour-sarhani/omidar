@@ -28,6 +28,16 @@ export async function POST(req) {
                 );
             }
 
+            if (user.status === 'banned') {
+                return NextResponse.json(
+                    {
+                        success: false,
+                        message: 'حساب کاربری شما مسدود شده است.',
+                    },
+                    { status: 401 }
+                );
+            }
+
             const isValid = await verifyPassword(password, user.password);
 
             if (!isValid) {
@@ -50,6 +60,16 @@ export async function POST(req) {
                         message: 'متقاضی با این نام کاربری پیدا نشد.',
                     },
                     { status: 404 }
+                );
+            }
+
+            if (client.status === 'banned') {
+                return NextResponse.json(
+                    {
+                        success: false,
+                        message: 'حساب کاربری شما مسدود شده است.',
+                    },
+                    { status: 401 }
                 );
             }
 

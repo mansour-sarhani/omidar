@@ -16,9 +16,17 @@ export async function GET(req) {
 
     if (!urlValue || !fs.existsSync(imagePath)) {
         const readStream = fs.createReadStream(placeholderPath);
-        return new NextResponse(readStream);
+        return new NextResponse(readStream, {
+            headers: { 'Content-Type': 'image/png' },
+        });
     } else {
         const readStream = fs.createReadStream(imagePath);
-        return new NextResponse(readStream);
+        if (urlValue.endsWith('.svg')) {
+            return new NextResponse(readStream, {
+                headers: { 'Content-Type': 'image/svg+xml' },
+            });
+        } else {
+            return new NextResponse(readStream);
+        }
     }
 }

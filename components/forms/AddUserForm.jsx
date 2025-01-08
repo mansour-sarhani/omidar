@@ -91,7 +91,9 @@ export default function AddUserForm(props) {
                                 </option>
                                 <option value="admin">ادمین</option>
                                 <option value="assisstant">مشاور</option>
-                                <option value="executive">مدیر اجرایی</option>
+                                <option value="chief_executive">
+                                    مدیر اجرایی
+                                </option>
                             </NativeSelect>
 
                             <FormHelperText className="om-form-error">

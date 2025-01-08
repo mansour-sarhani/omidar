@@ -4,7 +4,9 @@ import { handleAsyncActions } from '@/utils/handleAsyncActions';
 
 const initialState = {
     data: null,
+    clientData: null,
     status: 'idle',
+    isLoggedIn: false,
 };
 
 export const GET_CURRENT_CLIENT = createAsyncThunk(
@@ -118,15 +120,76 @@ export const CLIENT_READ_NOTIFICATION = createAsyncThunk(
     }
 );
 
+export const CLIENT_UPLOAD_FILE = createAsyncThunk(
+    'client/CLIENT_UPLOAD_FILE',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.post(
+                '/api/client/document?contractId=' + data.contractId,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const CLIENT_REMOVE_FILE = createAsyncThunk(
+    'client/CLIENT_REMOVE_FILE',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.put(
+                '/api/client/document?contractId=' + data.contractId,
+                formData
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
 export const clientSlice = createSlice({
     name: 'client',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder;
-
-        //GET_CURRENT_CLIENT
-        handleAsyncActions(builder, GET_CURRENT_CLIENT);
+        builder
+            //GET_CURRENT_CLIENT
+            .addCase(GET_CURRENT_CLIENT.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(GET_CURRENT_CLIENT.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.clientData = action.payload.data;
+                state.isLoggedIn = true;
+            })
+            .addCase(GET_CURRENT_CLIENT.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            });
 
         //CLIENT_UPDATE_PROFILE
         handleAsyncActions(builder, CLIENT_UPDATE_PROFILE);
@@ -142,6 +205,12 @@ export const clientSlice = createSlice({
 
         //CLIENT_READ_NOTIFICATION
         handleAsyncActions(builder, CLIENT_READ_NOTIFICATION);
+
+        //CLIENT_UPLOAD_FILE
+        handleAsyncActions(builder, CLIENT_UPLOAD_FILE);
+
+        //CLIENT_REMOVE_FILE
+        handleAsyncActions(builder, CLIENT_REMOVE_FILE);
     },
 });
 

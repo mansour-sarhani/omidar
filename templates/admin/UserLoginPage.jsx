@@ -1,13 +1,19 @@
 'use client';
 
-import { useEffect } from 'react';
+import Cookies from 'js-cookie';
+import { useEffect, useState } from 'react';
 import useCommonHooks from '@/hooks/useCommonHooks';
 import UserLoginForm from '@/components/forms/UserLoginForm';
+import { jwtDecode } from 'jwt-decode';
+import IsLoading from '@/components/common/IsLoading';
 
 export default function UserLoginPage() {
+    const [token, setToken] = useState(null);
     const { enqueueSnackbar, router, searchParams } = useCommonHooks();
 
     const logout = searchParams.get('logout');
+
+    const currentToken = Cookies.get('om_token');
 
     useEffect(() => {
         if (logout === 'success') {
@@ -17,6 +23,21 @@ export default function UserLoginPage() {
             });
         }
     }, [enqueueSnackbar, logout, router, searchParams]);
+
+    useEffect(() => {
+        setToken(currentToken);
+
+        if (token) {
+            const decoded = jwtDecode(token);
+            if (decoded.type === 'user') {
+                router.replace('/admin/dashboard');
+            }
+        }
+    }, [currentToken, router, token]);
+
+    if (token === null) {
+        return <IsLoading isLoading={true} />;
+    }
 
     return (
         <div className="inner-page auth-page">

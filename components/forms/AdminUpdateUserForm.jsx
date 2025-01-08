@@ -13,6 +13,7 @@ import Check from '@mui/icons-material/Check';
 const initialValues = {
     firstName: '',
     lastName: '',
+    username: '',
     nationalId: '',
     email: '',
     mobile: '',
@@ -27,6 +28,7 @@ const validationSchema = Yup.object({
     lastName: Yup.string().required('وارد کردن نام خانوادگی ضروری است'),
     email: Yup.string().required('وارد کردن ایمیل ضروری است'),
     mobile: Yup.string().required('وارد کردن شماره موبایل ضروری است'),
+    username: Yup.string().required('وارد کردن نام کاربری ضروری است'),
 });
 
 export default function AdminUpdateUserForm(props) {
@@ -63,6 +65,12 @@ export default function AdminUpdateUserForm(props) {
                         values.lastName !== currentData.lastName
                             ? values.lastName
                             : null,
+
+                    username:
+                        values.username !== currentData.username
+                            ? values.username
+                            : null,
+
                     nationalId:
                         values.nationalId !== currentData.nationalId
                             ? values.nationalId
@@ -111,40 +119,6 @@ export default function AdminUpdateUserForm(props) {
                 <Form className="om-form panel-form">
                     <div className="panel-grid-two">
                         <FormControl className="om-form-control">
-                            <label htmlFor="role-select" className="om-label">
-                                نقش کاربر*
-                            </label>
-                            <NativeSelect
-                                defaultValue={values.role}
-                                inputProps={{
-                                    name: 'role',
-                                    id: 'role-select',
-                                }}
-                                onChange={(e) => {
-                                    handleChange(e);
-                                    setFieldValue('role', e.target.value);
-                                }}
-                                className="om-select"
-                            >
-                                <option value="admin">ادمین</option>
-                                <option value="assisstant">مشاور</option>
-                                <option value="executive">مدیر اجرایی</option>
-                            </NativeSelect>
-                        </FormControl>
-
-                        <OmTextInput name="nationalId" label="کد ملی*" />
-                    </div>
-                    <div className="panel-grid-two">
-                        <OmTextInput name="firstName" label="نام*" />
-                        <OmTextInput name="lastName" label="نام خانوادگی*" />
-                    </div>
-                    <div className="panel-grid-two">
-                        <OmTextInput name="email" label="ایمیل*" />
-                        <OmTextInput name="mobile" label="شماره موبایل*" />
-                    </div>
-
-                    <div className="panel-grid-two">
-                        <FormControl className="om-form-control">
                             <label htmlFor="status-select" className="om-label">
                                 وضعیت*
                             </label>
@@ -165,6 +139,41 @@ export default function AdminUpdateUserForm(props) {
                                 <option value="banned">مسدود شده</option>
                             </NativeSelect>
                         </FormControl>
+                        <FormControl className="om-form-control">
+                            <label htmlFor="role-select" className="om-label">
+                                نقش کاربر*
+                            </label>
+                            <NativeSelect
+                                defaultValue={values.role}
+                                inputProps={{
+                                    name: 'role',
+                                    id: 'role-select',
+                                }}
+                                onChange={(e) => {
+                                    handleChange(e);
+                                    setFieldValue('role', e.target.value);
+                                }}
+                                className="om-select"
+                            >
+                                <option value="admin">ادمین</option>
+                                <option value="assisstant">مشاور</option>
+                                <option value="chief_executive">
+                                    مدیر اجرایی
+                                </option>
+                            </NativeSelect>
+                        </FormControl>
+                    </div>
+                    <div className="panel-grid-two">
+                        <OmTextInput name="nationalId" label="کد ملی*" />
+                        <OmTextInput name="username" label="نام کاربری*" />
+                    </div>
+                    <div className="panel-grid-two">
+                        <OmTextInput name="firstName" label="نام*" />
+                        <OmTextInput name="lastName" label="نام خانوادگی*" />
+                    </div>
+                    <div className="panel-grid-two">
+                        <OmTextInput name="email" label="ایمیل*" />
+                        <OmTextInput name="mobile" label="شماره موبایل*" />
                     </div>
 
                     <div className="panel-new-img-container">

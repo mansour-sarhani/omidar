@@ -8,7 +8,7 @@ async function userLogout(enqueueSnackbar, router) {
             Cookies.remove(key);
         });
 
-        router.push('/admin/login?logout=success');
+        router.push('/auth/admin/login?logout=success');
     } catch (err) {
         const errorMessage = err.message;
 

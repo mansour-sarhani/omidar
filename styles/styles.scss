@@ -224,6 +224,58 @@ button a {
     margin-left: 8px;
 }
 
+.MuiStepLabel-root.MuiStepLabel-vertical {
+    text-align: right;
+
+    .MuiStepLabel-iconContainer {
+        padding-left: 8px;
+        padding-right: 0;
+
+        svg {
+            width: 2rem;
+            height: 2rem;
+            color: var(--secondary-color);
+        }
+    }
+}
+
+.MuiStepConnector-root.MuiStepConnector-vertical {
+    margin-right: 15px;
+    margin-left: 0;
+
+    .MuiStepConnector-line.MuiStepConnector-lineVertical {
+        border-left-style: solid;
+        border-left-width: 0;
+        border-right-style: solid;
+        border-right-width: 1px;
+    }
+}
+
+.MuiStepContent-root {
+    margin-left: 0;
+    margin-right: 15px;
+    padding-left: 8px;
+    padding-right: 20px;
+    border-left: none !important;
+    border-right: 1px solid #bdbdbd;
+}
+
+.MuiCollapse-root.MuiCollapse-vertical.MuiStepContent-transition {
+    height: auto;
+    visibility: visible
+}
+
+.MuiStepLabel-label {
+    display: flex !important;
+    align-items: center;
+    gap: 5px;
+}
+
+.MuiStepLabel-label.Mui-active {
+    font-weight: 400 !important;
+    color: inherit !important;
+}
+
 /* FORM */
 .om-form {
     display: flex;
@@ -382,11 +434,8 @@ input::-webkit-inner-spin-button {
 
 /* HEADER */
 .header {
-    position: sticky;
-    top: 0;
     width: 100%;
-    z-index: 10; 
-     
+
     .header-container {
         display: flex;
         width: 100%;
@@ -712,6 +761,7 @@ input::-webkit-inner-spin-button {
     
             li.active-menu {
                 border-right: 3px solid var(--primary-color);
+                background-color: rgb(0 51 153 / 9%);
     
                 a {
                     color: var(--primary-color) !important;
@@ -775,7 +825,7 @@ input::-webkit-inner-spin-button {
         width: 100%;
     }
 
-    img {
+    > img {
         min-height: 80px;
     }
 }
@@ -1000,9 +1050,15 @@ input::-webkit-inner-spin-button {
 
     .notification-item.is-read {
         border-right: 8px solid var(--success-color);
+        background-color: var(--card-color);
     }
 
     .notification-item.is-unread {
         border-right: 8px solid var(--secondary-color);
     }
+}
+
+.history-wrapper {
+    display: flex;
+    justify-content: center;
 }

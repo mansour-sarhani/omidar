@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import DocTemplate from '@/models/DocTemplate';
+import Counter from '@/models/Counter';
 
 //ADD DOCUMENT TEMPLATE => "/api/document/template"
 export async function POST(req) {
@@ -51,6 +52,8 @@ export async function POST(req) {
                 sampleFile.type === 'application/pdf' ||
                 sampleFile.type === 'image/svg+xml' ||
                 sampleFile.type === 'application/zip' ||
+                sampleFile.type === 'application/x-zip-compressed' ||
+                sampleFile.type === 'multipart/x-zip' ||
                 sampleFile.type === 'application/x-rar-compressed')
         ) {
             const uniqueName = uuidv4() + path.extname(sampleFile.name);
@@ -81,6 +84,13 @@ export async function POST(req) {
                 url: uniqueName,
             };
         }
+
+        const counter = await Counter.findByIdAndUpdate(
+            { _id: 'docTemplateId' },
+            { $inc: { seq: 1 } },
+            { new: true, upsert: true }
+        );
+        docTemplateData.Id = counter.seq;
 
         const newDocTemplate = new DocTemplate(docTemplateData);
         await newDocTemplate.save();
@@ -213,6 +223,8 @@ export async function PUT(req) {
                 sampleFile.type === 'application/pdf' ||
                 sampleFile.type === 'image/svg+xml' ||
                 sampleFile.type === 'application/zip' ||
+                sampleFile.type === 'application/x-zip-compressed' ||
+                sampleFile.type === 'multipart/x-zip' ||
                 sampleFile.type === 'application/x-rar-compressed')
         ) {
             const uniqueName = uuidv4() + path.extname(sampleFile.name);

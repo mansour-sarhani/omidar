@@ -5,6 +5,7 @@ import ApprovalIcon from '@mui/icons-material/Approval';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
+import HistoryIcon from '@mui/icons-material/History';
 import { usePathname } from 'next/navigation';
 
 export default function ClientContractNavigation({ contractNo }) {
@@ -83,6 +84,18 @@ export default function ClientContractNavigation({ contractNo }) {
             >
                 <PaymentsIcon />
                 پرداخت ها
+            </Button>
+            <Button
+                variant="outlined"
+                href={`/panel/contract/${contractNo}/history`}
+                className={
+                    pathname === `/panel/contract/${contractNo}/history`
+                        ? 'active'
+                        : ''
+                }
+            >
+                <HistoryIcon />
+                تاریخچه
             </Button>
         </div>
     );

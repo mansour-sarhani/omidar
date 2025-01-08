@@ -18,7 +18,7 @@ const FA = {
     role: {
         admin: 'ادمین',
         assisstant: 'مشاور',
-        executive: 'مدیر اجرایی',
+        chief_executive: 'مدیر اجرایی',
     },
 };
 

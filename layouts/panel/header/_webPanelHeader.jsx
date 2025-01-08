@@ -14,21 +14,34 @@ import getClientNotifications from '@/functions/client/getClientNotifications';
 
 export default function WebPanelHeader(props) {
     const [notifications, setNotifications] = useState([]);
-    const { client, isDarkMode, toggleDarkMode, handleLogout } = props;
+    const [doReload, setDoReload] = useState(true);
+
+    const { client, isDarkMode, toggleDarkMode, handleLogout, socket } = props;
 
     const { dispatch, enqueueSnackbar } = useCommonHooks();
 
     useEffect(() => {
-        async function getUnreadNotifications() {
-            await getClientNotifications(
-                dispatch,
-                enqueueSnackbar,
-                setNotifications,
-                'unread'
-            );
+        if (doReload) {
+            async function getUnreadNotifications() {
+                await getClientNotifications(
+                    dispatch,
+                    enqueueSnackbar,
+                    setNotifications,
+                    'unread'
+                );
+                setDoReload(false);
+            }
+            getUnreadNotifications();
         }
-        getUnreadNotifications();
-    }, [dispatch, enqueueSnackbar]);
+    }, [dispatch, doReload, enqueueSnackbar, setDoReload]);
+
+    useEffect(() => {
+        socket.on('notification', (data) => {
+            if (data.receiver.includes(client._id)) {
+                setDoReload(true);
+            }
+        });
+    }, [client, socket]);
 
     return (
         <header className="header panel-header">
@@ -65,7 +78,7 @@ export default function WebPanelHeader(props) {
                             </Button>
                         </li>
                         <li className="menu-item link-item">
-                            <Tooltip title="پیام ها">
+                            <Tooltip title="اعلان ها">
                                 <Button
                                     variant="text"
                                     className="header-util-button"

@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import useContract from '@/hooks/useContract';
 import useCommonHooks from '@/hooks/useCommonHooks';
 import { dateFormatter } from '@/utils/dateFormatter';
@@ -33,9 +32,8 @@ export default function ContractOffersPage({ contractNo }) {
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
     const { contract } = useContract(contractNo);
-    const user = useSelector((state) => state.user.data);
 
-    const { dispatch, enqueueSnackbar } = useCommonHooks();
+    const { dispatch, enqueueSnackbar, userData } = useCommonHooks();
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shops.length) : 0;
@@ -53,7 +51,7 @@ export default function ContractOffersPage({ contractNo }) {
         const data = {
             offerId: id,
             contractId: contract._id,
-            userId: user._id,
+            userId: userData._id,
         };
         async function removeItem() {
             await removeOfferFromContract(dispatch, enqueueSnackbar, data);
@@ -102,7 +100,7 @@ export default function ContractOffersPage({ contractNo }) {
                         <AddOfferForm
                             setDoReload={setDoReload}
                             contractId={contract._id}
-                            userId={user._id}
+                            userId={userData._id}
                         />
                     </PanelModal>
                 </div>
@@ -217,7 +215,9 @@ export default function ContractOffersPage({ contractNo }) {
                                                             contractId={
                                                                 contract._id
                                                             }
-                                                            userId={user._id}
+                                                            userId={
+                                                                userData._id
+                                                            }
                                                         />
                                                     </PanelModal>
                                                     <DeleteModal

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import useCommonHooks from '@/hooks/useCommonHooks';
 import createContract from '@/functions/contract/createContract';
 import adminGetAllClients from '@/functions/admin/clients/adminGetAllClients';
@@ -31,9 +30,7 @@ export default function AddContractForm(props) {
 
     const { handleClose, setDoReload } = props;
 
-    const { dispatch, enqueueSnackbar } = useCommonHooks();
-
-    const user = useSelector((state) => state.user.data);
+    const { dispatch, enqueueSnackbar, userData } = useCommonHooks();
 
     const validate = (values) => {
         const errors = {};
@@ -67,7 +64,7 @@ export default function AddContractForm(props) {
                     contractNo: values.contractNo,
                     clientId: values.clientId,
                     countryId: values.countryId,
-                    createdBy: user._id,
+                    createdBy: userData._id,
                 };
                 await createContract(dispatch, enqueueSnackbar, data);
                 setSubmitting(false);

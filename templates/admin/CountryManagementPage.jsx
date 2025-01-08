@@ -120,7 +120,7 @@ export default function CountryManagementPage() {
                                             <div className="panel-table-image-wrapper">
                                                 <OmImage
                                                     name={country.flag}
-                                                    variant="circle"
+                                                    variant="rounded"
                                                     width={50}
                                                     height={50}
                                                 />

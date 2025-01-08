@@ -16,6 +16,7 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { dateFormatter } from '@/utils/dateFormatter';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import clientReadNotification from '@/functions/client/clientReadNotification';
+import { dateTimeFormatter } from '@/utils/dateTimeFormatter';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -88,9 +89,9 @@ export default function ClientNotificationsPage() {
         <div className="panel-content-container">
             <div className="panel-inner-header">
                 <div className="panel-inner-header-text">
-                    <Typography variant="h5">پیام ها</Typography>
+                    <Typography variant="h5">اعلان ها</Typography>
                     <Typography variant="body2">
-                        در این قسمت میتوانید پیام های ارسال شده برای شما را
+                        در این قسمت میتوانید اعلان های ارسال شده برای شما را
                         مشاهده نمایید.
                     </Typography>
                 </div>
@@ -100,19 +101,19 @@ export default function ClientNotificationsPage() {
                 <Tab
                     icon={<NotificationsNoneIcon />}
                     iconPosition="start"
-                    label="همه پیام ها"
+                    label="همه اعلان ها"
                     {...a11yProps(0)}
                 />
                 <Tab
                     icon={<NotificationsOffIcon />}
                     iconPosition="start"
-                    label="پیام های خوانده شده"
+                    label="اعلان های خوانده شده"
                     {...a11yProps(1)}
                 />
                 <Tab
                     icon={<NotificationsActiveIcon />}
                     iconPosition="start"
-                    label="پیام های خوانده نشده"
+                    label="اعلان های خوانده نشده"
                     {...a11yProps(2)}
                 />
             </Tabs>
@@ -156,7 +157,7 @@ export default function ClientNotificationsPage() {
                                         {item.body}
                                     </Typography>
                                     <Typography variant="body2">
-                                        {dateFormatter(item.createdAt)}
+                                        {dateTimeFormatter(item.createdAt)}
                                     </Typography>
                                 </div>
                             </div>

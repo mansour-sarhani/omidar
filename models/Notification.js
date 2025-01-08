@@ -28,7 +28,10 @@ const notificationSchema = new Schema(
         sender: {
             type: Schema.Types.ObjectId,
             ref: 'User',
-            required: true,
+        },
+        senderModel: {
+            type: String,
+            enum: ['system', 'manual'],
         },
         receiver: [
             {

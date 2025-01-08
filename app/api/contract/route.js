@@ -6,15 +6,16 @@ import Contract from '@/models/Contract';
 import User from '@/models/User';
 import Activity from '@/models/Activity';
 import Client from '@/models/Client';
+import Notification from '@/models/Notification';
 import Country from '@/models/Country';
 import Admission from '@/models/Admission';
 import Document from '@/models/Document';
 import Message from '@/models/Message';
-import Notification from '@/models/Notification';
 import Offer from '@/models/Offer';
 import Payment from '@/models/Payment';
 import Pickup from '@/models/Pickup';
 import Visa from '@/models/Visa';
+import { notify } from '@/utils/notify';
 
 //CREATE CONTRACT => "/api/contract"
 export async function POST(req) {
@@ -227,7 +228,12 @@ export async function GET(req) {
                 .populate('payments')
                 .populate('pickups')
                 .populate('visas')
-                .populate('activities')
+                .populate({
+                    path: 'activities',
+                    populate: {
+                        path: 'performedBy',
+                    },
+                })
                 .populate('messages');
 
             if (!contract) {
@@ -323,7 +329,7 @@ export async function GET(req) {
 }
 
 //UPDATE CONTRACT => "/api/contract?contractId=66bf44d3d02d846c4368ced0"
-export async function PUT(req) {
+export async function PUT(req, res) {
     await dbConnect();
 
     const authError = await authMiddleware(req);
@@ -386,12 +392,13 @@ export async function PUT(req) {
         const user = await User.findById(userId);
 
         const userName = user.firstName + ' ' + user.lastName;
+        const message = `قرارداد شماره ${contract.contractNo} توسط ${userName} به روزرسانی شد.`;
 
         const activityRecord = {
             action: 'update',
             performedBy: userId,
             performedByModel: 'User',
-            details: `قرارداد توسط ${userName} به روزرسانی شد.`,
+            details: message,
             contractId: contractId,
             timestamp: new Date(),
         };
@@ -405,7 +412,7 @@ export async function PUT(req) {
 
         const newNotification = {
             subject: 'اطلاعیه',
-            body: `قرارداد شماره ${contract.contractNo} توسط ${userName} به روزرسانی شد.`,
+            body: message,
             type: 'info',
             sender: userId,
             receiver: [contract.client],
@@ -419,6 +426,10 @@ export async function PUT(req) {
         client.notifications.push(notification._id);
         client.markModified('notifications');
         await client.save();
+
+        const receivers = [client._id];
+
+        notify(message, receivers);
 
         return NextResponse.json({ success: true, contract });
     } catch (error) {

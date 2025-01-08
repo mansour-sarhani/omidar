@@ -45,7 +45,7 @@ const userSchema = new Schema(
         },
         role: {
             type: String,
-            enum: ['assisstant', 'chief-executive', 'admin'],
+            enum: ['assisstant', 'chief_executive', 'admin'],
             required: true,
         },
         status: {

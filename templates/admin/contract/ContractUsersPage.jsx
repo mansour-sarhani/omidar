@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import useCommonHooks from '@/hooks/useCommonHooks';
 import useContract from '@/hooks/useContract';
 import FA from '@/utils/localizationFa';
@@ -32,9 +31,8 @@ export default function ContractUsersPage({ contractNo }) {
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
     const { contract } = useContract(contractNo);
-    const user = useSelector((state) => state.user.data);
 
-    const { dispatch, enqueueSnackbar } = useCommonHooks();
+    const { dispatch, enqueueSnackbar, userData } = useCommonHooks();
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shops.length) : 0;
@@ -52,7 +50,7 @@ export default function ContractUsersPage({ contractNo }) {
         const data = {
             contractId: contract._id,
             userId: userId,
-            performedBy: user._id,
+            performedBy: userData._id,
         };
         async function removeUser() {
             await removeUserFromContract(dispatch, enqueueSnackbar, data);
@@ -101,7 +99,7 @@ export default function ContractUsersPage({ contractNo }) {
                         <AddUserToContractForm
                             setDoReload={setDoReload}
                             contractId={contract._id}
-                            userId={user._id}
+                            userId={userData._id}
                         />
                     </PanelModal>
                 </div>

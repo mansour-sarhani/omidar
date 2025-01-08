@@ -26,9 +26,9 @@ const validationSchema = Yup.object({
 });
 
 export default function AddDocTemplateForm(props) {
-    const { handleClose, setDoReload, uploaderId } = props;
+    const { handleClose, setDoReload } = props;
 
-    const { dispatch, enqueueSnackbar, router } = useCommonHooks();
+    const { dispatch, enqueueSnackbar, userData } = useCommonHooks();
 
     const validate = (values) => {
         const errors = {};
@@ -58,7 +58,7 @@ export default function AddDocTemplateForm(props) {
                     format: values.format,
                     description: values.description,
                     sample: values.sample[0],
-                    uploadBy: uploaderId,
+                    uploadBy: userData._id,
                 };
                 await addDocTemplate(dispatch, enqueueSnackbar, data);
                 setSubmitting(false);

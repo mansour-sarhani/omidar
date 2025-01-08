@@ -36,7 +36,7 @@ export default function PanelSidebar({ client }) {
                             '/panel/notification'
                         )}
                     >
-                        <Link href="/panel/notification">پیام ها</Link>
+                        <Link href="/panel/notification">اعلان ها</Link>
                     </li>
                 </ul>
             </div>
