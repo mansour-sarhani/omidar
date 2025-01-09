@@ -4,7 +4,6 @@ const activitySchema = new Schema(
     {
         Id: {
             type: Number,
-            index: true,
         },
         action: {
             type: String,

@@ -88,10 +88,10 @@ export const GET_CLIENT_CONTRACTS = createAsyncThunk(
 
 export const GET_CLIENT_NOTIFICATIONS = createAsyncThunk(
     'client/GET_CLIENT_NOTIFICATIONS',
-    async (type, { rejectWithValue }) => {
+    async (data, { rejectWithValue }) => {
         try {
             const response = await http.get(
-                `/api/client/notification?type=` + type
+                `/api/client/notification?type=${data.type}&page=${data.page}&limit=${data.limit}`
             );
             return response.data;
         } catch (err) {

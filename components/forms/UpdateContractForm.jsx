@@ -5,6 +5,7 @@ import adminGetAllClients from '@/functions/admin/clients/adminGetAllClients';
 import getAllCountries from '@/functions/country/getAllCountries';
 import OmTextInput from '@/components/inputs/OmTextInput';
 import OmDatePicker from '@/components/inputs/OmDatePicker';
+import IsLoading from '@/components/common/IsLoading';
 import { Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -62,6 +63,9 @@ export default function UpdateContractForm(props) {
         }
         fetchData();
     }, [currentData, dispatch, enqueueSnackbar]);
+
+    if (countries === null || clients === null)
+        return <IsLoading isLoading={true} />;
 
     return (
         <Formik
@@ -211,7 +215,6 @@ export default function UpdateContractForm(props) {
                                 }}
                                 className="om-select"
                             >
-                                <option value="">کشور را انتخاب نمایید</option>
                                 {countries &&
                                     countries.map((country) => (
                                         <option

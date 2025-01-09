@@ -4,7 +4,6 @@ const contractSchema = new Schema(
     {
         Id: {
             type: Number,
-            index: true,
         },
         contractNo: {
             type: Number,
@@ -19,17 +18,6 @@ const contractSchema = new Schema(
         createdBy: {
             type: Schema.Types.ObjectId,
             ref: 'User',
-            required: true,
-        },
-        lastUpdatedBy: {
-            type: Schema.Types.ObjectId,
-            refPath: 'lastUpdatedByModel',
-            required: true,
-        },
-        lastUpdatedByModel: {
-            type: String,
-            required: true,
-            enum: ['User', 'Client'],
         },
         countries: [
             {

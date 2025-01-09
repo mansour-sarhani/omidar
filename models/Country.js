@@ -4,7 +4,6 @@ const countrySchema = new Schema(
     {
         Id: {
             type: Number,
-            index: true,
         },
         nameFarsi: {
             type: String,

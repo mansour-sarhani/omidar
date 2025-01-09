@@ -4,15 +4,19 @@ const pickupSchema = new Schema(
     {
         Id: {
             type: Number,
-            index: true,
         },
         trackingCode: {
             type: String,
             required: true,
         },
+        pickupCode: {
+            type: String,
+        },
+        description: {
+            type: String,
+        },
         date: {
             type: Date,
-            default: Date.now,
         },
         client: {
             type: Schema.Types.ObjectId,
@@ -26,23 +30,11 @@ const pickupSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'Country',
         },
-        users: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'User',
-            },
-        ],
         status: {
             type: String,
-            enum: ['pending', 'completed', 'cancelled'],
+            enum: ['pending', 'completed', 'cancelled', 'deleted'],
             default: 'pending',
             required: true,
-        },
-        pickupCode: {
-            type: String,
-        },
-        description: {
-            type: String,
         },
     },
     { timestamps: true }

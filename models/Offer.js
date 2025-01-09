@@ -4,7 +4,6 @@ const offerSchema = new Schema(
     {
         Id: {
             type: Number,
-            index: true,
         },
         title: {
             type: String,

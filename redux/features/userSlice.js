@@ -73,10 +73,10 @@ export const USER_LOGIN = createAsyncThunk(
 
 export const GET_USER_NOTIFICATIONS = createAsyncThunk(
     'user/GET_USER_NOTIFICATIONS',
-    async (type, { rejectWithValue }) => {
+    async (data, { rejectWithValue }) => {
         try {
             const response = await http.get(
-                `/api/user/notification?type=` + type
+                `/api/user/notification?type=${data.type}&page=${data.page}&limit=${data.limit}`
             );
             return response.data;
         } catch (err) {

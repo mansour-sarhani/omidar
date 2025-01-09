@@ -4,7 +4,6 @@ const documentSchema = new Schema(
     {
         Id: {
             type: Number,
-            index: true,
         },
         documentNo: {
             type: Number,
@@ -35,11 +34,9 @@ const documentSchema = new Schema(
         uploadBy: {
             type: Schema.Types.ObjectId,
             refPath: 'uploadByModel',
-            required: true,
         },
         uploadByModel: {
             type: String,
-            required: true,
             enum: ['User', 'Client'],
         },
         contractId: {

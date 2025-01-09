@@ -4,7 +4,6 @@ const paymentSchema = new Schema(
     {
         Id: {
             type: Number,
-            index: true,
         },
         contractId: {
             type: Schema.Types.ObjectId,

@@ -17,6 +17,8 @@ export async function GET(req) {
 
         const { searchParams } = new URL(req.url);
         const type = searchParams.get('type');
+        const page = parseInt(searchParams.get('page')) || 1;
+        const limit = parseInt(searchParams.get('limit')) || 10;
 
         if (!token) {
             return NextResponse.json(
@@ -45,26 +47,52 @@ export async function GET(req) {
             );
         }
 
+        user.notifications.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
         if (type === 'read') {
             const readNotifications = user.notifications.filter(
                 (item) => item.isRead
             );
+            const total = readNotifications.length;
+            const paginatedNotifications = readNotifications.slice(
+                (page - 1) * limit,
+                page * limit
+            );
+
             return NextResponse.json({
                 success: true,
-                data: readNotifications,
+                total: total,
+                data: paginatedNotifications,
             });
         } else if (type === 'unread') {
             const unReadNotifications = user.notifications.filter(
                 (item) => !item.isRead
             );
+            const total = unReadNotifications.length;
+            const paginatedNotifications = unReadNotifications.slice(
+                (page - 1) * limit,
+                page * limit
+            );
+
             return NextResponse.json({
                 success: true,
-                data: unReadNotifications,
+                total: total,
+                data: paginatedNotifications,
             });
-        } else {
+        } else if (type === 'all') {
+            const filteredNotifications = user.notifications;
+            const total = filteredNotifications.length;
+            const paginatedNotifications = filteredNotifications.slice(
+                (page - 1) * limit,
+                page * limit
+            );
+
             return NextResponse.json({
                 success: true,
-                data: user.notifications,
+                total: total,
+                data: paginatedNotifications,
             });
         }
     } catch (error) {

@@ -11,6 +11,10 @@ import AddContractForm from '@/components/forms/AddContractForm';
 import NoData from '@/components/common/NoData';
 import PanelModal from '@/components/modals/PanelModal';
 import OmProgress from '@/components/common/OmProgress';
+import UpdateContractForm from '@/components/forms/UpdateContractForm';
+import OmAvatar from '@/components/common/OmAvatar';
+import OmImage from '@/components/common/OmIamge';
+import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -79,11 +83,16 @@ export default function ContractManagementPage() {
                         <Table aria-label="contracts table">
                             <TableHead sx={{ backgroundColor: '#ccc' }}>
                                 <TableRow>
-                                    <TableCell align="center">شناسه</TableCell>
+                                    <TableCell align="center" width={70}>
+                                        ردیف
+                                    </TableCell>
                                     <TableCell align="center">
                                         شماره قرارداد
                                     </TableCell>
                                     <TableCell align="center">متقاضی</TableCell>
+                                    <TableCell align="center">
+                                        کارشناسان
+                                    </TableCell>
                                     <TableCell align="center">کشور</TableCell>
                                     <TableCell align="center">وضعیت</TableCell>
                                     <TableCell align="center">
@@ -99,10 +108,10 @@ export default function ContractManagementPage() {
                                           page * rowsPerPage + rowsPerPage
                                       )
                                     : contracts
-                                ).map((contract) => (
+                                ).map((contract, index) => (
                                     <TableRow key={contract._id}>
                                         <TableCell align="center">
-                                            {contract.Id}
+                                            {index + 1}
                                         </TableCell>
                                         <TableCell align="center">
                                             {contract.contractNo}
@@ -112,8 +121,49 @@ export default function ContractManagementPage() {
                                             {contract.client.lastName}
                                         </TableCell>
                                         <TableCell align="center">
+                                            <div className="table-avatar-chips">
+                                                {contract.users.map((user) => (
+                                                    <Chip
+                                                        key={user._id}
+                                                        className="om-avatar-chip"
+                                                        avatar={
+                                                            <OmAvatar
+                                                                person={user}
+                                                                width={30}
+                                                                height={30}
+                                                            />
+                                                        }
+                                                        label={
+                                                            user.firstName +
+                                                            ' ' +
+                                                            user.lastName
+                                                        }
+                                                    />
+                                                ))}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell align="center">
                                             {contract.countries.map(
-                                                (country) => country.nameFarsi
+                                                (country) => (
+                                                    <Chip
+                                                        key={country._id}
+                                                        className="om-country-chip"
+                                                        avatar={
+                                                            <OmImage
+                                                                name={
+                                                                    country.flag
+                                                                }
+                                                                width={30}
+                                                                height={30}
+                                                                variant="rounded"
+                                                            />
+                                                        }
+                                                        label={
+                                                            country.nameFarsi
+                                                        }
+                                                        color="primary"
+                                                    />
+                                                )
                                             )}
                                         </TableCell>
                                         <TableCell align="center">
@@ -128,7 +178,7 @@ export default function ContractManagementPage() {
                                                     href={`/admin/contract/${contract.contractNo}/overview`}
                                                 >
                                                     <Button
-                                                        variant="outlined"
+                                                        variant="contained"
                                                         color="primary"
                                                         size="small"
                                                     >
@@ -136,6 +186,22 @@ export default function ContractManagementPage() {
                                                         مدیریت قرارداد
                                                     </Button>
                                                 </Link>
+
+                                                <PanelModal
+                                                    data={contract}
+                                                    buttonLabel="ویرایش اطلاعات اولیه"
+                                                    modalHeader="ویرایش اطلاعات اولیه"
+                                                    type="table"
+                                                    icon="edit"
+                                                    tooltipTitle="ویرایش اطلاعات اولیه"
+                                                    variant="outlined"
+                                                >
+                                                    <UpdateContractForm
+                                                        setDoReload={
+                                                            setDoReload
+                                                        }
+                                                    />
+                                                </PanelModal>
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -144,7 +210,7 @@ export default function ContractManagementPage() {
                                     <TableRow
                                         style={{ height: 53 * emptyRows }}
                                     >
-                                        <TableCell colSpan={7} />
+                                        <TableCell colSpan={8} />
                                     </TableRow>
                                 )}
                             </TableBody>
@@ -152,7 +218,7 @@ export default function ContractManagementPage() {
                                 rows={contracts}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
-                                colSpan={7}
+                                colSpan={8}
                                 handleChangePage={handleChangePage}
                                 handleChangeRowsPerPage={
                                     handleChangeRowsPerPage

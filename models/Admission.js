@@ -4,7 +4,6 @@ const admissionSchema = new Schema(
     {
         Id: {
             type: Number,
-            index: true,
         },
         title: {
             type: String,
@@ -36,7 +35,7 @@ const admissionSchema = new Schema(
         },
         status: {
             type: String,
-            enum: ['pending', 'approved', 'rejected'],
+            enum: ['pending', 'approved', 'rejected', 'deleted'],
             default: 'pending',
             required: true,
         },

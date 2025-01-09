@@ -88,6 +88,9 @@ export default function DocTemplateManagementPage() {
                         <Table aria-label="docTemplates table">
                             <TableHead sx={{ backgroundColor: '#ccc' }}>
                                 <TableRow>
+                                    <TableCell align="center" width={70}>
+                                        ردیف
+                                    </TableCell>
                                     <TableCell align="center">
                                         شماره رفرنس
                                     </TableCell>
@@ -120,8 +123,11 @@ export default function DocTemplateManagementPage() {
                                           page * rowsPerPage + rowsPerPage
                                       )
                                     : docTemplates
-                                ).map((docTemplate) => (
+                                ).map((docTemplate, index) => (
                                     <TableRow key={docTemplate._id}>
+                                        <TableCell align="center">
+                                            {index + 1}
+                                        </TableCell>
                                         <TableCell align="center">
                                             {docTemplate.refNo}
                                         </TableCell>
@@ -179,7 +185,7 @@ export default function DocTemplateManagementPage() {
                                     <TableRow
                                         style={{ height: 53 * emptyRows }}
                                     >
-                                        <TableCell colSpan={9} />
+                                        <TableCell colSpan={10} />
                                     </TableRow>
                                 )}
                             </TableBody>
@@ -187,7 +193,7 @@ export default function DocTemplateManagementPage() {
                                 rows={docTemplates}
                                 rowsPerPage={rowsPerPage}
                                 page={page}
-                                colSpan={9}
+                                colSpan={10}
                                 handleChangePage={handleChangePage}
                                 handleChangeRowsPerPage={
                                     handleChangeRowsPerPage

@@ -976,4 +976,9 @@ input::-webkit-inner-spin-button {
   justify-content: center;
 }
 
+.pagination-container {
+  display: flex;
+  justify-content: center;
+}
+
 /*# sourceMappingURL=styles.css.map */
