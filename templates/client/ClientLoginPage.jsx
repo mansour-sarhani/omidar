@@ -8,10 +8,13 @@ import useCommonHooks from '@/hooks/useCommonHooks';
 import IsLoading from '@/components/common/IsLoading';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 
 export default function ClientLoginPage() {
     const [token, setToken] = useState(null);
-    const { searchParams, enqueueSnackbar, router } = useCommonHooks();
+    const { enqueueSnackbar, router } = useCommonHooks();
+
+    const searchParams = useSearchParams();
 
     const logout = searchParams.get('logout');
 
