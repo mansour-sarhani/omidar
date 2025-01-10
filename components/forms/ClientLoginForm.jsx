@@ -4,7 +4,6 @@ import OmTextInput from '@/components/inputs/OmTextInput';
 import OmPasswordInput from '@/components/inputs/OmPasswordInput';
 import { Formik, Form } from 'formik';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import LoginIcon from '@mui/icons-material/Login';
 
 const initialValues = {
@@ -29,10 +28,6 @@ export default function ClientLoginForm() {
         >
             {({ isSubmitting, values }) => (
                 <Form className="om-form auth-form">
-                    <Typography variant="h4" component="h4" gutterBottom>
-                        ورود متقاضیان
-                    </Typography>
-
                     <OmTextInput name="username" label="نام کاربری" />
                     <OmPasswordInput name="password" label="رمز عبور" />
 

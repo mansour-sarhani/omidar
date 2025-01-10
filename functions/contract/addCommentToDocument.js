@@ -6,7 +6,7 @@ async function addCommentToDocument(dispatch, enqueueSnackbar, data) {
         const result = await dispatch(ADD_COMMENT_TO_DOCUMENT(data));
         const response = unwrapResult(result);
 
-        enqueueSnackbar('پیام جدید برای فایل ارسال شد.', {
+        enqueueSnackbar('پیام جدید برای چک فایل ارسال شد.', {
             variant: 'success',
         });
     } catch (err) {

@@ -88,6 +88,21 @@ export const GET_USER_NOTIFICATIONS = createAsyncThunk(
     }
 );
 
+export const GET_USER_UNREAD_NOTIFICATIONS = createAsyncThunk(
+    'user/GET_USER_UNREAD_NOTIFICATIONS',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await http.get(`/api/user/notification/unread`);
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
 export const USER_READ_NOTIFICATION = createAsyncThunk(
     'user/USER_READ_NOTIFICATION',
     async (notificationId, { rejectWithValue }) => {
@@ -133,6 +148,9 @@ export const userSlice = createSlice({
 
         //GET_USER_NOTIFICATIONS
         handleAsyncActions(builder, GET_USER_NOTIFICATIONS);
+
+        //GET_USER_UNREAD_NOTIFICATIONS
+        handleAsyncActions(builder, GET_USER_UNREAD_NOTIFICATIONS);
 
         //USER_READ_NOTIFICATION
         handleAsyncActions(builder, USER_READ_NOTIFICATION);

@@ -29,10 +29,6 @@ export default function UserLoginForm() {
         >
             {({ isSubmitting, values }) => (
                 <Form className="om-form auth-form">
-                    <Typography variant="h4" component="h4" gutterBottom>
-                        ورود کاربران
-                    </Typography>
-
                     <OmTextInput name="username" label="نام کاربری" />
                     <OmPasswordInput name="password" label="رمز عبور" />
 

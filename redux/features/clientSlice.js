@@ -103,6 +103,21 @@ export const GET_CLIENT_NOTIFICATIONS = createAsyncThunk(
     }
 );
 
+export const GET_CLIENT_UNREAD_NOTIFICATIONS = createAsyncThunk(
+    'client/GET_CLIENT_UNREAD_NOTIFICATIONS',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await http.get(`/api/client/notification/unread`);
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
 export const CLIENT_READ_NOTIFICATION = createAsyncThunk(
     'client/CLIENT_READ_NOTIFICATION',
     async (notificationId, { rejectWithValue }) => {
@@ -202,6 +217,9 @@ export const clientSlice = createSlice({
 
         //GET_CLIENT_NOTIFICATIONS
         handleAsyncActions(builder, GET_CLIENT_NOTIFICATIONS);
+
+        //GET_CLIENT_UNREAD_NOTIFICATIONS
+        handleAsyncActions(builder, GET_CLIENT_UNREAD_NOTIFICATIONS);
 
         //CLIENT_READ_NOTIFICATION
         handleAsyncActions(builder, CLIENT_READ_NOTIFICATION);

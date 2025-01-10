@@ -116,7 +116,7 @@ export default function AddDocumentForm(props) {
                                 htmlFor="template-select"
                                 className="om-label"
                             >
-                                انتخاب از قالبهای موجود
+                                انتخاب از قالبهای موجود (اختیاری)
                             </label>
                             <NativeSelect
                                 defaultValue={''}
@@ -175,7 +175,7 @@ export default function AddDocumentForm(props) {
 
                     <OmTextInput
                         name="documentNo"
-                        placeholder={'شماره رفرنس قالب + شماره قرارداد'}
+                        placeholder={'شماره رفرنس فایل + شماره قرارداد'}
                         label={
                             savedValues
                                 ? `شماره فایل* (شماره رفرنس قالب انتخابی: ${savedValues.refNo})`

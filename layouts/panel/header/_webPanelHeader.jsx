@@ -10,11 +10,12 @@ import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useEffect, useState } from 'react';
 import useCommonHooks from '@/hooks/useCommonHooks';
-import getClientNotifications from '@/functions/client/getClientNotifications';
+import getClientUnreadNotifications from '@/functions/client/getClientUnreadNotifications';
 
 export default function WebPanelHeader(props) {
     const [notifications, setNotifications] = useState([]);
     const [doReload, setDoReload] = useState(true);
+    const [total, setTotal] = useState(true);
 
     const { client, isDarkMode, toggleDarkMode, handleLogout, socket } = props;
 
@@ -23,11 +24,11 @@ export default function WebPanelHeader(props) {
     useEffect(() => {
         if (doReload) {
             async function getUnreadNotifications() {
-                await getClientNotifications(
+                await getClientUnreadNotifications(
                     dispatch,
                     enqueueSnackbar,
                     setNotifications,
-                    'unread'
+                    setTotal
                 );
                 setDoReload(false);
             }
@@ -60,8 +61,8 @@ export default function WebPanelHeader(props) {
                     <Link href={'/'}>
                         <Logo
                             color={isDarkMode ? 'white' : 'black'}
-                            width={243}
-                            height={50}
+                            width={60}
+                            height={60}
                         />
                     </Link>
                 </div>
