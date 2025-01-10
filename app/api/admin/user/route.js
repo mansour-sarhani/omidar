@@ -13,10 +13,10 @@ import { hashPassword } from '@/utils/hashPassword';
 export async function POST(req) {
     await dbConnect();
 
-    const authError = await authMiddleware(req);
-    if (authError) {
-        return authError;
-    }
+    // const authError = await authMiddleware(req);
+    // if (authError) {
+    //     return authError;
+    // }
 
     try {
         const formData = await req.formData();
