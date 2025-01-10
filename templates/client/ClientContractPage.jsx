@@ -76,7 +76,9 @@ export default function ClientContractPage() {
                         <Table aria-label="contracts table">
                             <TableHead sx={{ backgroundColor: '#ccc' }}>
                                 <TableRow>
-                                    <TableCell align="center">شناسه</TableCell>
+                                    <TableCell align="center" width={70}>
+                                        ردیف
+                                    </TableCell>
                                     <TableCell align="center">
                                         شماره قرارداد
                                     </TableCell>
@@ -84,10 +86,10 @@ export default function ClientContractPage() {
                                         کارشناسان
                                     </TableCell>
                                     <TableCell align="center">کشور</TableCell>
+                                    <TableCell align="center">وضعیت</TableCell>
                                     <TableCell align="center">
                                         زمان ایجاد
                                     </TableCell>
-                                    <TableCell align="center">وضعیت</TableCell>
                                     <TableCell align="center">عملیات</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -98,10 +100,10 @@ export default function ClientContractPage() {
                                           page * rowsPerPage + rowsPerPage
                                       )
                                     : contracts
-                                ).map((contract) => (
+                                ).map((contract, index) => (
                                     <TableRow key={contract._id}>
                                         <TableCell align="center">
-                                            {contract.Id}
+                                            {index + 1}
                                         </TableCell>
                                         <TableCell align="center">
                                             {contract.contractNo}
@@ -153,10 +155,10 @@ export default function ClientContractPage() {
                                             )}
                                         </TableCell>
                                         <TableCell align="center">
-                                            {dateFormatter(contract.createdAt)}
+                                            {setStatusLabel(contract.status)}
                                         </TableCell>
                                         <TableCell align="center">
-                                            {setStatusLabel(contract.status)}
+                                            {dateFormatter(contract.createdAt)}
                                         </TableCell>
                                         <TableCell align="center">
                                             <div className="om-table-actions">
@@ -164,8 +166,9 @@ export default function ClientContractPage() {
                                                     href={`/panel/contract/${contract.contractNo}/overview`}
                                                 >
                                                     <Button
-                                                        variant="outlined"
+                                                        variant="contained"
                                                         color="primary"
+                                                        size="small"
                                                     >
                                                         <Settings />
                                                         مشاهده قرارداد

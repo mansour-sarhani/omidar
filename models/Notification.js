@@ -4,7 +4,6 @@ const notificationSchema = new Schema(
     {
         Id: {
             type: Number,
-            index: true,
         },
         subject: {
             type: String,
@@ -23,7 +22,7 @@ const notificationSchema = new Schema(
         type: {
             type: String,
             enum: ['info', 'warning', 'alert', 'success'],
-            required: true,
+            default: 'info',
         },
         sender: {
             type: Schema.Types.ObjectId,
@@ -31,7 +30,7 @@ const notificationSchema = new Schema(
         },
         senderModel: {
             type: String,
-            enum: ['system', 'manual'],
+            enum: ['system', 'user'],
         },
         receiver: [
             {

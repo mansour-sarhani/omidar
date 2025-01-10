@@ -8,10 +8,16 @@ const SocketContext = createContext(null);
 export function SocketProvider({ children }) {
     const [socket, setSocket] = useState(null);
 
+    const dev = process.env.NODE_ENV !== 'production';
+
     useEffect(() => {
-        const socketInstance = io(
-            process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:7007'
-        );
+        let socketInstance;
+        if (dev) {
+            socketInstance = io('http://localhost:7007');
+        } else {
+            socketInstance = io(process.env.NEXT_PUBLIC_LIVE_URL);
+        }
+
         setSocket(socketInstance);
 
         return () => {

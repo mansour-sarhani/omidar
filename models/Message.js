@@ -4,14 +4,10 @@ const messageSchema = new Schema(
     {
         Id: {
             type: Number,
-            index: true,
         },
         ticketId: {
             type: Schema.Types.ObjectId,
             ref: 'Ticket',
-        },
-        date: {
-            type: Date,
         },
         createdBy: {
             type: Schema.Types.ObjectId,

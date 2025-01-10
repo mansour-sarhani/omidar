@@ -6,6 +6,7 @@ import useCommonHooks from '@/hooks/useCommonHooks';
 import UserLoginForm from '@/components/forms/UserLoginForm';
 import { jwtDecode } from 'jwt-decode';
 import IsLoading from '@/components/common/IsLoading';
+import { Typography } from '@mui/material';
 
 export default function UserLoginPage() {
     const [token, setToken] = useState(null);
@@ -40,10 +41,20 @@ export default function UserLoginPage() {
     }
 
     return (
-        <div className="inner-page auth-page">
-            <div className="auth-page-container">
-                <div className="auth-page-box">
-                    <UserLoginForm />
+        <div className="inner-page auth-page admin-auth">
+            <div className="full-bg-container">
+                <div className="auth-box-wrapper">
+                    <div className="auth-intro">
+                        <Typography variant="h1" component="h1" gutterBottom>
+                            گروه مهاجرتی امیدار
+                        </Typography>
+                        <Typography variant="h4" component="h4" gutterBottom>
+                            ورود اعضا
+                        </Typography>
+                    </div>
+                    <div className="auth-page-box">
+                        <UserLoginForm />
+                    </div>
                 </div>
             </div>
         </div>

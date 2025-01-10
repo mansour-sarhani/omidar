@@ -88,11 +88,26 @@ export const GET_CLIENT_CONTRACTS = createAsyncThunk(
 
 export const GET_CLIENT_NOTIFICATIONS = createAsyncThunk(
     'client/GET_CLIENT_NOTIFICATIONS',
-    async (type, { rejectWithValue }) => {
+    async (data, { rejectWithValue }) => {
         try {
             const response = await http.get(
-                `/api/client/notification?type=` + type
+                `/api/client/notification?type=${data.type}&page=${data.page}&limit=${data.limit}`
             );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const GET_CLIENT_UNREAD_NOTIFICATIONS = createAsyncThunk(
+    'client/GET_CLIENT_UNREAD_NOTIFICATIONS',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await http.get(`/api/client/notification/unread`);
             return response.data;
         } catch (err) {
             if (!err.response) {
@@ -202,6 +217,9 @@ export const clientSlice = createSlice({
 
         //GET_CLIENT_NOTIFICATIONS
         handleAsyncActions(builder, GET_CLIENT_NOTIFICATIONS);
+
+        //GET_CLIENT_UNREAD_NOTIFICATIONS
+        handleAsyncActions(builder, GET_CLIENT_UNREAD_NOTIFICATIONS);
 
         //CLIENT_READ_NOTIFICATION
         handleAsyncActions(builder, CLIENT_READ_NOTIFICATION);

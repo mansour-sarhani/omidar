@@ -4,7 +4,6 @@ const visaSchema = new Schema(
     {
         Id: {
             type: Number,
-            index: true,
         },
         code: {
             type: String,
@@ -30,7 +29,7 @@ const visaSchema = new Schema(
         },
         status: {
             type: String,
-            enum: ['pending', 'approved', 'rejected', 'uploaded'],
+            enum: ['pending', 'approved', 'rejected', 'uploaded', 'deleted'],
             default: 'pending',
             required: true,
         },

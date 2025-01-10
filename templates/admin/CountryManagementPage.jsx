@@ -89,7 +89,9 @@ export default function CountryManagementPage() {
                         <Table aria-label="countries table">
                             <TableHead sx={{ backgroundColor: '#ccc' }}>
                                 <TableRow>
-                                    <TableCell align="center">شناسه</TableCell>
+                                    <TableCell align="center" width={70}>
+                                        ردیف
+                                    </TableCell>
                                     <TableCell align="center">پرچم</TableCell>
                                     <TableCell align="center">
                                         نام کشور
@@ -111,10 +113,10 @@ export default function CountryManagementPage() {
                                           page * rowsPerPage + rowsPerPage
                                       )
                                     : countries
-                                ).map((country) => (
+                                ).map((country, index) => (
                                     <TableRow key={country._id}>
                                         <TableCell align="center">
-                                            {country.Id}
+                                            {index + 1}
                                         </TableCell>
                                         <TableCell align="center">
                                             <div className="panel-table-image-wrapper">

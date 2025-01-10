@@ -4,14 +4,15 @@ const docTemplateSchema = new Schema(
     {
         Id: {
             type: Number,
-            index: true,
         },
         refNo: {
             type: Number,
             index: true,
+            required: true,
         },
         nameFarsi: {
             type: String,
+            required: true,
         },
         nameEnglish: {
             type: String,
@@ -19,7 +20,6 @@ const docTemplateSchema = new Schema(
         type: {
             type: String,
             enum: ['image', 'sound', 'video', 'document'],
-            required: true,
         },
         format: {
             type: String,
@@ -30,8 +30,7 @@ const docTemplateSchema = new Schema(
         },
         uploadBy: {
             type: Schema.Types.ObjectId,
-            refPath: 'uploadByModel',
-            required: true,
+            ref: 'User',
         },
         sample: {
             path: {

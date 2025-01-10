@@ -81,8 +81,8 @@ export default function UserManagementPage() {
                         <Table aria-label="users table">
                             <TableHead sx={{ backgroundColor: '#ccc' }}>
                                 <TableRow>
-                                    <TableCell align="center" width={50}>
-                                        شناسه
+                                    <TableCell align="center" width={70}>
+                                        ردیف
                                     </TableCell>
                                     <TableCell align="right">
                                         نام و نام خانوادگی
@@ -106,10 +106,10 @@ export default function UserManagementPage() {
                                           page * rowsPerPage + rowsPerPage
                                       )
                                     : users
-                                ).map((user) => (
+                                ).map((user, index) => (
                                     <TableRow key={user._id}>
                                         <TableCell align="center">
-                                            {user.Id}
+                                            {index + 1}
                                         </TableCell>
                                         <TableCell align="right">
                                             <Box

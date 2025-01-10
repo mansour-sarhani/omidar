@@ -40,6 +40,7 @@ export default function ClientContractOverviewPage({ contractNo }) {
             <div className="contract-page-content">
                 <div className="contract-page-heading">
                     <Typography variant="h4">اطلاعات قرارداد</Typography>
+                    {setStatusLabel(contract.status)}
                 </div>
                 <div className="contract-info-wrapper">
                     <div className="contract-info-row">
@@ -49,8 +50,6 @@ export default function ClientContractOverviewPage({ contractNo }) {
                             </label>
                             <span className="contract-info-value">
                                 {contract.contractNo}
-                                {'   '}
-                                {setStatusLabel(contract.status)}
                             </span>
                         </div>
                         <div className="contract-info-line">

@@ -8,13 +8,14 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import { useEffect, useState } from 'react';
-import getUserNotifications from '@/functions/user/getUserNotifications';
+import getUserUnreadNotifications from '@/functions/user/getUserUnreadNotifications';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 export default function WebAdminHeader(props) {
     const [notifications, setNotifications] = useState([]);
     const [doReload, setDoReload] = useState(true);
+    const [total, setTotal] = useState(true);
 
     const { user, isDarkMode, toggleDarkMode, handleLogout, socket } = props;
 
@@ -23,11 +24,11 @@ export default function WebAdminHeader(props) {
     useEffect(() => {
         if (doReload) {
             async function getUnreadNotifications() {
-                await getUserNotifications(
+                await getUserUnreadNotifications(
                     dispatch,
                     enqueueSnackbar,
                     setNotifications,
-                    'unread'
+                    setTotal
                 );
                 setDoReload(false);
             }
@@ -60,8 +61,8 @@ export default function WebAdminHeader(props) {
                     <Link href={'/'}>
                         <Logo
                             color={isDarkMode ? 'white' : 'black'}
-                            width={243}
-                            height={50}
+                            width={60}
+                            height={60}
                         />
                     </Link>
                 </div>

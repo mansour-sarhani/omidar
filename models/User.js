@@ -4,7 +4,6 @@ const userSchema = new Schema(
     {
         Id: {
             type: Number,
-            index: true,
         },
         username: {
             type: String,

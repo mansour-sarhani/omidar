@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/utils/dbConnect';
 import { authMiddleware } from '@/utils/authMiddleware';
+import { notify } from '@/utils/notify';
+import { addActivity } from '@/utils/addActivity';
+import FA from '@/utils/localizationFa';
 import Counter from '@/models/Counter';
 import Contract from '@/models/Contract';
 import User from '@/models/User';
@@ -15,7 +18,6 @@ import Offer from '@/models/Offer';
 import Payment from '@/models/Payment';
 import Pickup from '@/models/Pickup';
 import Visa from '@/models/Visa';
-import { notify } from '@/utils/notify';
 
 //CREATE CONTRACT => "/api/contract"
 export async function POST(req) {
@@ -34,12 +36,33 @@ export async function POST(req) {
         const createdBy = formData.get('createdBy');
 
         const contractExists = await Contract.findOne({ contractNo });
-
         if (contractExists) {
             return NextResponse.json(
                 {
                     success: false,
                     message: 'قرارداد با این شماره قرارداد وجود دارد.',
+                },
+                { status: 400 }
+            );
+        }
+
+        const client = await Client.findById(clientId);
+        if (!client) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'متقاضی وجود ندارد.',
+                },
+                { status: 400 }
+            );
+        }
+
+        const user = await User.findById(createdBy);
+        if (!user) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'کاربر وجود ندارد.',
                 },
                 { status: 400 }
             );
@@ -56,45 +79,43 @@ export async function POST(req) {
 
         contractData.countries.push(countryId);
 
-        const counter = await Counter.findByIdAndUpdate(
+        const contractCounter = await Counter.findByIdAndUpdate(
             { _id: 'contractId' },
             { $inc: { seq: 1 } },
             { new: true, upsert: true }
         );
-        contractData.Id = counter.seq;
+        contractData.Id = contractCounter.seq;
 
         const newContract = new Contract(contractData);
         await newContract.save();
 
-        const savedContract = await Contract.findOne({ contractNo });
-
-        const client = await Client.findById(clientId);
-        client.contracts.push(savedContract._id);
+        client.contracts.push(newContract._id);
         client.markModified('contracts');
         await client.save();
 
-        const user = await User.findById(createdBy);
         const userName = user.firstName + ' ' + user.lastName;
+        const message = `قرارداد با شماره قرارداد ${newContract.contractNo} توسط ${userName} ایجاد شد.`;
 
-        const activityRecord = {
+        await notify({
+            subject: 'اطلاعیه',
+            message: message,
+            type: 'info',
+            senderModel: 'system',
+            receiver: [client._id],
+            receiverModel: 'Client',
+        });
+
+        await addActivity({
             action: 'create',
-            performedBy: contractData.createdBy,
+            performedBy: user._id,
             performedByModel: 'User',
-            details: `قرارداد با شماره قرارداد ${newContract.contractNo} توسط ${userName} ایجاد شد.`,
-            contractId: savedContract._id,
-            timestamp: new Date(),
-        };
-
-        const newActivity = new Activity(activityRecord);
-        await newActivity.save();
-
-        savedContract.activities.push(newActivity._id);
-        savedContract.markModified('activities');
-        savedContract.save();
+            details: message,
+            contractId: newContract._id,
+        });
 
         return NextResponse.json({
             success: true,
-            contract: newContract,
+            data: newContract,
         });
     } catch (error) {
         return NextResponse.json(
@@ -106,6 +127,7 @@ export async function POST(req) {
 
 export async function GET(req) {
     await dbConnect();
+
     const { searchParams } = new URL(req.url);
     const contractId = searchParams.get('contractId');
     const clientId = searchParams.get('clientId');
@@ -116,12 +138,9 @@ export async function GET(req) {
         return {
             _id: contract._id,
             Id: contract.Id,
-            client: contract.client,
             contractNo: contract.contractNo,
-            status: contract.status,
-            contractFile: contract.contractFile,
-            visaExpiryDate: contract.visaExpiryDate,
-            arrivalDate: contract.arrivalDate,
+            client: contract.client,
+            createdBy: contract.createdBy,
             countries: contract.countries,
             users: contract.users,
             admissions: contract.admissions,
@@ -131,23 +150,30 @@ export async function GET(req) {
             pickups: contract.pickups,
             visas: contract.visas,
             messages: contract.messages,
-            createdBy: contract.createdBy,
-            lastUpdatedBy: contract.lastUpdatedBy,
-            lastUpdatedByModel: contract.lastUpdatedByModel,
+            activities: contract.activities,
+            visaExpiryDate: contract.visaExpiryDate,
+            arrivalDate: contract.arrivalDate,
+            status: contract.status,
             createdAt: contract.createdAt,
             updatedAt: contract.updated,
-            deleted: contract.deleted,
         };
     }
 
     try {
         //GET CONTRACT BY CONTRACTID => "/api/contract?contractId=66bf44d3d02d846c4368ced0"
         if (contractId && !type) {
-            console.log('1');
-            const contract = await Contract.findOne({ _id: contractId })
+            const contract = await Contract.findById(contractId)
                 .populate('client')
                 .populate('users')
-                .populate('countries');
+                .populate('countries')
+                .populate('admissions')
+                .populate('offers')
+                .populate('documents')
+                .populate('payments')
+                .populate('pickups')
+                .populate('visas')
+                .populate('activities')
+                .populate('messages');
 
             if (!contract) {
                 return NextResponse.json(
@@ -218,7 +244,7 @@ export async function GET(req) {
             );
         } else if (contractId && type) {
             //GET CONTRACT DATA BY TYPE => "/api/contract?type=users&contractNo=12345"
-            const contract = await Contract.findOne({ _id: contractId })
+            const contract = await Contract.findById(contractId)
                 .populate('client')
                 .populate('users')
                 .populate('countries')
@@ -329,7 +355,7 @@ export async function GET(req) {
 }
 
 //UPDATE CONTRACT => "/api/contract?contractId=66bf44d3d02d846c4368ced0"
-export async function PUT(req, res) {
+export async function PUT(req) {
     await dbConnect();
 
     const authError = await authMiddleware(req);
@@ -340,6 +366,14 @@ export async function PUT(req, res) {
     try {
         const { searchParams } = new URL(req.url);
         const contractId = searchParams.get('contractId');
+        const formData = await req.formData();
+        const userId = formData.get('userId');
+        const contractNo = formData.get('contractNo');
+        const visaExpiryDate = formData.get('visaExpiryDate');
+        const arrivalDate = formData.get('arrivalDate');
+        const clientId = formData.get('clientId');
+        const countryId = formData.get('countryId');
+        const status = formData.get('status');
 
         const contract = await Contract.findById(contractId);
 
@@ -350,16 +384,58 @@ export async function PUT(req, res) {
             );
         }
 
-        const formData = await req.formData();
-        const userId = formData.get('userId');
-        const contractNo = formData.get('contractNo');
-        const visaExpiryDate = formData.get('visaExpiryDate');
-        const arrivalDate = formData.get('arrivalDate');
-        const clientId = formData.get('clientId');
-        const countryId = formData.get('countryId');
-        const status = formData.get('status');
+        const user = await User.findById(userId);
+        const client = await Client.findById(contract.client);
+        const userName = user.firstName + ' ' + user.lastName;
 
-        if (contractNo !== null) {
+        if (status !== null) {
+            const statusMessage = `وضعیت قرارداد با شماره ${contract.contractNo} توسط ${userName} به ${FA.status[status]} تغییر کرد.`;
+
+            await notify({
+                subject: 'اطلاعیه',
+                message: statusMessage,
+                type: 'info',
+                senderModel: 'system',
+                receiver: [client._id],
+                receiverModel: 'Client',
+            });
+
+            await notify({
+                subject: 'اطلاعیه',
+                message: statusMessage,
+                type: 'info',
+                senderModel: 'system',
+                receiver: contract.users,
+                receiverModel: 'User',
+            });
+
+            await addActivity({
+                action: 'update',
+                performedBy: user._id,
+                performedByModel: 'User',
+                details: statusMessage,
+                contractId: contractId,
+            });
+
+            contract.status = status;
+            contract.markModified('status');
+            await contract.save();
+
+            return NextResponse.json({ success: true, data: contract });
+        }
+
+        if (contractNo && contractNo !== contract.contractNo) {
+            const contractExists = await Contract.findOne({ contractNo });
+            if (contractExists) {
+                return NextResponse.json(
+                    {
+                        success: false,
+                        message: 'قرارداد با این شماره قرارداد وجود دارد.',
+                    },
+                    { status: 400 }
+                );
+            }
+
             contract.contractNo = contractNo;
             contract.markModified('contractNo');
         }
@@ -371,7 +447,19 @@ export async function PUT(req, res) {
             contract.arrivalDate = arrivalDate;
             contract.markModified('arrivalDate');
         }
-        if (clientId !== null) {
+        if (clientId !== contract.client.toString()) {
+            const oldClient = await Client.findById(contract.client);
+            oldClient.contracts = oldClient.contracts.filter(
+                (c) => c.toString() !== contractId
+            );
+            oldClient.markModified('contracts');
+            await oldClient.save();
+
+            const newClient = await Client.findById(clientId);
+            newClient.contracts.push(contractId);
+            newClient.markModified('contracts');
+            await newClient.save();
+
             contract.client = clientId;
             contract.markModified('client');
         }
@@ -379,59 +467,38 @@ export async function PUT(req, res) {
             contract.countries[0] = countryId;
             contract.markModified('countries');
         }
-        if (status !== null) {
-            contract.status = status;
-            contract.markModified('status');
-        }
-
-        contract.lastUpdatedBy = userId;
-        contract.markModified('userId');
 
         await contract.save();
 
-        const user = await User.findById(userId);
-
-        const userName = user.firstName + ' ' + user.lastName;
         const message = `قرارداد شماره ${contract.contractNo} توسط ${userName} به روزرسانی شد.`;
 
-        const activityRecord = {
+        await notify({
+            subject: 'اطلاعیه',
+            message: message,
+            type: 'info',
+            senderModel: 'system',
+            receiver: contract.users,
+            receiverModel: 'User',
+        });
+
+        await notify({
+            subject: 'اطلاعیه',
+            message: message,
+            type: 'info',
+            senderModel: 'system',
+            receiver: [contract.client],
+            receiverModel: 'Client',
+        });
+
+        await addActivity({
             action: 'update',
-            performedBy: userId,
+            performedBy: user._id,
             performedByModel: 'User',
             details: message,
             contractId: contractId,
-            timestamp: new Date(),
-        };
+        });
 
-        const newActivity = new Activity(activityRecord);
-        await newActivity.save();
-
-        contract.activities.push(newActivity._id);
-        contract.markModified('activities');
-        contract.save();
-
-        const newNotification = {
-            subject: 'اطلاعیه',
-            body: message,
-            type: 'info',
-            sender: userId,
-            receiver: [contract.client],
-            receiverModel: 'Client',
-        };
-
-        const notification = new Notification(newNotification);
-        await notification.save();
-
-        const client = await Client.findById(contract.client);
-        client.notifications.push(notification._id);
-        client.markModified('notifications');
-        await client.save();
-
-        const receivers = [client._id];
-
-        notify(message, receivers);
-
-        return NextResponse.json({ success: true, contract });
+        return NextResponse.json({ success: true, data: contract });
     } catch (error) {
         return NextResponse.json(
             { success: false, message: error.message },

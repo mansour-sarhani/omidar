@@ -78,7 +78,9 @@ export default function ClientManagementPage() {
                         <Table aria-label="clients table">
                             <TableHead sx={{ backgroundColor: '#ccc' }}>
                                 <TableRow>
-                                    <TableCell align="center">شناسه</TableCell>
+                                    <TableCell align="center" width={70}>
+                                        ردیف
+                                    </TableCell>
                                     <TableCell align="center">
                                         نام و نام خانوادگی
                                     </TableCell>
@@ -100,10 +102,10 @@ export default function ClientManagementPage() {
                                           page * rowsPerPage + rowsPerPage
                                       )
                                     : clients
-                                ).map((client) => (
+                                ).map((client, index) => (
                                     <TableRow key={client._id}>
                                         <TableCell align="center">
-                                            {client.Id}
+                                            {index + 1}
                                         </TableCell>
                                         <TableCell align="center">
                                             {client.firstName +

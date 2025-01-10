@@ -197,7 +197,7 @@ export default function ContractDocumentsPage({ contractNo }) {
                                                 وضعیت
                                             </TableCell>
                                             <TableCell align="center">
-                                                پیام
+                                                پیام ها
                                             </TableCell>
                                             <TableCell align="center">
                                                 عملیات

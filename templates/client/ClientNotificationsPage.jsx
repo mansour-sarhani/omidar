@@ -2,21 +2,18 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import useCommonHooks from '@/hooks/useCommonHooks';
+import getClientNotifications from '@/functions/client/getClientNotifications';
+import clientReadNotification from '@/functions/client/clientReadNotification';
 import NoData from '@/components/common/NoData';
-import OmProgress from '@/components/common/OmProgress';
+import NotificationItem from '@/components/common/NotificationItem';
+import IsLoading from '@/components/common/IsLoading';
+import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
-import getClientNotifications from '@/functions/client/getClientNotifications';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import NotificationsOffIcon from '@mui/icons-material/NotificationsOff';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import { dateFormatter } from '@/utils/dateFormatter';
-import DoneAllIcon from '@mui/icons-material/DoneAll';
-import clientReadNotification from '@/functions/client/clientReadNotification';
-import { dateTimeFormatter } from '@/utils/dateTimeFormatter';
+import OmProgress from '@/components/common/OmProgress';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -45,21 +42,22 @@ function a11yProps(index) {
 
 export default function ClientNotificationsPage() {
     const [notifications, setNotifications] = useState(null);
-    const [type, setType] = useState('');
+    const [type, setType] = useState('all');
     const [value, setValue] = useState(0);
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
+    const [total, setTotal] = useState(0);
 
     const { dispatch, enqueueSnackbar } = useCommonHooks();
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
         setNotifications(null);
-
+        setPage(1);
         if (newValue === 1) {
-            setType('read');
-        } else if (newValue === 2) {
             setType('unread');
         } else {
-            setType('');
+            setType('all');
         }
     };
 
@@ -73,17 +71,30 @@ export default function ClientNotificationsPage() {
     };
 
     const getNotifications = useCallback(async () => {
+        const data = {
+            type,
+            page,
+            limit,
+        };
         await getClientNotifications(
             dispatch,
             enqueueSnackbar,
             setNotifications,
-            type
+            setTotal,
+            data
         );
-    }, [dispatch, enqueueSnackbar, type]);
+    }, [dispatch, enqueueSnackbar, limit, page, type]);
+
+    const handlePaginationClick = (event, value) => {
+        setNotifications(null);
+        setPage(value);
+    };
 
     useEffect(() => {
         getNotifications();
     }, [getNotifications]);
+
+    if (notifications === null) return <IsLoading isLoading={true} />;
 
     return (
         <div className="panel-content-container">
@@ -105,12 +116,6 @@ export default function ClientNotificationsPage() {
                     {...a11yProps(0)}
                 />
                 <Tab
-                    icon={<NotificationsOffIcon />}
-                    iconPosition="start"
-                    label="اعلان های خوانده شده"
-                    {...a11yProps(1)}
-                />
-                <Tab
                     icon={<NotificationsActiveIcon />}
                     iconPosition="start"
                     label="اعلان های خوانده نشده"
@@ -124,120 +129,47 @@ export default function ClientNotificationsPage() {
                 <div className="panel-inner-content">
                     <CustomTabPanel value={value} index={0}>
                         {notifications.map((item) => (
-                            <div
+                            <NotificationItem
                                 key={item._id}
-                                className={`notification-item ${
-                                    item.isRead ? 'is-read' : 'is-unread'
-                                }`}
-                            >
-                                <div className="notification-item-header">
-                                    <Typography variant="h6">
-                                        {item.subject}
-                                    </Typography>
-
-                                    {item.isRead ? (
-                                        <Chip
-                                            label="خوانده شده"
-                                            color="success"
-                                        />
-                                    ) : (
-                                        <Button
-                                            variant="contained"
-                                            size="small"
-                                            color="secondary"
-                                            onClick={() => markAsRead(item._id)}
-                                        >
-                                            <DoneAllIcon />
-                                            خواندم
-                                        </Button>
-                                    )}
-                                </div>
-                                <div className="notification-item-body">
-                                    <Typography variant="body1">
-                                        {item.body}
-                                    </Typography>
-                                    <Typography variant="body2">
-                                        {dateTimeFormatter(item.createdAt)}
-                                    </Typography>
-                                </div>
-                            </div>
+                                item={item}
+                                markAsRead={markAsRead}
+                            />
                         ))}
+
+                        <div className="pagination-container">
+                            <Pagination
+                                page={page}
+                                count={Math.ceil(total / limit)}
+                                onChange={handlePaginationClick}
+                                showFirstButton
+                                showLastButton
+                                color="primary"
+                                shape="rounded"
+                                size="large"
+                            />
+                        </div>
                     </CustomTabPanel>
+
                     <CustomTabPanel value={value} index={1}>
                         {notifications.map((item) => (
-                            <div
+                            <NotificationItem
                                 key={item._id}
-                                className={`notification-item ${
-                                    item.isRead ? 'is-read' : 'is-unread'
-                                }`}
-                            >
-                                <div className="notification-item-header">
-                                    <span>{dateFormatter(item.createdAt)}</span>
-                                    {item.isRead ? (
-                                        <Chip
-                                            label="خوانده شده"
-                                            color="success"
-                                        />
-                                    ) : (
-                                        <Button
-                                            variant="contained"
-                                            size="small"
-                                            color="secondary"
-                                            onClick={() => markAsRead(item._id)}
-                                        >
-                                            <DoneAllIcon />
-                                            خواندم
-                                        </Button>
-                                    )}
-                                </div>
-                                <div className="notification-item-body">
-                                    <Typography variant="h6">
-                                        {item.subject}
-                                    </Typography>
-                                    <Typography variant="body1">
-                                        {item.body}
-                                    </Typography>
-                                </div>
-                            </div>
+                                item={item}
+                                markAsRead={markAsRead}
+                            />
                         ))}
-                    </CustomTabPanel>
-                    <CustomTabPanel value={value} index={2}>
-                        {notifications.map((item) => (
-                            <div
-                                key={item._id}
-                                className={`notification-item ${
-                                    item.isRead ? 'is-read' : 'is-unread'
-                                }`}
-                            >
-                                <div className="notification-item-header">
-                                    <span>{dateFormatter(item.createdAt)}</span>
-                                    {item.isRead ? (
-                                        <Chip
-                                            label="خوانده شده"
-                                            color="success"
-                                        />
-                                    ) : (
-                                        <Button
-                                            variant="contained"
-                                            size="small"
-                                            color="secondary"
-                                            onClick={() => markAsRead(item._id)}
-                                        >
-                                            <DoneAllIcon />
-                                            خواندم
-                                        </Button>
-                                    )}
-                                </div>
-                                <div className="notification-item-body">
-                                    <Typography variant="h6">
-                                        {item.subject}
-                                    </Typography>
-                                    <Typography variant="body1">
-                                        {item.body}
-                                    </Typography>
-                                </div>
-                            </div>
-                        ))}
+                        <div className="pagination-container">
+                            <Pagination
+                                page={page}
+                                count={Math.ceil(total / limit)}
+                                onChange={handlePaginationClick}
+                                showFirstButton
+                                showLastButton
+                                color="primary"
+                                shape="rounded"
+                                size="large"
+                            />
+                        </div>
                     </CustomTabPanel>
                 </div>
             ) : (

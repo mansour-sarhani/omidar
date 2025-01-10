@@ -65,7 +65,7 @@ export default function DocumentCommentModal(props) {
                 onClick={handleOpen}
             >
                 <Note />
-                اعلان ها
+                پیام ها
             </Button>
             <Modal
                 open={open}
@@ -74,7 +74,7 @@ export default function DocumentCommentModal(props) {
                 aria-describedby="document-comment-modal-description"
             >
                 <Box sx={style}>
-                    <Typography variant="h6">اعلان های چک لیست فایل</Typography>
+                    <Typography variant="h6">پیام های چک لیست فایل</Typography>
                     <div className="document-comments-wrapper">
                         {document.comments.length > 0 ? (
                             document.comments.map((comment, index) => (

@@ -6,16 +6,14 @@ import useCommonHooks from '@/hooks/useCommonHooks';
 import useContract from '@/hooks/useContract';
 import setStatusLabel from '@/utils/setStatusLabel';
 import getContractDataByType from '@/functions/contract/getContractDataByType';
-import DeleteModal from '@/components/modals/DeleteModal';
-import UpdateDocumentForm from '@/components/forms/UpdateDocumentForm';
 import DocumentCommentModal from '@/components/modals/DocumentCommentModal';
 import ClientContractNavigation from '@/components/common/ClientContractNavigation';
 import IsLoading from '@/components/common/IsLoading';
-import PanelModal from '@/components/modals/PanelModal';
 import NoData from '@/components/common/NoData';
 import OmProgress from '@/components/common/OmProgress';
 import OmTableFooter from '@/components/common/OmTableFooter';
 import UploadModal from '@/components/modals/UploadModal';
+import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
@@ -33,7 +31,6 @@ import Download from '@mui/icons-material/Download';
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import clientRemoveFile from '@/functions/client/clientRemoveFile';
-import { IconButton } from '@mui/material';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -68,7 +65,7 @@ export default function ClientContractDocumentsPage({ contractNo }) {
 
     const { contract } = useContract(contractNo);
 
-    const { dispatch, enqueueSnackbar, userData } = useCommonHooks();
+    const { dispatch, enqueueSnackbar, clientData } = useCommonHooks();
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shops.length) : 0;
@@ -318,17 +315,19 @@ export default function ClientContractDocumentsPage({ contractNo }) {
                                                                     <Download />
                                                                     دانلود
                                                                 </Button>
-
-                                                                <IconButton
-                                                                    onClick={() =>
-                                                                        handleRemoveFile(
-                                                                            document._id
-                                                                        )
-                                                                    }
-                                                                    color="error"
-                                                                >
-                                                                    <DeleteForeverIcon />
-                                                                </IconButton>
+                                                                {document.status !==
+                                                                    'approved' && (
+                                                                    <IconButton
+                                                                        onClick={() =>
+                                                                            handleRemoveFile(
+                                                                                document._id
+                                                                            )
+                                                                        }
+                                                                        color="error"
+                                                                    >
+                                                                        <DeleteForeverIcon />
+                                                                    </IconButton>
+                                                                )}
                                                             </>
                                                         )}
                                                     </TableCell>
@@ -372,6 +371,7 @@ export default function ClientContractDocumentsPage({ contractNo }) {
                         <NoData />
                     )}
                 </TabPanel>
+
                 <TabPanel value={value} index={1}>
                     <div className="contract-page-heading">
                         <Typography variant="h4">مدارک تکمیلی</Typography>
@@ -407,9 +407,6 @@ export default function ClientContractDocumentsPage({ contractNo }) {
                                             </TableCell>
                                             <TableCell align="center">
                                                 پیام
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                عملیات
                                             </TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -522,50 +519,8 @@ export default function ClientContractDocumentsPage({ contractNo }) {
                                                     <TableCell align="center">
                                                         <DocumentCommentModal
                                                             document={document}
-                                                            userId={
-                                                                userData._id
-                                                            }
-                                                            setDoReload={
-                                                                setDoReload
-                                                            }
+                                                            type="view"
                                                         />
-                                                    </TableCell>
-                                                    <TableCell align="center">
-                                                        <div className="om-table-actions">
-                                                            <PanelModal
-                                                                data={document}
-                                                                buttonLabel="به روزرسانی"
-                                                                modalHeader="به روزرسانی فایل"
-                                                                type="table"
-                                                                icon="edit"
-                                                                tooltipTitle="ویرایش"
-                                                                variant="outlined"
-                                                            >
-                                                                <UpdateDocumentForm
-                                                                    setDoReload={
-                                                                        setDoReload
-                                                                    }
-                                                                    contractId={
-                                                                        contract._id
-                                                                    }
-                                                                    uploaderId={
-                                                                        userData._id
-                                                                    }
-                                                                    isCheckList={
-                                                                        false
-                                                                    }
-                                                                />
-                                                            </PanelModal>
-
-                                                            <DeleteModal
-                                                                data={
-                                                                    document._id
-                                                                }
-                                                                handleRemoveItem={
-                                                                    handleRemoveFile
-                                                                }
-                                                            />
-                                                        </div>
                                                     </TableCell>
                                                 </TableRow>
                                             ))}

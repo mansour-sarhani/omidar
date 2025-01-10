@@ -1,9 +1,9 @@
 import Image from 'next/image';
 
-export default function Logo({ color, width = 243, height = 50 }) {
+export default function Logo({ color, width = 60, height = 60 }) {
     return (
         <Image
-            src={`/assets/images/misc/logo-${color}.png`}
+            src={`/assets/images/misc/logo-150x150.png`}
             width={width}
             height={height}
             alt="امیدار"

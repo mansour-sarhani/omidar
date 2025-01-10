@@ -7,8 +7,6 @@ import setStatusLabel from '@/utils/setStatusLabel';
 import getContractByContractNo from '@/functions/contract/getContractByContractNo';
 import ContractNavigation from '@/components/common/ContractNavigation';
 import IsLoading from '@/components/common/IsLoading';
-import PanelModal from '@/components/modals/PanelModal';
-import UpdateContractForm from '@/components/forms/UpdateContractForm';
 import Typography from '@mui/material/Typography';
 
 export default function ContractOverviewPage({ contractNo }) {
@@ -45,17 +43,7 @@ export default function ContractOverviewPage({ contractNo }) {
                         اطلاعات قرارداد
                         {'   '}
                     </Typography>
-                    <PanelModal
-                        data={contract}
-                        buttonLabel="ویرایش قرارداد"
-                        modalHeader="ویرایش قرارداد"
-                        type="table"
-                        icon="edit"
-                        tooltipTitle="ویرایش قرارداد"
-                        variant="outlined"
-                    >
-                        <UpdateContractForm setDoReload={setDoReload} />
-                    </PanelModal>
+                    {setStatusLabel(contract.status)}
                 </div>
                 <div className="contract-info-wrapper">
                     <div className="contract-info-row">
@@ -77,10 +65,14 @@ export default function ContractOverviewPage({ contractNo }) {
                         </div>
                         <div className="contract-info-line">
                             <label className="contract-info-label">
-                                وضعیت:
+                                آخرین به روزرسانی:
                             </label>
                             <span className="contract-info-value">
-                                {setStatusLabel(contract.status)}
+                                {dateFormatter(
+                                    contract.updatedAt
+                                        ? contract.updatedAt
+                                        : contract.createdAt
+                                )}
                             </span>
                         </div>
                     </div>

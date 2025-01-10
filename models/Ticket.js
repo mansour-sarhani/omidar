@@ -4,7 +4,6 @@ const ticketSchema = new Schema(
     {
         Id: {
             type: Number,
-            index: true,
         },
         ticketNo: {
             type: Number,
@@ -16,14 +15,14 @@ const ticketSchema = new Schema(
         },
         status: {
             type: String,
-            enum: ['open', 'inProgress', 'closed'],
+            enum: ['open', 'waitingOnClient', 'waitingOnUser', 'closed'],
             default: 'open',
             required: true,
         },
         priority: {
             type: String,
             enum: ['low', 'medium', 'high'],
-            default: 'medium',
+            default: 'low',
             required: true,
         },
         createdBy: {
@@ -54,14 +53,6 @@ const ticketSchema = new Schema(
                 ref: 'Message',
             },
         ],
-        createdAt: {
-            type: Date,
-            default: Date.now,
-        },
-        updatedAt: {
-            type: Date,
-            default: Date.now,
-        },
     },
     { timestamps: true }
 );

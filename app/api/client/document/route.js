@@ -7,11 +7,9 @@ import { verifyToken } from '@/utils/verifyToken';
 import { v4 as uuidv4 } from 'uuid';
 import Contract from '@/models/Contract';
 import Document from '@/models/Document';
-import User from '@/models/User';
-import Activity from '@/models/Activity';
 import Client from '@/models/Client';
-import Notification from '@/models/Notification';
-import { io } from 'socket.io-client';
+import { notify } from '@/utils/notify';
+import { addActivity } from '@/utils/addActivity';
 
 //CLIENT UPLOAD DOCUMENT TO CONTRACT => "/api/client/document?contractId=123456789"
 export async function POST(req, res) {
@@ -61,7 +59,6 @@ export async function POST(req, res) {
         }
 
         const document = await Document.findById(documentId);
-
         if (!document) {
             return NextResponse.json(
                 {
@@ -116,47 +113,29 @@ export async function POST(req, res) {
             document.markModified('file');
         }
 
+        document.status = 'underReview';
+        document.markModified('status');
         await document.save();
 
         const clientName = client.firstName + ' ' + client.lastName;
+        const message = `فایل جدید برای چک لیست با عنوان ${document.nameFarsi} توسط ${clientName} بارگذاری شد.`;
 
-        const activityRecord = {
+        await notify({
+            subject: 'اطلاعیه',
+            message: message,
+            type: 'info',
+            senderModel: 'system',
+            receiver: contract.users,
+            receiverModel: 'User',
+        });
+
+        await addActivity({
             action: 'upload',
             performedBy: client._id,
             performedByModel: 'Client',
-            details: `فایل جدید برای چک لیست با عنوان ${document.nameFarsi} توسط ${clientName} بارگذاری شد.`,
+            details: message,
             contractId: contractId,
-            timestamp: new Date(),
-        };
-
-        const newActivity = new Activity(activityRecord);
-        await newActivity.save();
-
-        contract.activities.push(newActivity._id);
-        contract.markModified('activities');
-        contract.save();
-
-        const newNotification = {
-            subject: 'اطلاعیه',
-            body: `فایل جدید برای چک لیست با عنوان ${document.nameFarsi} توسط ${clientName} بارگذاری شد.`,
-            type: 'info',
-            senderModel: 'system',
-            receiver: contract.users.map((user) => user._id),
-            receiverModel: 'User',
-        };
-
-        const notification = new Notification(newNotification);
-        await notification.save();
-
-        for (const user of contract.users) {
-            user.notifications.push(notification._id);
-            user.markModified('notifications');
-            await user.save();
-        }
-
-        const socket = io('http://localhost:7007');
-        const message = `فایل جدید برای چک لیست با عنوان  توسط  بارگذاری شد.`;
-        socket.emit('notification', message);
+        });
 
         return NextResponse.json({
             success: true,
@@ -229,25 +208,21 @@ export async function PUT(req) {
         document.file.url = '';
         document.markModified('file');
 
+        document.status = 'pending';
+        document.markModified('status');
+
         await document.save();
 
         const clientName = client.firstName + ' ' + client.lastName;
+        const message = `فایل آپلود شده برای چک لیست با عنوان ${document.nameFarsi} توسط ${clientName} حذف شد.`;
 
-        const activityRecord = {
+        await addActivity({
             action: 'delete',
             performedBy: client._id,
             performedByModel: 'Client',
-            details: `فایل آپلود شده برای چک لیست با عنوان ${document.nameFarsi} توسط ${clientName} حذف شد.`,
+            details: message,
             contractId: contractId,
-            timestamp: new Date(),
-        };
-
-        const newActivity = new Activity(activityRecord);
-        await newActivity.save();
-
-        contract.activities.push(newActivity._id);
-        contract.markModified('activities');
-        contract.save();
+        });
 
         return NextResponse.json({ success: true, data: document });
     } catch (error) {
