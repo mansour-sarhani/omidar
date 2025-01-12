@@ -74,7 +74,7 @@ export async function POST(req) {
     }
 }
 
-export async function GET(req, NextApiResponse) {
+export async function GET(req) {
     await dbConnect();
 
     const authError = await authMiddleware(req);

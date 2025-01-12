@@ -22,7 +22,7 @@ export async function GET() {
 
     try {
         //ADMIN GET ALL COUNTRIES => "/api/admin/country"
-        const countries = await Country.find();
+        const countries = await Country.find({});
 
         const filteredCountries = countries
             .filter((country) => !country.deleted)

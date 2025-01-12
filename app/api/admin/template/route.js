@@ -25,7 +25,7 @@ export async function GET() {
 
     try {
         //ADMIN GET ALL DOCUMENT TEMPLATES => "/api/admin/template"
-        const docTemplates = await DocTemplate.find();
+        const docTemplates = await DocTemplate.find({});
 
         const filteredDocTemplates = docTemplates
             .filter((docTemplate) => !docTemplate.deleted)

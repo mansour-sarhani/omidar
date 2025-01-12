@@ -324,7 +324,7 @@ export async function GET(req) {
             );
         } else {
             // GET ALL CONTRACTS => "/api/contract"
-            const contracts = await Contract.find()
+            const contracts = await Contract.find({})
                 .populate('client')
                 .populate('users')
                 .populate('countries')
