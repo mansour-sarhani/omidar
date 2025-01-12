@@ -100,7 +100,7 @@ export async function GET() {
 
     try {
         //GET ALL COUNTRIES => "/api/country"
-        const countries = await Country.find();
+        const countries = await Country.find({});
 
         const filteredCountries = countries
             .filter(

@@ -130,7 +130,7 @@ export async function GET() {
     }
 
     try {
-        const docTemplates = await DocTemplate.find();
+        const docTemplates = await DocTemplate.find({});
 
         const filteredDocTemplates = docTemplates
             .filter(

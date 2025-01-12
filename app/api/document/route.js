@@ -224,7 +224,7 @@ export async function GET() {
 
     try {
         //GET ALL DOCUMENTS => "/api/document"
-        const documents = await Document.find();
+        const documents = await Document.find({});
 
         const filteredDocuments = documents
             .filter(
