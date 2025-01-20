@@ -11,6 +11,10 @@ import OmProgress from '@/components/common/OmProgress';
 import OmTableFooter from '@/components/common/OmTableFooter';
 import AddClientForm from '@/components/forms/AddClientForm';
 import AdminUpdateClientForm from '@/components/forms/AdminUpdateClientForm';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterClientForm from '@/components/forms/FilterClientForm';
+import ChangePasswordModal from '@/components/modals/ChangePasswordModal';
+import OmAvatar from '@/components/common/OmAvatar';
 import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -19,13 +23,22 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import ChangePasswordModal from '@/components/modals/ChangePasswordModal';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 export default function ClientManagementPage() {
     const [clients, setClients] = useState(null);
     const [doReload, setDoReload] = useState(true);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [mobile, setMobile] = useState('');
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(20);
+    const [open, setOpen] = useState(false);
 
     const { dispatch, enqueueSnackbar, router } = useCommonHooks();
 
@@ -37,8 +50,12 @@ export default function ClientManagementPage() {
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+        setRowsPerPage(parseInt(event.target.value, 20));
         setPage(0);
+    };
+
+    const toggleDrawer = (newOpen) => () => {
+        setOpen(newOpen);
     };
 
     useEffect(() => {
@@ -61,14 +78,52 @@ export default function ClientManagementPage() {
                         جدیدی اضافه نمایید.
                     </Typography>
                 </div>
-                <PanelModal
-                    buttonLabel="اضافه کردن متقاضی"
-                    modalHeader="اضافه کردن متقاضی"
-                    icon="add"
-                >
-                    <AddClientForm setDoReload={setDoReload} />
-                </PanelModal>
+                <div className="panel-inner-header-btns">
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={toggleDrawer(true)}
+                    >
+                        <FilterListIcon />
+                        فیلترها
+                    </Button>
+                    <PanelModal
+                        buttonLabel="اضافه کردن متقاضی"
+                        modalHeader="اضافه کردن متقاضی"
+                        icon="add"
+                    >
+                        <AddClientForm setDoReload={setDoReload} />
+                    </PanelModal>
+                </div>
             </div>
+
+            <Drawer
+                className="panel-filter-drawer"
+                anchor="right"
+                open={open}
+                onClose={toggleDrawer(false)}
+            >
+                <div className="panel-filter-container">
+                    <div className="panel-filter-header">
+                        <Typography variant="h6">فیلتر متقاضیان</Typography>
+                        <IconButton onClick={toggleDrawer(false)}>
+                            <HighlightOffIcon />
+                        </IconButton>
+                    </div>
+                    <FilterClientForm
+                        firstName={firstName}
+                        setFirstName={setFirstName}
+                        lastName={lastName}
+                        setLastName={setLastName}
+                        mobile={mobile}
+                        setMobile={setMobile}
+                        email={email}
+                        setEmail={setEmail}
+                        setClients={setClients}
+                        setOpen={setOpen}
+                    />
+                </div>
+            </Drawer>
 
             {!clients ? (
                 <OmProgress />
@@ -81,7 +136,7 @@ export default function ClientManagementPage() {
                                     <TableCell align="center" width={70}>
                                         ردیف
                                     </TableCell>
-                                    <TableCell align="center">
+                                    <TableCell align="right">
                                         نام و نام خانوادگی
                                     </TableCell>
                                     <TableCell align="center">
@@ -107,10 +162,21 @@ export default function ClientManagementPage() {
                                         <TableCell align="center">
                                             {index + 1}
                                         </TableCell>
-                                        <TableCell align="center">
-                                            {client.firstName +
-                                                ' ' +
-                                                client.lastName}
+                                        <TableCell align="right">
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '10px',
+                                                }}
+                                            >
+                                                <div className="panel-table-image-wrapper">
+                                                    <OmAvatar person={client} />
+                                                </div>
+                                                {client.firstName +
+                                                    ' ' +
+                                                    client.lastName}
+                                            </Box>
                                         </TableCell>
                                         <TableCell align="center">
                                             {client.mobile}

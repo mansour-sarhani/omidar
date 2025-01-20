@@ -3,24 +3,33 @@ import addOfferToContract from '@/functions/contract/addOfferToContract';
 import OmTextInput from '@/components/inputs/OmTextInput';
 import OmTextArea from '@/components/inputs/OmTextArea';
 import OmDatePicker from '@/components/inputs/OmDatePicker';
-import { Formik, Form } from 'formik';
+import { Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
+import NativeSelect from '@mui/material/NativeSelect';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 
 const initialValues = {
     title: '',
+    studyLanguage: '',
+    fieldOfStudy: '',
+    degree: '',
+    intake: '',
     university: '',
     applicationFee: '',
-    clientComment: '',
+    currency: '',
     description: '',
     interview: '',
     interviewDate: '',
     test: '',
     testDate: '',
+    languageReq: '',
+    languageReqDate: '',
     deadline: '',
 };
 
@@ -55,14 +64,20 @@ export default function AddOfferForm(props) {
             onSubmit={async (values, { setSubmitting, resetForm }) => {
                 const data = {
                     title: values.title,
+                    studyLanguage: values.studyLanguage,
+                    fieldOfStudy: values.fieldOfStudy,
+                    degree: values.degree,
+                    intake: values.intake,
                     university: values.university,
                     applicationFee: values.applicationFee,
-                    clientComment: values.clientComment,
+                    currency: values.currency,
                     description: values.description,
                     interview: values.interview,
                     interviewDate: values.interviewDate,
                     test: values.test,
                     testDate: values.testDate,
+                    languageReq: values.languageReq,
+                    languageReqDate: values.languageReqDate,
                     deadline: values.deadline,
                     userId: userId,
                     contractId: contractId,
@@ -76,12 +91,94 @@ export default function AddOfferForm(props) {
         >
             {({ values, handleChange, setFieldValue, isSubmitting }) => (
                 <Form className="om-form panel-form">
-                    <OmTextInput name="title" label="عنوان*" />
-                    <OmTextInput name="university" label="دانشگاه" />
-                    <OmTextInput name="applicationFee" label="شهریه دانشگاه" />
-                    <OmTextInput name="clientComment" label="نظر متقاضی" />
+                    <div className="panel-grid-three">
+                        <OmTextInput name="title" label="عنوان*" />
+                        <OmTextInput name="fieldOfStudy" label="رشته" />
+                        <OmTextInput name="degree" label="مقطع" />
+                    </div>
+                    <div className="panel-grid-three">
+                        <OmTextInput name="university" label="دانشگاه" />
+                        <OmTextInput
+                            name="applicationFee"
+                            label="شهریه دانشگاه"
+                        />
+                        <FormControl className="om-form-control">
+                            <label
+                                htmlFor="currency-select"
+                                className="om-label"
+                            >
+                                واحد پولی
+                            </label>
+                            <NativeSelect
+                                defaultValue={''}
+                                inputProps={{
+                                    name: 'currency',
+                                    id: 'currency-select',
+                                }}
+                                onChange={(e) => {
+                                    handleChange(e);
+                                    setFieldValue('currency', e.target.value);
+                                }}
+                                className="om-select"
+                            >
+                                <option value="">
+                                    واحد پولی را انتخاب نمایید
+                                </option>
+                                <option value={'EUR'}>یورو</option>
+                                <option value={'USD'}>دلار</option>
+                            </NativeSelect>
 
-                    <div className="panel-grid-two">
+                            <FormHelperText className="om-form-error">
+                                <ErrorMessage name={'currency'} />
+                            </FormHelperText>
+                        </FormControl>
+                    </div>
+
+                    <div className="panel-grid-three">
+                        <OmTextInput name="studyLanguage" label="زبان تحصیل" />
+
+                        <OmDatePicker
+                            name="deadline"
+                            label="مهلت ثبت نام"
+                            setFieldValue={setFieldValue}
+                        />
+                    </div>
+
+                    <div className="panel-grid-three">
+                        <FormControlLabel
+                            className="om-switch-input"
+                            style={{ marginBottom: '20px' }}
+                            control={
+                                <Switch
+                                    checked={values.languageReq}
+                                    onChange={(e) => {
+                                        handleChange(e);
+                                        setFieldValue(
+                                            'languageReq',
+                                            e.target.checked
+                                        );
+                                    }}
+                                    name="languageReq"
+                                />
+                            }
+                            label={
+                                values.languageReq ? (
+                                    <Typography>
+                                        پیش نیاز مدرک زبان{' '}
+                                        <strong className="primary-text">
+                                            دارد
+                                        </strong>
+                                    </Typography>
+                                ) : (
+                                    <Typography>
+                                        پیش نیاز مدرک زبان{' '}
+                                        <strong className="primary-text">
+                                            ندارد
+                                        </strong>
+                                    </Typography>
+                                )
+                            }
+                        />
                         <FormControlLabel
                             className="om-switch-input"
                             style={{ marginBottom: '20px' }}
@@ -151,11 +248,14 @@ export default function AddOfferForm(props) {
                     </div>
 
                     <div className="panel-grid-three">
-                        <OmDatePicker
-                            name="deadline"
-                            label="مهلت ثبت نام"
-                            setFieldValue={setFieldValue}
-                        />
+                        {values.languageReq && (
+                            <OmDatePicker
+                                name="languageReqDate"
+                                label="مهلت برای مدرک زبان"
+                                setFieldValue={setFieldValue}
+                            />
+                        )}
+
                         {values.interview && (
                             <OmDatePicker
                                 name="interviewDate"

@@ -15,14 +15,20 @@ import Typography from '@mui/material/Typography';
 
 const initialValues = {
     title: '',
+    studyLanguage: '',
+    fieldOfStudy: '',
+    degree: '',
+    intake: '',
     university: '',
     applicationFee: '',
-    clientComment: '',
+    currency: '',
     description: '',
     interview: '',
     interviewDate: '',
     test: '',
     testDate: '',
+    languageReq: '',
+    languageReqDate: '',
     deadline: '',
     status: '',
 };
@@ -62,6 +68,25 @@ export default function UpdateOfferForm(props) {
                             ? values.title
                             : null,
 
+                    studyLanguage:
+                        values.studyLanguage !== currentData.studyLanguage
+                            ? values.studyLanguage
+                            : null,
+                    degree:
+                        values.degree !== currentData.degree
+                            ? values.degree
+                            : null,
+
+                    fieldOfStudy:
+                        values.fieldOfStudy !== currentData.fieldOfStudy
+                            ? values.fieldOfStudy
+                            : null,
+
+                    intake:
+                        values.intake !== currentData.intake
+                            ? values.intake
+                            : null,
+
                     university:
                         values.university !== currentData.university
                             ? values.university
@@ -72,9 +97,9 @@ export default function UpdateOfferForm(props) {
                             ? values.applicationFee
                             : null,
 
-                    clientComment:
-                        values.clientComment !== currentData.clientComment
-                            ? values.clientComment
+                    currency:
+                        values.currency !== currentData.currency
+                            ? values.currency
                             : null,
 
                     description:
@@ -99,14 +124,19 @@ export default function UpdateOfferForm(props) {
                             ? values.testDate
                             : null,
 
+                    languageReq:
+                        values.languageReq !== currentData.languageReq
+                            ? values.languageReq
+                            : null,
+
+                    languageReqDate:
+                        values.languageReqDate !== currentData.languageReqDate
+                            ? values.languageReqDate
+                            : null,
+
                     deadline:
                         values.deadline !== currentData.deadline
                             ? values.deadline
-                            : null,
-
-                    status:
-                        values.status !== currentData.status
-                            ? values.status
                             : null,
                 };
 
@@ -138,34 +168,88 @@ export default function UpdateOfferForm(props) {
         >
             {({ values, handleChange, setFieldValue, isSubmitting }) => (
                 <Form className="om-form panel-form">
-                    <FormControl className="om-form-control">
-                        <label htmlFor="status-select" className="om-label">
-                            وضعیت
-                        </label>
-                        <NativeSelect
-                            defaultValue={values.status}
-                            inputProps={{
-                                name: 'status',
-                                id: 'status-select',
-                            }}
-                            onChange={(e) => {
-                                handleChange(e);
-                                setFieldValue('status', e.target.value);
-                            }}
-                            className="om-select"
-                        >
-                            <option value="">وضعیت آفر را انتخاب نمایید</option>
-                            <option value="approved">تایید شده</option>
-                            <option value="rejected">رد شده</option>
-                            <option value="pending">در انتظار متقاضی</option>
-                        </NativeSelect>
-                    </FormControl>
-                    <OmTextInput name="title" label="عنوان*" />
-                    <OmTextInput name="university" label="دانشگاه" />
-                    <OmTextInput name="applicationFee" label="شهریه دانشگاه" />
-                    <OmTextInput name="clientComment" label="نظر متقاضی" />
+                    <div className="panel-grid-three">
+                        <OmTextInput name="title" label="عنوان*" />
+                        <OmTextInput name="fieldOfStudy" label="رشته" />
+                        <OmTextInput name="degree" label="مقطع" />
+                    </div>
+                    <div className="panel-grid-three">
+                        <OmTextInput name="university" label="دانشگاه" />
+                        <OmTextInput
+                            name="applicationFee"
+                            label="شهریه دانشگاه"
+                        />
+                        <FormControl className="om-form-control">
+                            <label
+                                htmlFor="currency-select"
+                                className="om-label"
+                            >
+                                واحد پولی
+                            </label>
+                            <NativeSelect
+                                defaultValue={values.currency}
+                                inputProps={{
+                                    name: 'currency',
+                                    id: 'currency-select',
+                                }}
+                                onChange={(e) => {
+                                    handleChange(e);
+                                    setFieldValue('currency', e.target.value);
+                                }}
+                                className="om-select"
+                            >
+                                <option value={'EUR'}>یورو</option>
+                                <option value={'USD'}>دلار</option>
+                            </NativeSelect>
+                        </FormControl>
+                    </div>
 
-                    <div className="panel-grid-two">
+                    <div className="panel-grid-three">
+                        <OmTextInput name="studyLanguage" label="زبان تحصیل" />
+
+                        <OmDatePicker
+                            name="deadline"
+                            label="مهلت ثبت نام"
+                            setFieldValue={setFieldValue}
+                            savedValue={values.deadline}
+                        />
+                    </div>
+
+                    <div className="panel-grid-three">
+                        <FormControlLabel
+                            className="om-switch-input"
+                            style={{ marginBottom: '20px' }}
+                            control={
+                                <Switch
+                                    checked={values.languageReq}
+                                    onChange={(e) => {
+                                        handleChange(e);
+                                        setFieldValue(
+                                            'languageReq',
+                                            e.target.checked
+                                        );
+                                    }}
+                                    name="languageReq"
+                                />
+                            }
+                            label={
+                                values.languageReq ? (
+                                    <Typography>
+                                        پیش نیاز مدرک زبان{' '}
+                                        <strong className="primary-text">
+                                            دارد
+                                        </strong>
+                                    </Typography>
+                                ) : (
+                                    <Typography>
+                                        پیش نیاز مدرک زبان{' '}
+                                        <strong className="primary-text">
+                                            ندارد
+                                        </strong>
+                                    </Typography>
+                                )
+                            }
+                        />
                         <FormControlLabel
                             className="om-switch-input"
                             style={{ marginBottom: '20px' }}
@@ -235,12 +319,15 @@ export default function UpdateOfferForm(props) {
                     </div>
 
                     <div className="panel-grid-three">
-                        <OmDatePicker
-                            name="deadline"
-                            label="مهلت ثبت نام"
-                            setFieldValue={setFieldValue}
-                            savedValue={values.deadline}
-                        />
+                        {values.languageReq && (
+                            <OmDatePicker
+                                name="languageReqDate"
+                                label="مهلت برای مدرک زبان"
+                                setFieldValue={setFieldValue}
+                                savedValue={values.languageReqDate}
+                            />
+                        )}
+
                         {values.interview && (
                             <OmDatePicker
                                 name="interviewDate"
@@ -249,6 +336,7 @@ export default function UpdateOfferForm(props) {
                                 savedValue={values.interviewDate}
                             />
                         )}
+
                         {values.test && (
                             <OmDatePicker
                                 name="testDate"

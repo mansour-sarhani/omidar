@@ -52,16 +52,18 @@ export default function AdminSidebar({ user }) {
                             >
                                 <Link href="/admin/dashboard">پیشخوان</Link>
                             </li>
-                            <li
-                                className={getMenuItemClass(
-                                    path,
-                                    '/admin/user'
-                                )}
-                            >
-                                <Link href="/admin/user">
-                                    مدیریت افراد مجموعه
-                                </Link>
-                            </li>
+                            {user.role === 'admin' && (
+                                <li
+                                    className={getMenuItemClass(
+                                        path,
+                                        '/admin/user'
+                                    )}
+                                >
+                                    <Link href="/admin/user">
+                                        مدیریت افراد مجموعه
+                                    </Link>
+                                </li>
+                            )}
                             <li
                                 className={getMenuItemClass(
                                     path,
@@ -82,14 +84,18 @@ export default function AdminSidebar({ user }) {
                                     مدیریت قراردادها
                                 </Link>
                             </li>
-                            <li
-                                className={getMenuItemClass(
-                                    path,
-                                    '/admin/country'
-                                )}
-                            >
-                                <Link href="/admin/country">مدیریت کشورها</Link>
-                            </li>
+                            {user.role === 'admin' && (
+                                <li
+                                    className={getMenuItemClass(
+                                        path,
+                                        '/admin/country'
+                                    )}
+                                >
+                                    <Link href="/admin/country">
+                                        مدیریت کشورها
+                                    </Link>
+                                </li>
+                            )}
                             <li
                                 className={getMenuItemClass(
                                     path,
@@ -100,6 +106,11 @@ export default function AdminSidebar({ user }) {
                                     نمونه قالب فایل ها
                                 </Link>
                             </li>
+
+                            <div className="panel-sidebar-separator">
+                                <Typography variant="h6">پنل کاربر</Typography>
+                            </div>
+
                             <li
                                 className={getMenuItemClass(
                                     path,
@@ -107,23 +118,6 @@ export default function AdminSidebar({ user }) {
                                 )}
                             >
                                 <Link href="/admin/notification">اعلان ها</Link>
-                            </li>
-                        </>
-                    )}
-                    {user.role === 'consultant' && (
-                        <>
-                            <div className="panel-sidebar-separator">
-                                <Typography variant="h6">پنل مشاور</Typography>
-                            </div>
-                            <li
-                                className={getMenuItemClass(
-                                    path,
-                                    '/admin/contract'
-                                )}
-                            >
-                                <Link href="/admin/contract">
-                                    مدیریت قراردادها
-                                </Link>
                             </li>
                         </>
                     )}

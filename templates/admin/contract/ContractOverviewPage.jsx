@@ -43,7 +43,6 @@ export default function ContractOverviewPage({ contractNo }) {
                         اطلاعات قرارداد
                         {'   '}
                     </Typography>
-                    {setStatusLabel(contract.status)}
                 </div>
                 <div className="contract-info-wrapper">
                     <div className="contract-info-row">
@@ -57,22 +56,20 @@ export default function ContractOverviewPage({ contractNo }) {
                         </div>
                         <div className="contract-info-line">
                             <label className="contract-info-label">
-                                زمان ایجاد قرارداد:
+                                تاریخ صدور قرارداد:
                             </label>
                             <span className="contract-info-value">
-                                {dateFormatter(contract.createdAt)}
+                                {contract.issueDate
+                                    ? dateFormatter(contract.issueDate)
+                                    : '-'}
                             </span>
                         </div>
                         <div className="contract-info-line">
                             <label className="contract-info-label">
-                                آخرین به روزرسانی:
+                                وضعیت:
                             </label>
                             <span className="contract-info-value">
-                                {dateFormatter(
-                                    contract.updatedAt
-                                        ? contract.updatedAt
-                                        : contract.createdAt
-                                )}
+                                {setStatusLabel(contract.status)}
                             </span>
                         </div>
                     </div>
@@ -116,22 +113,22 @@ export default function ContractOverviewPage({ contractNo }) {
                         </div>
                         <div className="contract-info-line">
                             <label className="contract-info-label">
-                                تاریخ ورود:
+                                زمان ایجاد قرارداد:
                             </label>
                             <span className="contract-info-value">
-                                {contract.arrivalDate
-                                    ? dateFormatter(contract.arrivalDate)
-                                    : '-'}
+                                {dateFormatter(contract.createdAt)}
                             </span>
                         </div>
                         <div className="contract-info-line">
                             <label className="contract-info-label">
-                                تاریخ انقضای ویزا:
+                                آخرین به روزرسانی:
                             </label>
                             <span className="contract-info-value">
-                                {contract.visaExpiryDate
-                                    ? dateFormatter(contract.visaExpiryDate)
-                                    : '-'}
+                                {dateFormatter(
+                                    contract.updatedAt
+                                        ? contract.updatedAt
+                                        : contract.createdAt
+                                )}
                             </span>
                         </div>
                     </div>

@@ -15,6 +15,7 @@ const initialValues = {
     username: '',
     nationalId: '',
     fatherName: '',
+    motherName: '',
     zipCode: '',
     address: '',
     sex: '',
@@ -87,6 +88,10 @@ export default function AdminUpdateClientForm(props) {
                         values.fatherName !== currentData.fatherName
                             ? values.fatherName
                             : null,
+                    motherName:
+                        values.motherName !== currentData.motherName
+                            ? values.motherName
+                            : null,
                     zipCode:
                         values.zipCode !== currentData.zipCode
                             ? values.zipCode
@@ -132,28 +137,50 @@ export default function AdminUpdateClientForm(props) {
         >
             {({ values, handleChange, setFieldValue, isSubmitting }) => (
                 <Form className="om-form panel-form">
+                    <FormControl className="om-form-control">
+                        <label htmlFor="status-select" className="om-label">
+                            وضعیت*
+                        </label>
+                        <NativeSelect
+                            defaultValue={values.status}
+                            inputProps={{
+                                name: 'status',
+                                id: 'status-select',
+                            }}
+                            onChange={(e) => {
+                                handleChange(e);
+                                setFieldValue('status', e.target.value);
+                            }}
+                            className="om-select"
+                        >
+                            <option value="active">فعال</option>
+                            <option value="inactive">غیر فعال</option>
+                            <option value="banned">مسدود شده</option>
+                        </NativeSelect>
+                    </FormControl>
                     <div className="panel-grid-two">
-                        <FormControl className="om-form-control">
-                            <label htmlFor="status-select" className="om-label">
-                                وضعیت*
-                            </label>
-                            <NativeSelect
-                                defaultValue={values.status}
-                                inputProps={{
-                                    name: 'status',
-                                    id: 'status-select',
-                                }}
-                                onChange={(e) => {
-                                    handleChange(e);
-                                    setFieldValue('status', e.target.value);
-                                }}
-                                className="om-select"
-                            >
-                                <option value="active">فعال</option>
-                                <option value="inactive">غیر فعال</option>
-                                <option value="banned">مسدود شده</option>
-                            </NativeSelect>
-                        </FormControl>
+                        <OmTextInput name="nationalId" label="کد ملی*" />
+                        <OmTextInput name="username" label="نام کاربری*" />
+                    </div>
+                    <div className="panel-grid-two">
+                        <OmTextInput name="firstName" label="نام*" />
+                        <OmTextInput name="lastName" label="نام خانوادگی*" />
+                    </div>
+                    <div className="panel-grid-two">
+                        <OmTextInput name="fatherName" label="نام پدر" />
+                        <OmTextInput name="motherName" label="نام مادر" />
+                    </div>
+                    <div className="panel-grid-two">
+                        <OmTextInput name="email" label="ایمیل*" />
+                        <OmTextInput name="mobile" label="شماره موبایل*" />
+                    </div>
+                    <div className="panel-grid-two">
+                        <OmDatePicker
+                            name="dateOfBirth"
+                            label="تاریخ تولد"
+                            setFieldValue={setFieldValue}
+                            savedValue={values.dateOfBirth}
+                        />
                         <FormControl className="om-form-control">
                             <label htmlFor="sex-select" className="om-label">
                                 جنسیت
@@ -178,28 +205,6 @@ export default function AdminUpdateClientForm(props) {
                             </NativeSelect>
                         </FormControl>
                     </div>
-                    <div className="panel-grid-two">
-                        <OmTextInput name="nationalId" label="کد ملی*" />
-                        <OmTextInput name="username" label="نام کاربری*" />
-                    </div>
-                    <div className="panel-grid-two">
-                        <OmTextInput name="firstName" label="نام*" />
-                        <OmTextInput name="lastName" label="نام خانوادگی*" />
-                    </div>
-                    <div className="panel-grid-two">
-                        <OmTextInput name="fatherName" label="نام پدر" />
-                        <OmDatePicker
-                            name="dateOfBirth"
-                            label="تاریخ تولد"
-                            setFieldValue={setFieldValue}
-                            savedValue={values.dateOfBirth}
-                        />
-                    </div>
-                    <div className="panel-grid-two">
-                        <OmTextInput name="email" label="ایمیل*" />
-                        <OmTextInput name="mobile" label="شماره موبایل*" />
-                    </div>
-
                     <OmTextInput name="zipCode" label="کد پستی" />
                     <OmTextInput name="address" label="آدرس" />
 

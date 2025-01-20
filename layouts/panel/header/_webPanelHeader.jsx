@@ -52,8 +52,18 @@ export default function WebPanelHeader(props) {
                         <li className="menu-item link-item">
                             <Link href="/">
                                 <HomeOutlinedIcon />
-                                صفحه اصلی
+                                خانه
                             </Link>
+                        </li>
+                        <li className="menu-item link-item">
+                            <a href="https://omidarmigrate.com/">
+                                وبسایت امیدار
+                            </a>
+                        </li>
+                        <li className="menu-item link-item">
+                            <a href="https://omidarmigrate.com/blog/">
+                                مجله مهاجرت
+                            </a>
                         </li>
                     </ul>
                 </div>

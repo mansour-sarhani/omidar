@@ -25,7 +25,6 @@ export async function POST(req) {
         const description = formData.get('description');
         const uploadBy = formData.get('uploadBy');
         const contractId = formData.get('contractId');
-        const status = formData.get('status');
         const uploadByModel = 'User';
 
         const documentExists = await Document.findOne({ documentNo });
@@ -51,7 +50,7 @@ export async function POST(req) {
             uploadBy,
             uploadByModel,
             contractId,
-            status,
+            status: isCheckList ? 'pending' : 'active',
             sample: {
                 url: '',
                 path: '/assets/storage/documents/',
@@ -212,13 +211,12 @@ export async function GET() {
             uploadBy: document.uploadBy,
             uploadByModel: document.uploadByModel,
             contractId: document.contractId,
-            comments: document.comments,
             file: document.file,
             sample: document.sample,
+            comments: document.comments,
             status: document.status,
             createdAt: document.createdAt,
             updatedAt: document.updated,
-            deleted: document.deleted,
         };
     }
 

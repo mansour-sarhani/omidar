@@ -59,7 +59,7 @@ export default function ContractDocumentsPage({ contractNo }) {
     const [documents, setDocuments] = useState(null);
     const [doReload, setDoReload] = useState(true);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(20);
     const [value, setValue] = useState(0);
     const [anchorEl, setAnchorEl] = useState(null);
     const [description, setDescription] = useState('');
@@ -76,7 +76,7 @@ export default function ContractDocumentsPage({ contractNo }) {
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+        setRowsPerPage(parseInt(event.target.value, 20));
         setPage(0);
     };
 
@@ -152,8 +152,8 @@ export default function ContractDocumentsPage({ contractNo }) {
                     <div className="contract-page-heading">
                         <Typography variant="h4">چک لیست مدارک</Typography>
                         <PanelModal
-                            buttonLabel="اضافه کردن قالب فایل"
-                            modalHeader="اضافه کردن قالب فایل"
+                            buttonLabel="اضافه کردن چک لیست"
+                            modalHeader="اضافه کردن چک لیست"
                             icon="add"
                         >
                             <AddDocumentForm
@@ -161,6 +161,7 @@ export default function ContractDocumentsPage({ contractNo }) {
                                 contractId={contract._id}
                                 uploaderId={userData._id}
                                 isCheckList={true}
+                                contractNo={contractNo}
                             />
                         </PanelModal>
                     </div>
@@ -346,7 +347,7 @@ export default function ContractDocumentsPage({ contractNo }) {
                                                             <PanelModal
                                                                 data={document}
                                                                 buttonLabel="به روزرسانی"
-                                                                modalHeader="به روزرسانی قالب فایل"
+                                                                modalHeader="به روزرسانی چک لیست"
                                                                 type="table"
                                                                 icon="edit"
                                                                 tooltipTitle="ویرایش"
@@ -418,6 +419,7 @@ export default function ContractDocumentsPage({ contractNo }) {
                             <AddDocumentForm
                                 setDoReload={setDoReload}
                                 contractId={contract._id}
+                                contractNo={contractNo}
                                 uploader="user"
                                 uploaderId={userData._id}
                                 isCheckList={false}

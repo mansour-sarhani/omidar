@@ -121,11 +121,11 @@ export async function GET() {
             type: docType.type,
             format: docType.format,
             description: docType.description,
+            uploadBy: docType.uploadBy,
             sample: docType.sample,
             status: docType.status,
             createdAt: docType.createdAt,
             updatedAt: docType.updated,
-            deleted: docType.deleted,
         };
     }
 

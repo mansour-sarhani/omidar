@@ -8,15 +8,13 @@ export async function GET() {
     function countryDetails(country) {
         return {
             _id: country._id,
-            createdAt: country.createdAt,
-            updatedAt: country.updated,
             Id: country.Id,
             nameFarsi: country.nameFarsi,
             nameEnglish: country.nameEnglish,
             flag: country.flag,
-            country: country.country,
             status: country.status,
-            deleted: country.deleted,
+            createdAt: country.createdAt,
+            updatedAt: country.updated,
         };
     }
 

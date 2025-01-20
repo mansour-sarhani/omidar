@@ -9,12 +9,20 @@ const offerSchema = new Schema(
             type: String,
             required: true,
         },
-        university: {
+        studyLanguage: {
             type: String,
         },
-        user: {
-            type: Schema.Types.ObjectId,
-            ref: 'User',
+        fieldOfStudy: {
+            type: String,
+        },
+        degree: {
+            type: String,
+        },
+        intake: {
+            type: String,
+        },
+        university: {
+            type: String,
         },
         client: {
             type: Schema.Types.ObjectId,
@@ -28,10 +36,11 @@ const offerSchema = new Schema(
         applicationFee: {
             type: Number,
         },
-        description: {
+        currency: {
             type: String,
+            enum: ['USD', 'EUR', 'IRT'],
         },
-        clientComment: {
+        description: {
             type: String,
         },
         interview: {
@@ -46,14 +55,18 @@ const offerSchema = new Schema(
         testDate: {
             type: Date,
         },
+        languageReq: {
+            type: Boolean,
+        },
+        languageReqDate: {
+            type: Date,
+        },
         deadline: {
             type: Date,
         },
         status: {
             type: String,
-            enum: ['pending', 'approved', 'rejected', 'deleted'],
-            default: 'pending',
-            required: true,
+            enum: ['active', 'deleted'],
         },
         deleted: {
             type: Boolean,

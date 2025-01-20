@@ -36,16 +36,22 @@ export async function POST(req) {
 
         const formData = await req.formData();
         const title = formData.get('title');
+        const studyLanguage = formData.get('studyLanguage');
+        const fieldOfStudy = formData.get('fieldOfStudy');
+        const degree = formData.get('degree');
+        const intake = formData.get('intake');
         const university = formData.get('university');
         const userId = formData.get('userId');
         const clientId = formData.get('clientId');
         const applicationFee = formData.get('applicationFee');
+        const currency = formData.get('currency');
         const description = formData.get('description');
-        const clientComment = formData.get('clientComment');
         const interview = formData.get('interview');
         const interviewDate = formData.get('interviewDate');
         const test = formData.get('test');
         const testDate = formData.get('testDate');
+        const languageReq = formData.get('languageReq');
+        const languageReqDate = formData.get('languageReqDate');
         const deadline = formData.get('deadline');
 
         const user = await User.findById(userId);
@@ -55,16 +61,22 @@ export async function POST(req) {
 
         const offerData = {
             title,
+            studyLanguage,
+            fieldOfStudy,
+            degree,
+            intake,
             university,
             user: userId,
             client: clientId,
             applicationFee,
-            clientComment,
+            currency,
             description,
             interview,
             interviewDate,
             test,
             testDate,
+            languageReq,
+            languageReqDate,
             deadline,
             contractId,
         };
@@ -213,25 +225,47 @@ export async function PUT(req) {
             return NextResponse.json({ success: true, data: offer });
         } else if (action === 'update') {
             const title = formData.get('title');
+            const studyLanguage = formData.get('studyLanguage');
+            const fieldOfStudy = formData.get('fieldOfStudy');
+            const degree = formData.get('degree');
+            const intake = formData.get('intake');
             const university = formData.get('university');
+            const userId = formData.get('userId');
             const applicationFee = formData.get('applicationFee');
-            const clientComment = formData.get('clientComment');
+            const currency = formData.get('currency');
             const description = formData.get('description');
             const interview = formData.get('interview');
             const interviewDate = formData.get('interviewDate');
             const test = formData.get('test');
             const testDate = formData.get('testDate');
+            const languageReq = formData.get('languageReq');
+            const languageReqDate = formData.get('languageReqDate');
             const deadline = formData.get('deadline');
             const status = formData.get('status');
-
-            if (offerId !== null) {
-                offer.offerId = offerId;
-                offer.markModified('offerId');
-            }
 
             if (title !== null) {
                 offer.title = title;
                 offer.markModified('title');
+            }
+
+            if (studyLanguage !== null) {
+                offer.studyLanguage = studyLanguage;
+                offer.markModified('studyLanguage');
+            }
+
+            if (fieldOfStudy !== null) {
+                offer.fieldOfStudy = fieldOfStudy;
+                offer.markModified('fieldOfStudy');
+            }
+
+            if (degree !== null) {
+                offer.degree = degree;
+                offer.markModified('degree');
+            }
+
+            if (intake !== null) {
+                offer.intake = intake;
+                offer.markModified('intake');
             }
 
             if (university !== null) {
@@ -244,14 +278,14 @@ export async function PUT(req) {
                 offer.markModified('applicationFee');
             }
 
+            if (currency !== null) {
+                offer.currency = currency;
+                offer.markModified('currency');
+            }
+
             if (description !== null) {
                 offer.description = description;
                 offer.markModified('description');
-            }
-
-            if (clientComment !== null) {
-                offer.clientComment = clientComment;
-                offer.markModified('clientComment');
             }
 
             if (interview !== null) {
@@ -272,6 +306,16 @@ export async function PUT(req) {
             if (testDate !== null) {
                 offer.testDate = testDate;
                 offer.markModified('testDate');
+            }
+
+            if (languageReq !== null) {
+                offer.languageReq = languageReq;
+                offer.markModified('languageReq');
+            }
+
+            if (languageReqDate !== null) {
+                offer.languageReqDate = languageReqDate;
+                offer.markModified('languageReqDate');
             }
 
             if (deadline !== null) {

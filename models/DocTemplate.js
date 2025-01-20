@@ -7,7 +7,6 @@ const docTemplateSchema = new Schema(
         },
         refNo: {
             type: Number,
-            index: true,
             required: true,
         },
         nameFarsi: {

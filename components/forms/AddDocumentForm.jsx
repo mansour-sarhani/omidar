@@ -21,7 +21,6 @@ const initialValues = {
     type: '',
     format: '',
     description: '',
-    status: '',
     sample: null,
     file: null,
 };
@@ -42,6 +41,7 @@ export default function AddDocumentForm(props) {
         uploaderId,
         contractId = null,
         isCheckList,
+        contractNo,
     } = props;
 
     const { dispatch, enqueueSnackbar } = useCommonHooks();
@@ -51,7 +51,10 @@ export default function AddDocumentForm(props) {
         const template = templates.find(
             (template) => template._id === templateId
         );
-        setSavedValues(template);
+        setSavedValues({
+            ...template,
+            documentNo: template.refNo + contractNo,
+        });
 
         if (templateId === '') {
             setSavedValues(null);
@@ -93,11 +96,11 @@ export default function AddDocumentForm(props) {
                     type: values.type,
                     format: values.format,
                     description: values.description,
-                    status: values.status,
                     isCheckList: isCheckList,
                     file: values.file ? values.file[0] : null,
                     sample: values.sample ? values.sample[0] : null,
                     savedSampleUrl: savedValues ? savedValues.sample.url : '',
+                    status: isCheckList ? 'pending' : 'approved',
                     uploadBy: uploaderId,
                     contractId: contractId ? contractId : null,
                 };
@@ -143,45 +146,13 @@ export default function AddDocumentForm(props) {
                                 ))}
                             </NativeSelect>
                         </FormControl>
-                        <FormControl className="om-form-control">
-                            <label htmlFor="status-select" className="om-label">
-                                وضعیت
-                            </label>
-                            <NativeSelect
-                                value={values.status}
-                                inputProps={{
-                                    name: 'status',
-                                    id: 'status-select',
-                                }}
-                                onChange={(e) => {
-                                    handleChange(e);
-                                    setFieldValue('status', e.target.value);
-                                }}
-                                className="om-select"
-                            >
-                                <option value="">
-                                    وضعیت قالب را انتخاب نمایید
-                                </option>
-                                <option value="approved">تایید شده</option>
-                                <option value="pending">
-                                    در انتظار متقاضی
-                                </option>
-                                <option value="underReview">
-                                    در انتظار کارشناس
-                                </option>
-                            </NativeSelect>
-                        </FormControl>
-                    </div>
 
-                    <OmTextInput
-                        name="documentNo"
-                        placeholder={'شماره رفرنس فایل + شماره قرارداد'}
-                        label={
-                            savedValues
-                                ? `شماره فایل* (شماره رفرنس قالب انتخابی: ${savedValues.refNo})`
-                                : 'شماره فایل*'
-                        }
-                    />
+                        <OmTextInput
+                            name="documentNo"
+                            placeholder={'شماره رفرنس فایل + شماره قرارداد'}
+                            label="شماره فایل*"
+                        />
+                    </div>
                     <div className="panel-grid-two">
                         <OmTextInput
                             name="nameFarsi"
@@ -310,7 +281,7 @@ export default function AddDocumentForm(props) {
                         style={{ marginTop: '1rem' }}
                     >
                         <AddIcon />
-                        اضافه کردن قالب فایل
+                        ثبت
                     </Button>
                 </Form>
             )}

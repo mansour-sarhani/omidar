@@ -7,11 +7,10 @@ import FA from '@/utils/localizationFa';
 import Counter from '@/models/Counter';
 import Contract from '@/models/Contract';
 import User from '@/models/User';
-import Activity from '@/models/Activity';
 import Client from '@/models/Client';
+import Activity from '@/models/Activity';
 import Notification from '@/models/Notification';
 import Country from '@/models/Country';
-import Admission from '@/models/Admission';
 import Document from '@/models/Document';
 import Message from '@/models/Message';
 import Offer from '@/models/Offer';
@@ -33,6 +32,7 @@ export async function POST(req) {
         const countryId = formData.get('countryId');
         const contractNo = formData.get('contractNo');
         const clientId = formData.get('clientId');
+        const issueDate = formData.get('issueDate');
         const createdBy = formData.get('createdBy');
 
         const contractExists = await Contract.findOne({ contractNo });
@@ -75,6 +75,8 @@ export async function POST(req) {
             client: clientId,
             lastUpdatedByModel: 'User',
             countries: [],
+            issueDate,
+            status: 'processing',
         };
 
         contractData.countries.push(countryId);
@@ -143,7 +145,6 @@ export async function GET(req) {
             createdBy: contract.createdBy,
             countries: contract.countries,
             users: contract.users,
-            admissions: contract.admissions,
             offers: contract.offers,
             documents: contract.documents,
             payments: contract.payments,
@@ -151,8 +152,7 @@ export async function GET(req) {
             visas: contract.visas,
             messages: contract.messages,
             activities: contract.activities,
-            visaExpiryDate: contract.visaExpiryDate,
-            arrivalDate: contract.arrivalDate,
+            issueDate: contract.issueDate,
             status: contract.status,
             createdAt: contract.createdAt,
             updatedAt: contract.updated,
@@ -166,7 +166,6 @@ export async function GET(req) {
                 .populate('client')
                 .populate('users')
                 .populate('countries')
-                .populate('admissions')
                 .populate('offers')
                 .populate('documents')
                 .populate('payments')
@@ -192,7 +191,6 @@ export async function GET(req) {
                 .populate('client')
                 .populate('users')
                 .populate('countries')
-                .populate('admissions')
                 .populate('offers')
                 .populate('documents')
                 .populate('payments')
@@ -218,7 +216,6 @@ export async function GET(req) {
                 .populate('client')
                 .populate('users')
                 .populate('countries')
-                .populate('admissions')
                 .populate('offers')
                 .populate('documents')
                 .populate('payments')
@@ -248,7 +245,6 @@ export async function GET(req) {
                 .populate('client')
                 .populate('users')
                 .populate('countries')
-                .populate('admissions')
                 .populate('offers')
                 .populate('documents')
                 .populate('payments')
@@ -278,10 +274,6 @@ export async function GET(req) {
 
                 case 'countries':
                     returnedData = contract.countries;
-                    break;
-
-                case 'admissions':
-                    returnedData = contract.admissions;
                     break;
 
                 case 'offers':
@@ -328,7 +320,6 @@ export async function GET(req) {
                 .populate('client')
                 .populate('users')
                 .populate('countries')
-                .populate('admissions')
                 .populate('offers')
                 .populate('documents')
                 .populate('payments')
@@ -369,8 +360,7 @@ export async function PUT(req) {
         const formData = await req.formData();
         const userId = formData.get('userId');
         const contractNo = formData.get('contractNo');
-        const visaExpiryDate = formData.get('visaExpiryDate');
-        const arrivalDate = formData.get('arrivalDate');
+        const issueDate = formData.get('issueDate');
         const clientId = formData.get('clientId');
         const countryId = formData.get('countryId');
         const status = formData.get('status');
@@ -439,13 +429,9 @@ export async function PUT(req) {
             contract.contractNo = contractNo;
             contract.markModified('contractNo');
         }
-        if (visaExpiryDate !== null) {
-            contract.visaExpiryDate = visaExpiryDate;
-            contract.markModified('visaExpiryDate');
-        }
-        if (arrivalDate !== null) {
-            contract.arrivalDate = arrivalDate;
-            contract.markModified('arrivalDate');
+        if (issueDate !== null) {
+            contract.issueDate = issueDate;
+            contract.markModified('issueDate');
         }
         if (clientId !== contract.client.toString()) {
             const oldClient = await Client.findById(contract.client);

@@ -5,7 +5,6 @@ import Tooltip from '@mui/material/Tooltip';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
-import LoginIcon from '@mui/icons-material/Login';
 
 export default function WebFrontHeader(props) {
     const { isDarkMode, toggleDarkMode } = props;
@@ -49,19 +48,6 @@ export default function WebFrontHeader(props) {
                     <div className="header-menu front-menu left-menu">
                         <nav className="header-nav">
                             <ul>
-                                <li className="menu-item link-item">
-                                    <Link href="/auth/client/login">
-                                        <LoginIcon />
-                                        ورود متقاضیان
-                                    </Link>
-                                </li>
-
-                                <li className="menu-item link-item">
-                                    <Link href="/auth/admin/login">
-                                        <LoginIcon />
-                                        ورود اعضا
-                                    </Link>
-                                </li>
                                 <li
                                     className="menu-item button-item"
                                     style={{ marginLeft: 0 }}

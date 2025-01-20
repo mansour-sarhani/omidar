@@ -21,14 +21,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Box } from '@mui/system';
+import Box from '@mui/material/Box';
 import ChangePasswordModal from '@/components/modals/ChangePasswordModal';
 
 export default function UserManagementPage() {
     const [users, setUsers] = useState(null);
     const [doReload, setDoReload] = useState(true);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(20);
 
     const { dispatch, enqueueSnackbar } = useCommonHooks();
 
@@ -40,7 +40,7 @@ export default function UserManagementPage() {
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+        setRowsPerPage(parseInt(event.target.value, 20));
         setPage(0);
     };
 

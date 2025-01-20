@@ -9,7 +9,6 @@ const clientSchema = new Schema(
             type: String,
             required: true,
             unique: true,
-            index: true,
         },
         password: {
             type: String,
@@ -30,6 +29,9 @@ const clientSchema = new Schema(
             required: true,
         },
         fatherName: {
+            type: String,
+        },
+        motherName: {
             type: String,
         },
         nationalId: {
@@ -61,22 +63,6 @@ const clientSchema = new Schema(
             type: String,
             default: null,
         },
-        status: {
-            type: String,
-            enum: ['active', 'inactive', 'banned'],
-            default: 'active',
-            required: true,
-        },
-        avatar: {
-            path: {
-                type: String,
-                default: '/assets/storage/users/',
-            },
-            url: {
-                type: String,
-                default: '',
-            },
-        },
         contracts: [
             {
                 type: Schema.Types.ObjectId,
@@ -95,6 +81,22 @@ const clientSchema = new Schema(
                 ref: 'Notification',
             },
         ],
+        avatar: {
+            path: {
+                type: String,
+                default: '/assets/storage/users/',
+            },
+            url: {
+                type: String,
+                default: '',
+            },
+        },
+        status: {
+            type: String,
+            enum: ['active', 'inactive', 'banned', 'deleted'],
+            default: 'active',
+            required: true,
+        },
         deleted: {
             type: Boolean,
             default: false,

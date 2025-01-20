@@ -173,6 +173,23 @@ export const ADMIN_UPDATE_CLIENT = createAsyncThunk(
     }
 );
 
+export const ADMIN_FILTER_CLIENTS = createAsyncThunk(
+    'admin/ADMIN_FILTER_CLIENTS',
+    async (data, { rejectWithValue }) => {
+        try {
+            const response = await http.get(
+                `/api/admin/client/search?firstName=${data.firstName}&lastName=${data.lastName}&email=${data.email}&mobile=${data.mobile}`
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
 export const ADMIN_GET_ALL_COUNTRIES = createAsyncThunk(
     'admin/ADMIN_GET_ALL_COUNTRIES',
     async (_, { rejectWithValue }) => {
@@ -233,6 +250,9 @@ export const adminSlice = createSlice({
 
         //ADMIN_UPDATE_CLIENT
         handleAsyncActions(builder, ADMIN_UPDATE_CLIENT);
+
+        //ADMIN_FILTER_CLIENTS
+        handleAsyncActions(builder, ADMIN_FILTER_CLIENTS);
 
         //ADMIN_GET_ALL_COUNTRIES
         handleAsyncActions(builder, ADMIN_GET_ALL_COUNTRIES);

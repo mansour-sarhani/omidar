@@ -62,7 +62,6 @@ export default function UserNotificationsPage() {
     };
 
     const markAsRead = (id) => {
-        setNotifications(null);
         async function readNotifications() {
             await userReadNotification(dispatch, enqueueSnackbar, id);
             getNotifications();
