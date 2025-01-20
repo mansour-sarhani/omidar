@@ -9,7 +9,6 @@ const userSchema = new Schema(
             type: String,
             required: true,
             unique: true,
-            index: true,
         },
         password: {
             type: String,
@@ -44,13 +43,7 @@ const userSchema = new Schema(
         },
         role: {
             type: String,
-            enum: ['assisstant', 'chief_executive', 'admin'],
-            required: true,
-        },
-        status: {
-            type: String,
-            enum: ['active', 'inactive', 'banned', 'deleted'],
-            default: 'active',
+            enum: ['consultant', 'executive', 'chief_executive', 'admin'],
             required: true,
         },
         avatar: {
@@ -69,6 +62,12 @@ const userSchema = new Schema(
                 ref: 'Notification',
             },
         ],
+        status: {
+            type: String,
+            enum: ['active', 'inactive', 'banned', 'deleted'],
+            default: 'active',
+            required: true,
+        },
         deleted: {
             type: Boolean,
             default: false,

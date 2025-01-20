@@ -5,6 +5,10 @@ const paymentSchema = new Schema(
         Id: {
             type: Number,
         },
+        title: {
+            type: String,
+            required: true,
+        },
         contractId: {
             type: Schema.Types.ObjectId,
             ref: 'Contract',
@@ -29,34 +33,41 @@ const paymentSchema = new Schema(
             ],
             required: true,
         },
-        finalFee: {
+        paidAmount: {
             type: Number,
+            required: true,
         },
         currency: {
             type: String,
-            enum: ['USD', 'EUR', 'IRR'],
+            enum: ['USD', 'EUR', 'IRT'],
             required: true,
         },
-        status: {
-            type: String,
-            enum: ['pending', 'completed'],
-            default: 'pending',
-            required: true,
-        },
-        date: {
+        dateOfPayment: {
             type: Date,
-            default: Date.now,
         },
         paymentMethod: {
             type: String,
             enum: ['direct', 'deposit'],
             required: true,
         },
-        paidAmount: {
-            type: Number,
+        receipt: {
+            path: {
+                type: String,
+                default: '/assets/storage/payments/',
+            },
+            url: {
+                type: String,
+                default: '',
+            },
         },
-        paidRial: {
-            type: Number,
+        status: {
+            type: String,
+            enum: ['pending', 'completed', 'deleted'],
+            default: 'pending',
+        },
+        deleted: {
+            type: Boolean,
+            default: false,
         },
     },
     { timestamps: true }

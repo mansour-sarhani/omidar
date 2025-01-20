@@ -245,6 +245,7 @@ export async function PUT(req) {
         const formData = await req.formData();
         const documentId = formData.get('documentId');
         const userId = formData.get('userId');
+        const comment = formData.get('comment');
 
         const contract = await Contract.findById(contractId);
         if (!contract) {
@@ -262,7 +263,6 @@ export async function PUT(req) {
             );
         }
 
-        const client = await Client.findById(contract.client);
         const user = await User.findOne({ _id: userId });
         const userName = user.firstName + ' ' + user.lastName;
 
@@ -290,50 +290,6 @@ export async function PUT(req) {
             });
 
             return NextResponse.json({ success: true, data: document });
-        } else if (action === 'comment') {
-            const comment = formData.get('comment');
-            if (comment !== null) {
-                const newComment = {
-                    userId,
-                    userName,
-                    body: comment,
-                    date: new Date(),
-                };
-
-                document.comments.push(newComment);
-                document.markModified('comments');
-                document.save();
-
-                const message = `پیام جدید توسط ${userName} به چک لیست فایل با شماره ${document.documentNo} اضافه شد.`;
-
-                await notify({
-                    subject: 'اطلاعیه',
-                    message: message,
-                    type: 'info',
-                    senderModel: 'system',
-                    receiver: [contract.client],
-                    receiverModel: 'Client',
-                });
-
-                await notify({
-                    subject: 'اطلاعیه',
-                    message: message,
-                    type: 'info',
-                    senderModel: 'system',
-                    receiver: contract.users,
-                    receiverModel: 'User',
-                });
-
-                await addActivity({
-                    action: 'message',
-                    performedBy: user._id,
-                    performedByModel: 'User',
-                    details: message,
-                    contractId: contract._id,
-                });
-
-                return NextResponse.json({ success: true, data: document });
-            }
         } else if (action === 'update') {
             const documentNo = formData.get('documentNo');
             const nameFarsi = formData.get('nameFarsi');
@@ -513,6 +469,47 @@ export async function PUT(req) {
                 }
                 document.file.url = uniqueName;
                 document.markModified('file');
+            }
+
+            if (comment !== null) {
+                const newComment = {
+                    userId,
+                    userName,
+                    body: comment,
+                    date: new Date(),
+                };
+
+                document.comments.push(newComment);
+                document.markModified('comments');
+                document.save();
+
+                const message = `پیام جدید توسط ${userName} به چک لیست فایل با شماره ${document.documentNo} اضافه شد.`;
+
+                await notify({
+                    subject: 'اطلاعیه',
+                    message: message,
+                    type: 'info',
+                    senderModel: 'system',
+                    receiver: [contract.client],
+                    receiverModel: 'Client',
+                });
+
+                await notify({
+                    subject: 'اطلاعیه',
+                    message: message,
+                    type: 'info',
+                    senderModel: 'system',
+                    receiver: contract.users,
+                    receiverModel: 'User',
+                });
+
+                await addActivity({
+                    action: 'message',
+                    performedBy: user._id,
+                    performedByModel: 'User',
+                    details: message,
+                    contractId: contract._id,
+                });
             }
 
             await document.save();

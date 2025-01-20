@@ -8,7 +8,7 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
 //GET CURRENT CLIENT BY TOKEN => "/api/client"
-export async function GET(req) {
+export async function GET() {
     await dbConnect();
 
     try {
@@ -35,7 +35,7 @@ export async function GET(req) {
         const client = await Client.findOne({ token: token });
         if (!client) {
             return NextResponse.json(
-                { success: false, message: 'کاربر پیدا نشد.' },
+                { success: false, message: 'متقاضی پیدا نشد.' },
                 { status: 404 }
             );
         }
@@ -44,10 +44,10 @@ export async function GET(req) {
             _id: client._id,
             Id: client.Id,
             token: client.token,
-            role: client.role,
             firstName: client.firstName,
             lastName: client.lastName,
             fatherName: client.fatherName,
+            motherName: client.motherName,
             nationalId: client.nationalId,
             sex: client.sex,
             dateOfBirth: client.dateOfBirth,
@@ -58,8 +58,8 @@ export async function GET(req) {
             contracts: client.contracts,
             tickets: client.tickets,
             notifications: client.notifications,
-            status: client.status,
             avatar: client.avatar,
+            status: client.status,
             createdAt: client.createdAt,
             updatedAt: client.updated,
         };
@@ -102,6 +102,7 @@ export async function PUT(req) {
         const lastName = formData.get('lastName');
         const nationalId = formData.get('nationalId');
         const fatherName = formData.get('fatherName');
+        const motherName = formData.get('motherName');
         const sex = formData.get('sex');
         const dateOfBirth = formData.get('dateOfBirth');
         const address = formData.get('address');
@@ -129,6 +130,10 @@ export async function PUT(req) {
         if (fatherName) {
             client.fatherName = fatherName;
             client.markModified('fatherName');
+        }
+        if (motherName) {
+            client.motherName = motherName;
+            client.markModified('motherName');
         }
         if (sex) {
             client.sex = sex;

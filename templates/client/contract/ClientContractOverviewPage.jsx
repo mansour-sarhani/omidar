@@ -40,7 +40,6 @@ export default function ClientContractOverviewPage({ contractNo }) {
             <div className="contract-page-content">
                 <div className="contract-page-heading">
                     <Typography variant="h4">اطلاعات قرارداد</Typography>
-                    {setStatusLabel(contract.status)}
                 </div>
                 <div className="contract-info-wrapper">
                     <div className="contract-info-row">
@@ -54,20 +53,20 @@ export default function ClientContractOverviewPage({ contractNo }) {
                         </div>
                         <div className="contract-info-line">
                             <label className="contract-info-label">
-                                زمان ایجاد قرارداد:
+                                تاریخ صدور قرارداد:
                             </label>
                             <span className="contract-info-value">
-                                {dateFormatter(contract.createdAt)}
+                                {contract.issueDate
+                                    ? dateFormatter(contract.issueDate)
+                                    : '-'}
                             </span>
                         </div>
                         <div className="contract-info-line">
                             <label className="contract-info-label">
-                                آخرین به روزرسانی:
+                                وضعیت:
                             </label>
                             <span className="contract-info-value">
-                                {contract.updatedAt
-                                    ? dateFormatter(contract.updatedAt)
-                                    : dateFormatter(contract.createdAt)}
+                                {setStatusLabel(contract.status)}
                             </span>
                         </div>
                     </div>
@@ -78,9 +77,9 @@ export default function ClientContractOverviewPage({ contractNo }) {
                             </label>
                             <span className="contract-info-value">
                                 {contract.client.sex &&
-                                contract.client.sex === 'male'
-                                    ? 'آقای'
-                                    : 'خانم'}{' '}
+                                    (contract.client.sex === 'male'
+                                        ? 'آقای'
+                                        : 'خانم')}{' '}
                                 {contract.client.firstName}{' '}
                                 {contract.client.lastName}
                             </span>
@@ -111,22 +110,22 @@ export default function ClientContractOverviewPage({ contractNo }) {
                         </div>
                         <div className="contract-info-line">
                             <label className="contract-info-label">
-                                تاریخ ورود:
+                                زمان ایجاد قرارداد:
                             </label>
                             <span className="contract-info-value">
-                                {contract.arrivalDate
-                                    ? dateFormatter(contract.arrivalDate)
-                                    : '-'}
+                                {dateFormatter(contract.createdAt)}
                             </span>
                         </div>
                         <div className="contract-info-line">
                             <label className="contract-info-label">
-                                تاریخ انقضای ویزا:
+                                آخرین به روزرسانی:
                             </label>
                             <span className="contract-info-value">
-                                {contract.visaExpiryDate
-                                    ? dateFormatter(contract.visaExpiryDate)
-                                    : '-'}
+                                {dateFormatter(
+                                    contract.updatedAt
+                                        ? contract.updatedAt
+                                        : contract.createdAt
+                                )}
                             </span>
                         </div>
                     </div>

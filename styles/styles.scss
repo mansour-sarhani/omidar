@@ -276,6 +276,11 @@ button a {
     color: inherit !important;
 }
 
+.MuiInputAdornment-positionEnd {
+    margin-left: 0 !important;
+    margin-right: 8px;
+}
+
 /* FORM */
 .om-form {
     display: flex;
@@ -647,6 +652,20 @@ input::-webkit-inner-spin-button {
         h4 {
             color: var(--white-color);
         }
+
+        .home-login-form {
+            width: 350px;
+            margin-top: 20px;
+
+            label {
+                color: var(--white-color);
+            }
+
+            .Mui-disabled {
+                background-color: rgb(255 255 255 / 12%);
+                color: var(--white-color);
+            }
+        }
     }
 }
 
@@ -929,6 +948,33 @@ input::-webkit-inner-spin-button {
     .panel-inner-header-btns {
         display: flex;
         gap: 10px;
+    }
+}
+
+.panel-filter-drawer .MuiPaper-root {
+    right: auto;
+    left: 0;
+}
+
+.panel-filter-container {
+    width: 300px;
+    height: auto;
+    min-height: 100vh;
+    padding: 20px;
+
+    .panel-filter-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+}
+
+.filter-form {
+    button {
+        width: 100%;
     }
 }
 

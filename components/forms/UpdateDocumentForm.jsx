@@ -18,6 +18,7 @@ const initialValues = {
     format: '',
     description: '',
     status: '',
+    comment: '',
     sample: null,
     file: null,
 };
@@ -43,36 +44,30 @@ export default function UpdateDocumentForm(props) {
                         values.documentNo !== currentData.documentNo
                             ? values.documentNo
                             : null,
-
                     nameFarsi:
                         values.nameFarsi !== currentData.nameFarsi
                             ? values.nameFarsi
                             : null,
-
                     nameEnglish:
                         values.nameEnglish !== currentData.nameEnglish
                             ? values.nameEnglish
                             : null,
-
                     type: values.type !== currentData.type ? values.type : null,
-
                     format:
                         values.format !== currentData.format
                             ? values.format
                             : null,
-
                     description:
                         values.description !== currentData.description
                             ? values.description
                             : null,
-
                     status:
                         values.status !== currentData.status
                             ? values.status
                             : null,
                     isCheckList:
                         values.isCheckList !== isCheckList ? isCheckList : null,
-
+                    comment: values.comment,
                     sample: values.newSample ? values.newSample[0] : null,
                     file: values.newFile ? values.newFile[0] : null,
                 };
@@ -261,6 +256,8 @@ export default function UpdateDocumentForm(props) {
                         </div>
                     )}
 
+                    <OmTextArea name={'comment'} label={'یادداشت'} />
+
                     <Button
                         type="submit"
                         variant="contained"
@@ -269,7 +266,7 @@ export default function UpdateDocumentForm(props) {
                         style={{ marginTop: '1rem' }}
                     >
                         <Check />
-                        به روزرسانی قالب فایل
+                        به روزرسانی چک لیست
                     </Button>
                 </Form>
             )}

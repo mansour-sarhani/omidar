@@ -15,8 +15,8 @@ const ticketSchema = new Schema(
         },
         status: {
             type: String,
-            enum: ['open', 'waitingOnClient', 'waitingOnUser', 'closed'],
-            default: 'open',
+            enum: ['active', 'waitingOnClient', 'waitingOnUser', 'closed'],
+            default: 'active',
             required: true,
         },
         priority: {

@@ -16,8 +16,7 @@ import Check from '@mui/icons-material/Check';
 
 const initialValues = {
     contractNo: '',
-    visaExpiryDate: '',
-    arrivalDate: '',
+    issueDate: '',
     clientId: '',
     countryId: '',
     status: '',
@@ -37,8 +36,7 @@ export default function UpdateContractForm(props) {
     const { dispatch, enqueueSnackbar, userData } = useCommonHooks();
 
     initialValues.contractNo = currentData.contractNo;
-    initialValues.visaExpiryDate = currentData.visaExpiryDate;
-    initialValues.arrivalDate = currentData.arrivalDate;
+    initialValues.issueDate = currentData.issueDate;
     initialValues.clientId = currentData.client._id;
     initialValues.countryId = currentData.countries[0]._id;
     initialValues.status = currentData.status;
@@ -81,14 +79,9 @@ export default function UpdateContractForm(props) {
                             ? values.contractNo
                             : null,
 
-                    visaExpiryDate:
-                        values.visaExpiryDate !== currentData.visaExpiryDate
-                            ? values.visaExpiryDate
-                            : null,
-
-                    arrivalDate:
-                        values.arrivalDate !== currentData.arrivalDate
-                            ? values.arrivalDate
+                    issueDate:
+                        values.issueDate !== currentData.issueDate
+                            ? values.issueDate
                             : null,
 
                     clientId:
@@ -134,31 +127,37 @@ export default function UpdateContractForm(props) {
         >
             {({ values, handleChange, setFieldValue, isSubmitting }) => (
                 <Form className="om-form panel-form">
+                    <FormControl className="om-form-control">
+                        <label htmlFor="status-select" className="om-label">
+                            وضعیت*
+                        </label>
+                        <NativeSelect
+                            defaultValue={values.status}
+                            inputProps={{
+                                name: 'status',
+                                id: 'status-select',
+                            }}
+                            onChange={(e) => {
+                                handleChange(e);
+                                setFieldValue('status', e.target.value);
+                            }}
+                            className="om-select"
+                        >
+                            <option value="active">فعال</option>
+                            <option value="inactive">غیر فعال</option>
+                            <option value="processing">در حال اجرا</option>
+                            <option value="canceled">کنسل شده</option>
+                            <option value="done">انجام شده</option>
+                        </NativeSelect>
+                    </FormControl>
                     <div className="panel-grid-two">
-                        <FormControl className="om-form-control">
-                            <label htmlFor="status-select" className="om-label">
-                                وضعیت*
-                            </label>
-                            <NativeSelect
-                                defaultValue={values.status}
-                                inputProps={{
-                                    name: 'status',
-                                    id: 'status-select',
-                                }}
-                                onChange={(e) => {
-                                    handleChange(e);
-                                    setFieldValue('status', e.target.value);
-                                }}
-                                className="om-select"
-                            >
-                                <option value="active">فعال</option>
-                                <option value="inactive">غیر فعال</option>
-                                <option value="processing">در حال اجرا</option>
-                                <option value="canceled">کنسل شده</option>
-                                <option value="done">انجام شده</option>
-                            </NativeSelect>
-                        </FormControl>
                         <OmTextInput name="contractNo" label="شماره قرارداد*" />
+                        <OmDatePicker
+                            name="issueDate"
+                            label="تاریخ صدور"
+                            savedValue={values.issueDate}
+                            setFieldValue={setFieldValue}
+                        />
                     </div>
                     <div className="panel-grid-two">
                         <FormControl className="om-form-control">
@@ -230,20 +229,6 @@ export default function UpdateContractForm(props) {
                                 <ErrorMessage name={'countryId'} />
                             </FormHelperText>
                         </FormControl>
-                    </div>
-                    <div className="panel-grid-two">
-                        <OmDatePicker
-                            name="arrivalDate"
-                            label="تاریخ ورود"
-                            savedValue={values.arrivalDate}
-                            setFieldValue={setFieldValue}
-                        />
-                        <OmDatePicker
-                            name="visaExpiryDate"
-                            label="تاریخ انقضای ویزا"
-                            savedValue={values.visaExpiryDate}
-                            setFieldValue={setFieldValue}
-                        />
                     </div>
 
                     <Button

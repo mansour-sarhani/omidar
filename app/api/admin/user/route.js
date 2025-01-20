@@ -89,19 +89,19 @@ export async function GET(req) {
         return {
             _id: user._id,
             Id: user.Id,
+            username: user.username,
             token: user.token,
-            role: user.role,
             firstName: user.firstName,
             lastName: user.lastName,
-            username: user.username,
             nationalId: user.nationalId,
             email: user.email,
             mobile: user.mobile,
-            status: user.status,
+            role: user.role,
             avatar: user.avatar,
             notifications: user.notifications,
+            status: user.status,
             createdAt: user.createdAt,
-            updatedAt: user.updated,
+            updatedAt: user.updatedAt,
         };
     }
 

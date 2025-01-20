@@ -8,7 +8,6 @@ const documentSchema = new Schema(
         documentNo: {
             type: Number,
             required: true,
-            index: true,
         },
         nameFarsi: {
             type: String,

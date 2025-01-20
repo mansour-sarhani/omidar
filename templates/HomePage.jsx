@@ -1,5 +1,6 @@
 'use client';
 
+import ClientLoginForm from '@/components/forms/ClientLoginForm';
 import Typography from '@mui/material/Typography';
 
 export default function HomePage() {
@@ -21,8 +22,11 @@ export default function HomePage() {
                                 component="h4"
                                 gutterBottom
                             >
-                                پنل مدیریت قرارداد
+                                ورود متقاضیان به پورتال مدیریت قرارداد
                             </Typography>
+                        </div>
+                        <div className="home-login-form">
+                            <ClientLoginForm />
                         </div>
                     </div>
                 </div>

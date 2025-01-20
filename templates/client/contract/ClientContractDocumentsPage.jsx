@@ -58,7 +58,7 @@ export default function ClientContractDocumentsPage({ contractNo }) {
     const [documents, setDocuments] = useState(null);
     const [doReload, setDoReload] = useState(true);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(20);
     const [value, setValue] = useState(0);
     const [anchorEl, setAnchorEl] = useState(null);
     const [description, setDescription] = useState('');
@@ -75,7 +75,7 @@ export default function ClientContractDocumentsPage({ contractNo }) {
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+        setRowsPerPage(parseInt(event.target.value, 20));
         setPage(0);
     };
 

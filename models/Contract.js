@@ -31,12 +31,6 @@ const contractSchema = new Schema(
                 ref: 'User',
             },
         ],
-        admissions: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'Admission',
-            },
-        ],
         offers: [
             {
                 type: Schema.Types.ObjectId,
@@ -79,11 +73,7 @@ const contractSchema = new Schema(
                 ref: 'Activity',
             },
         ],
-        visaExpiryDate: {
-            type: Date,
-            default: null,
-        },
-        arrivalDate: {
+        issueDate: {
             type: Date,
             default: null,
         },

@@ -22,7 +22,8 @@ const validationSchema = Yup.object({
 export default function AddUserToContractForm(props) {
     const [users, setUsers] = useState(null);
 
-    const { handleClose, setDoReload, contractId, userId } = props;
+    const { handleClose, setDoReload, contractId, userId, contractUsers } =
+        props;
 
     const { dispatch, enqueueSnackbar } = useCommonHooks();
 
@@ -49,6 +50,16 @@ export default function AddUserToContractForm(props) {
     if (users === null) {
         return <IsLoading isLoading={true} />;
     }
+
+    const filteredUsers =
+        (users &&
+            users.filter(
+                (user) =>
+                    !contractUsers.some(
+                        (contractUser) => contractUser._id === user._id
+                    )
+            )) ||
+        [];
 
     return (
         <Formik
@@ -89,7 +100,7 @@ export default function AddUserToContractForm(props) {
                         >
                             <option value="">کاربر را انتخاب نمایید</option>
                             {users &&
-                                users.map((user) => (
+                                filteredUsers.map((user) => (
                                     <option key={user._id} value={user._id}>
                                         {user.firstName} {user.lastName}
                                     </option>

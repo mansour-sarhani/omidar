@@ -24,7 +24,7 @@ export default function ClientContractOffersPage({ contractNo }) {
     const [offers, setOffers] = useState(null);
     const [doReload, setDoReload] = useState(true);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(20);
 
     const { contract } = useContract(contractNo);
 

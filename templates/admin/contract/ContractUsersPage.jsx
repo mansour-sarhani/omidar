@@ -28,7 +28,7 @@ export default function ContractUsersPage({ contractNo }) {
     const [users, setUsers] = useState(null);
     const [doReload, setDoReload] = useState(true);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(20);
 
     const { contract } = useContract(contractNo);
 
@@ -79,7 +79,7 @@ export default function ContractUsersPage({ contractNo }) {
             }
             setDoReload(false);
         }
-    }, [contract, dispatch, doReload, enqueueSnackbar]);
+    }, [contract, dispatch, doReload, enqueueSnackbar, users]);
 
     if (!contract) {
         return <IsLoading isLoading={true} />;
@@ -100,6 +100,7 @@ export default function ContractUsersPage({ contractNo }) {
                             setDoReload={setDoReload}
                             contractId={contract._id}
                             userId={userData._id}
+                            contractUsers={users}
                         />
                     </PanelModal>
                 </div>

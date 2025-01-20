@@ -86,12 +86,11 @@ export async function GET(req) {
             _id: client._id,
             Id: client.Id,
             token: client.token,
-            role: client.role,
+            username: client.username,
             firstName: client.firstName,
             lastName: client.lastName,
-            username: client.username,
-            password: client.password,
             fatherName: client.fatherName,
+            motherName: client.motherName,
             nationalId: client.nationalId,
             sex: client.sex,
             dateOfBirth: client.dateOfBirth,
@@ -99,11 +98,11 @@ export async function GET(req) {
             mobile: client.mobile,
             address: client.address,
             zipCode: client.zipCode,
-            status: client.status,
-            avatar: client.avatar,
             contracts: client.contracts,
             tickets: client.tickets,
             notifications: client.notifications,
+            avatar: client.avatar,
+            status: client.status,
             createdAt: client.createdAt,
             updatedAt: client.updated,
         };
@@ -168,6 +167,7 @@ export async function PUT(req) {
         const email = formData.get('email');
         const mobile = formData.get('mobile');
         const fatherName = formData.get('fatherName');
+        const motherName = formData.get('motherName');
         const sex = formData.get('sex');
         const dateOfBirth = formData.get('dateOfBirth');
         const address = formData.get('address');
@@ -197,6 +197,10 @@ export async function PUT(req) {
         if (fatherName !== null || fatherName === '') {
             client.fatherName = fatherName;
             client.markModified('fatherName');
+        }
+        if (motherName !== null || motherName === '') {
+            client.motherName = motherName;
+            client.markModified('motherName');
         }
         if (sex !== null || sex === '') {
             client.sex = sex;

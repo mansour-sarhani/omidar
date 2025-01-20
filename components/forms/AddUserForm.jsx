@@ -90,7 +90,8 @@ export default function AddUserForm(props) {
                                     نقش کاربر را انتخاب نمایید
                                 </option>
                                 <option value="admin">ادمین</option>
-                                <option value="assisstant">مشاور</option>
+                                <option value="consultant">مشاور</option>
+                                <option value="executive">کارشناس اجرا</option>
                                 <option value="chief_executive">
                                     مدیر اجرایی
                                 </option>

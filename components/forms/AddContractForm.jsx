@@ -11,11 +11,13 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
 import AddIcon from '@mui/icons-material/Add';
+import OmDatePicker from '../inputs/OmDatePicker';
 
 const initialValues = {
     contractNo: '',
     clientId: '',
     countryId: '',
+    issueDate: '',
 };
 
 const validationSchema = Yup.object({
@@ -64,6 +66,7 @@ export default function AddContractForm(props) {
                     contractNo: values.contractNo,
                     clientId: values.clientId,
                     countryId: values.countryId,
+                    issueDate: values.issueDate,
                     createdBy: userData._id,
                 };
                 await createContract(dispatch, enqueueSnackbar, data);
@@ -75,7 +78,15 @@ export default function AddContractForm(props) {
         >
             {({ isSubmitting, handleChange, setFieldValue }) => (
                 <Form className="om-form panel-form">
-                    <OmTextInput name="contractNo" label="شماره قرارداد*" />
+                    <div className="panel-grid-two">
+                        <OmTextInput name="contractNo" label="شماره قرارداد*" />
+                        <OmDatePicker
+                            name="issueDate"
+                            label="تاریخ صدور"
+                            setFieldValue={setFieldValue}
+                        />
+                    </div>
+
                     <div className="panel-grid-two">
                         <FormControl className="om-form-control">
                             <label

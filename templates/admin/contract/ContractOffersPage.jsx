@@ -24,12 +24,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import FA from '@/utils/localizationFa';
 
 export default function ContractOffersPage({ contractNo }) {
     const [offers, setOffers] = useState(null);
     const [doReload, setDoReload] = useState(true);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(20);
 
     const { contract } = useContract(contractNo);
 
@@ -43,7 +44,7 @@ export default function ContractOffersPage({ contractNo }) {
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+        setRowsPerPage(parseInt(event.target.value, 20));
         setPage(0);
     };
 
@@ -96,6 +97,7 @@ export default function ContractOffersPage({ contractNo }) {
                         buttonLabel="اضافه کردن آفر"
                         modalHeader="اضافه کردن آفر"
                         icon="add"
+                        fullScreen="true"
                     >
                         <AddOfferForm
                             setDoReload={setDoReload}
@@ -114,37 +116,31 @@ export default function ContractOffersPage({ contractNo }) {
                                 <TableHead sx={{ backgroundColor: '#ccc' }}>
                                     <TableRow>
                                         <TableCell align="center">
-                                            شناسه
+                                            ردیف
                                         </TableCell>
                                         <TableCell align="center">
                                             عنوان
                                         </TableCell>
                                         <TableCell align="center">
-                                            دانشگاه
+                                            مقطع - رشته - دانشگاه
                                         </TableCell>
                                         <TableCell align="center">
                                             شهریه
                                         </TableCell>
                                         <TableCell align="center">
-                                            نظر متقاضی
+                                            زبان تحصیل
                                         </TableCell>
                                         <TableCell align="center">
                                             آزمون ورودی
                                         </TableCell>
                                         <TableCell align="center">
-                                            تاریخ آزمون ورودی
-                                        </TableCell>
-                                        <TableCell align="center">
                                             مصاحبه
                                         </TableCell>
                                         <TableCell align="center">
-                                            تاریخ مصاحبه
+                                            پیش نیاز زبان
                                         </TableCell>
                                         <TableCell align="center">
                                             آخرین مهلت ثبت نام
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            وضعیت
                                         </TableCell>
                                         <TableCell align="center">
                                             عملیات
@@ -158,44 +154,53 @@ export default function ContractOffersPage({ contractNo }) {
                                               page * rowsPerPage + rowsPerPage
                                           )
                                         : offers
-                                    ).map((offer) => (
+                                    ).map((offer, index) => (
                                         <TableRow key={offer._id}>
                                             <TableCell align="center">
-                                                {offer.Id}
+                                                {index + 1}
                                             </TableCell>
                                             <TableCell align="center">
                                                 {offer.title}
                                             </TableCell>
                                             <TableCell align="center">
+                                                {offer.degree} -{' '}
+                                                {offer.fieldOfStudy} -{' '}
                                                 {offer.university}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {offer.applicationFee}
+                                                {offer.applicationFee}{' '}
+                                                {FA.currency[offer.currency]}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {offer.clientComment}
+                                                {offer.studyLanguage}
                                             </TableCell>
                                             <TableCell align="center">
                                                 {offer.test ? 'دارد' : 'ندارد'}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {dateFormatter(offer.testDate)}
+                                                {offer.test &&
+                                                    ` (${dateFormatter(
+                                                        offer.testDate
+                                                    )})`}
                                             </TableCell>
                                             <TableCell align="center">
                                                 {offer.interview
                                                     ? 'دارد'
                                                     : 'ندارد'}
+                                                {offer.interview &&
+                                                    ` (${dateFormatter(
+                                                        offer.interviewDate
+                                                    )})`}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {dateFormatter(
-                                                    offer.interviewDate
-                                                )}
+                                                {offer.languageReq
+                                                    ? 'دارد'
+                                                    : 'ندارد'}
+                                                {offer.languageReq &&
+                                                    ` (${dateFormatter(
+                                                        offer.languageReqDate
+                                                    )})`}
                                             </TableCell>
                                             <TableCell align="center">
                                                 {dateFormatter(offer.deadline)}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {setStatusLabel(offer.status)}
                                             </TableCell>
                                             <TableCell align="center">
                                                 <div className="om-table-actions">
@@ -207,6 +212,7 @@ export default function ContractOffersPage({ contractNo }) {
                                                         icon="edit"
                                                         tooltipTitle="ویرایش"
                                                         variant="outlined"
+                                                        fullScreen={'true'}
                                                     >
                                                         <UpdateOfferForm
                                                             setDoReload={
