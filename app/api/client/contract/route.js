@@ -11,7 +11,6 @@ import Contract from '@/models/Contract';
 import User from '@/models/User';
 import Activity from '@/models/Activity';
 import Country from '@/models/Country';
-import Admission from '@/models/Admission';
 import Document from '@/models/Document';
 import Message from '@/models/Message';
 import Notification from '@/models/Notification';
@@ -54,7 +53,6 @@ export async function GET(req) {
                 { path: 'countries' },
                 { path: 'offers' },
                 { path: 'documents' },
-                { path: 'admissions' },
                 { path: 'payments' },
                 { path: 'pickups' },
                 { path: 'visas' },
