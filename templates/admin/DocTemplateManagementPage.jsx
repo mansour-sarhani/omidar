@@ -55,10 +55,10 @@ export default function DocTemplateManagementPage() {
                     enqueueSnackbar,
                     setDocTemplates
                 );
+                setDoReload(false);
             }
             fetchData();
         }
-        setDoReload(false);
     }, [dispatch, doReload, enqueueSnackbar]);
 
     return (

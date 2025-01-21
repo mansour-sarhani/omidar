@@ -56,10 +56,10 @@ export default function CountryManagementPage() {
                     enqueueSnackbar,
                     setCountries
                 );
+                setDoReload(false);
             }
             fetchData();
         }
-        setDoReload(false);
     }, [dispatch, doReload, enqueueSnackbar]);
 
     return (
