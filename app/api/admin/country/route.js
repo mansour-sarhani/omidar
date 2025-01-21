@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/utils/dbConnect';
 import Country from '@/models/Country';
+import { authMiddleware } from '@/utils/authMiddleware';
 
-export async function GET() {
+export async function GET(req) {
     await dbConnect();
+
+    const authError = await authMiddleware(req);
+    if (authError) {
+        return authError;
+    }
 
     function countryDetails(country) {
         return {
@@ -22,9 +28,11 @@ export async function GET() {
         //ADMIN GET ALL COUNTRIES => "/api/admin/country"
         const countries = await Country.find({});
 
-        const filteredCountries = countries
-            .filter((country) => !country.deleted)
-            .map(countryDetails);
+        // const filteredCountries = countries
+        //     .filter((country) => !country.deleted)
+        //     .map(countryDetails);
+
+        const filteredCountries = countries.map(countryDetails);
 
         return NextResponse.json(
             { success: true, data: filteredCountries },

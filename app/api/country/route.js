@@ -102,13 +102,11 @@ export async function GET() {
         //GET ALL COUNTRIES => "/api/country"
         const countries = await Country.find({});
 
-        // const filteredCountries = countries
-        //     .filter(
-        //         (country) => !country.deleted && country.status === 'active'
-        //     )
-        //     .map(countryDetails);
-
-        const filteredCountries = countries.map(countryDetails);
+        const filteredCountries = countries
+            .filter(
+                (country) => !country.deleted && country.status === 'active'
+            )
+            .map(countryDetails);
 
         return NextResponse.json(
             { success: true, data: filteredCountries },
