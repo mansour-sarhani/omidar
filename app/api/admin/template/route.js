@@ -33,11 +33,9 @@ export async function GET(req) {
         //ADMIN GET ALL DOCUMENT TEMPLATES => "/api/admin/template"
         const docTemplates = await DocTemplate.find({});
 
-        // const filteredDocTemplates = docTemplates
-        //     .filter((docTemplate) => !docTemplate.deleted)
-        //     .map(docTemplateDetails);
-
-        const filteredDocTemplates = docTemplates.map(docTemplateDetails);
+        const filteredDocTemplates = docTemplates
+            .filter((docTemplate) => !docTemplate.deleted)
+            .map(docTemplateDetails);
 
         return NextResponse.json(
             { success: true, data: filteredDocTemplates },

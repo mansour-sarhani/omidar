@@ -28,11 +28,9 @@ export async function GET(req) {
         //ADMIN GET ALL COUNTRIES => "/api/admin/country"
         const countries = await Country.find({});
 
-        // const filteredCountries = countries
-        //     .filter((country) => !country.deleted)
-        //     .map(countryDetails);
-
-        const filteredCountries = countries.map(countryDetails);
+        const filteredCountries = countries
+            .filter((country) => !country.deleted)
+            .map(countryDetails);
 
         return NextResponse.json(
             { success: true, data: filteredCountries },
