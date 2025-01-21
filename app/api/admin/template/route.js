@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/utils/dbConnect';
 import DocTemplate from '@/models/DocTemplate';
+import { authMiddleware } from '@/utils/authMiddleware';
 
-export async function GET() {
+export async function GET(req) {
     await dbConnect();
+
+    const authError = await authMiddleware(req);
+    if (authError) {
+        return authError;
+    }
 
     function docTemplateDetails(docType) {
         return {
@@ -27,9 +33,11 @@ export async function GET() {
         //ADMIN GET ALL DOCUMENT TEMPLATES => "/api/admin/template"
         const docTemplates = await DocTemplate.find({});
 
-        const filteredDocTemplates = docTemplates
-            .filter((docTemplate) => !docTemplate.deleted)
-            .map(docTemplateDetails);
+        // const filteredDocTemplates = docTemplates
+        //     .filter((docTemplate) => !docTemplate.deleted)
+        //     .map(docTemplateDetails);
+
+        const filteredDocTemplates = docTemplates.map(docTemplateDetails);
 
         return NextResponse.json(
             { success: true, data: filteredDocTemplates },
