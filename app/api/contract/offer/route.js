@@ -3,11 +3,10 @@ import dbConnect from '@/utils/dbConnect';
 import Contract from '@/models/Contract';
 import Offer from '@/models/Offer';
 import User from '@/models/User';
-import Activity from '@/models/Activity';
 import { authMiddleware } from '@/utils/authMiddleware';
 import Counter from '@/models/Counter';
-import Client from '@/models/Client';
-import Notification from '@/models/Notification';
+import { notify } from '@/utils/notify';
+import { addActivity } from '@/utils/addActivity';
 
 //ADD OFFER TO CONTRACT => "/api/contract/offer?contractId=66bf44d3d02d846c4368ced0"
 export async function POST(req) {
@@ -54,11 +53,6 @@ export async function POST(req) {
         const languageReqDate = formData.get('languageReqDate');
         const deadline = formData.get('deadline');
 
-        const user = await User.findById(userId);
-        const userName = user.firstName + ' ' + user.lastName;
-
-        const client = await Client.findById(contract.client);
-
         const offerData = {
             title,
             studyLanguage,
@@ -94,43 +88,37 @@ export async function POST(req) {
         contract.offers.push(newOffer._id);
         contract.markModified('offers');
 
-        contract.lastUpdatedBy = userId;
-        contract.markModified('lastUpdatedBy');
+        await contract.save();
 
-        contract.lastUpdatedByModel = 'User';
-        contract.markModified('lastUpdatedByModel');
+        const user = await User.findById(userId);
+        const userName = user.firstName + ' ' + user.lastName;
+        const message = `آفر جدید با عنوان ${offerData.title} توسط ${userName} به قرارداد اضافه شد.`;
 
-        const activityRecord = {
+        await notify({
+            subject: 'اطلاعیه',
+            message: message,
+            type: 'info',
+            senderModel: 'system',
+            receiver: contract.users,
+            receiverModel: 'User',
+        });
+
+        await notify({
+            subject: 'اطلاعیه',
+            message: message,
+            type: 'info',
+            senderModel: 'system',
+            receiver: [contract.client],
+            receiverModel: 'Client',
+        });
+
+        await addActivity({
             action: 'update',
             performedBy: userId,
             performedByModel: 'User',
-            details: `آفر جدید با عنوان ${offerData.title} توسط ${userName} به قرارداد اضافه شد.`,
+            details: message,
             contractId: contractId,
-            timestamp: new Date(),
-        };
-
-        const newActivity = new Activity(activityRecord);
-        await newActivity.save();
-
-        contract.activities.push(newActivity._id);
-        contract.markModified('activities');
-        contract.save();
-
-        const newNotification = {
-            subject: 'اطلاعیه',
-            body: `آفر جدید با عنوان ${offerData.title} توسط ${userName} به قرارداد اضافه شد.`,
-            type: 'info',
-            sender: userId,
-            receiver: [contract.client],
-            receiverModel: 'Client',
-        };
-
-        const notification = new Notification(newNotification);
-        await notification.save();
-
-        client.notifications.push(notification._id);
-        client.markModified('notifications');
-        await client.save();
+        });
 
         return NextResponse.json({
             success: true,
@@ -174,8 +162,6 @@ export async function PUT(req) {
         const user = await User.findById(userId);
         const userName = user.firstName + ' ' + user.lastName;
 
-        const client = await Client.findById(contract.client);
-
         const offer = await Offer.findById(offerId);
 
         if (!offer) {
@@ -198,29 +184,35 @@ export async function PUT(req) {
             );
 
             contract.markModified('offers');
+            await contract.save();
 
-            contract.lastUpdatedBy = userId;
-            contract.markModified('lastUpdatedBy');
+            const message = `آفر با عنوان ${offer.title} توسط ${userName} از قرارداد حذف شد.`;
 
-            contract.lastUpdatedByModel = 'User';
-            contract.markModified('lastUpdatedByModel');
+            await notify({
+                subject: 'اطلاعیه',
+                message: message,
+                type: 'info',
+                senderModel: 'system',
+                receiver: contract.users,
+                receiverModel: 'User',
+            });
 
-            const activityRecord = {
-                action: 'upload',
+            await notify({
+                subject: 'اطلاعیه',
+                message: message,
+                type: 'info',
+                senderModel: 'system',
+                receiver: [contract.client],
+                receiverModel: 'Client',
+            });
+
+            await addActivity({
+                action: 'update',
                 performedBy: userId,
                 performedByModel: 'User',
-                details: `آفر با عنوان ${offer.title} توسط ${userName} از قرارداد حذف شد.`,
+                details: message,
                 contractId: contractId,
-                timestamp: new Date(),
-            };
-
-            const newActivity = new Activity(activityRecord);
-            await newActivity.save();
-
-            contract.activities.push(newActivity._id);
-            contract.markModified('activities');
-
-            await contract.save();
+            });
 
             return NextResponse.json({ success: true, data: offer });
         } else if (action === 'update') {
@@ -330,33 +322,33 @@ export async function PUT(req) {
 
             await offer.save();
 
-            const activityRecord = {
+            const message = `آفر با عنوان ${offer.title} توسط ${userName} به روزرسانی شد.`;
+
+            await notify({
+                subject: 'اطلاعیه',
+                message: message,
+                type: 'info',
+                senderModel: 'system',
+                receiver: contract.users,
+                receiverModel: 'User',
+            });
+
+            await notify({
+                subject: 'اطلاعیه',
+                message: message,
+                type: 'info',
+                senderModel: 'system',
+                receiver: [contract.client],
+                receiverModel: 'Client',
+            });
+
+            await addActivity({
                 action: 'update',
                 performedBy: userId,
                 performedByModel: 'User',
-                details: `آفر با عنوان ${offer.title} توسط ${userName} به روزرسانی شد.`,
-                contractId: offer.contractId,
-                timestamp: new Date(),
-            };
-
-            const newActivity = new Activity(activityRecord);
-            await newActivity.save();
-
-            const newNotification = {
-                subject: 'اطلاعیه',
-                body: `آفر با عنوان ${offer.title} توسط ${userName} به روزرسانی شد.`,
-                type: 'info',
-                sender: userId,
-                receiver: [contract.client],
-                receiverModel: 'Client',
-            };
-
-            const notification = new Notification(newNotification);
-            await notification.save();
-
-            client.notifications.push(notification._id);
-            client.markModified('notifications');
-            await client.save();
+                details: message,
+                contractId: contractId,
+            });
 
             return NextResponse.json({ success: true, data: offer });
         }

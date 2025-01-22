@@ -50,6 +50,15 @@ const FA = {
         business: 'تجاری',
         other: 'دیگر',
     },
+    invLetterType: {
+        JW201: 'JW201',
+        JW202: 'JW202',
+        RussiaLetter: 'دعوتنامه روسیه',
+        RomaniaLetter: 'تاییدیه تحصیلی رومانی',
+        personal: 'شخصی',
+        tourist: 'توریستی',
+        commercial: 'تجاری',
+    },
     fileType: {
         sound: 'فایل صوتی',
         video: 'فایل ویدیو',
