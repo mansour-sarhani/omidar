@@ -1,4 +1,5 @@
 import { Schema, model, models } from 'mongoose';
+import { string } from 'yup';
 
 const pickupSchema = new Schema(
     {
@@ -10,7 +11,7 @@ const pickupSchema = new Schema(
             required: true,
         },
         timeOfArival: {
-            type: Date,
+            type: String,
         },
         numberOfPassengers: {
             type: Number,
@@ -20,6 +21,11 @@ const pickupSchema = new Schema(
         },
         pickupLocation: {
             type: String,
+        },
+        contractId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Contract',
+            required: true,
         },
         client: {
             type: Schema.Types.ObjectId,
@@ -42,7 +48,14 @@ const pickupSchema = new Schema(
         },
         status: {
             type: String,
-            enum: ['ongoing', 'left', 'arrived', 'pickedUp', 'done', 'deleted'],
+            enum: [
+                'processing',
+                'left',
+                'arrived',
+                'pickedUp',
+                'done',
+                'deleted',
+            ],
             default: 'ongoing',
             required: true,
         },

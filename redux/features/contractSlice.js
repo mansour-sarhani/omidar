@@ -450,6 +450,84 @@ export const REMOVE_VISA_FROM_CONTRACT = createAsyncThunk(
     }
 );
 
+export const ADD_PICKUP_TO_CONTRACT = createAsyncThunk(
+    'contract/ADD_PICKUP_TO_CONTRACT',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.post(
+                '/api/contract/pickup?contractId=' + data.contractId,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const UPDATE_PICKUP = createAsyncThunk(
+    'contract/UPDATE_PICKUP',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.put(
+                '/api/contract/pickup?contractId=' +
+                    data.contractId +
+                    '&action=update',
+                formData
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const REMOVE_PICKUP_FROM_CONTRACT = createAsyncThunk(
+    'contract/REMOVE_PICKUP_FROM_CONTRACT',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.put(
+                '/api/contract/pickup?contractId=' +
+                    data.contractId +
+                    '&action=remove',
+                formData
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
 export const contractSlice = createSlice({
     name: 'contract',
     initialState,
@@ -513,6 +591,15 @@ export const contractSlice = createSlice({
 
         //REMOVE_VISA_FROM_CONTRACT
         handleAsyncActions(builder, REMOVE_VISA_FROM_CONTRACT);
+
+        //ADD_PICKUP_TO_CONTRACT
+        handleAsyncActions(builder, ADD_PICKUP_TO_CONTRACT);
+
+        //UPDATE_PICKUP
+        handleAsyncActions(builder, UPDATE_PICKUP);
+
+        //REMOVE_PICKUP_FROM_CONTRACT
+        handleAsyncActions(builder, REMOVE_PICKUP_FROM_CONTRACT);
     },
 });
 

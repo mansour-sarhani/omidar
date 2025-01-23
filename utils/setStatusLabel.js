@@ -53,6 +53,33 @@ export default function setStatusLabel(status) {
                 />
             );
 
+        case 'left':
+            return (
+                <Chip
+                    icon={<PendingIcon />}
+                    label={FA.status.left}
+                    color="warning"
+                />
+            );
+
+        case 'arrived':
+            return (
+                <Chip
+                    icon={<PendingIcon />}
+                    label={FA.status.arrived}
+                    color="warning"
+                />
+            );
+
+        case 'pickedUp':
+            return (
+                <Chip
+                    icon={<PendingIcon />}
+                    label={FA.status.pickedUp}
+                    color="warning"
+                />
+            );
+
         case 'pending':
             return (
                 <Chip

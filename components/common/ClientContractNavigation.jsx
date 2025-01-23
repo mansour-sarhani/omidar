@@ -2,7 +2,7 @@ import Button from '@mui/material/Button';
 import InfoIcon from '@mui/icons-material/Info';
 import ArticleIcon from '@mui/icons-material/Article';
 import ApprovalIcon from '@mui/icons-material/Approval';
-import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import HailIcon from '@mui/icons-material/Hail';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import HistoryIcon from '@mui/icons-material/History';
@@ -70,7 +70,7 @@ export default function ClientContractNavigation({ contractNo }) {
                         : ''
                 }
             >
-                <BusinessCenterIcon />
+                <HailIcon />
                 پیکاپ ها
             </Button>
             <Button

@@ -9,6 +9,7 @@ import NoData from '@/components/common/NoData';
 import OmProgress from '@/components/common/OmProgress';
 import OmTableFooter from '@/components/common/OmTableFooter';
 import IsLoading from '@/components/common/IsLoading';
+import OmImage from '@/components/common/OmIamge';
 import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -17,17 +18,19 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Download from '@mui/icons-material/Download';
-import FA from '@/utils/localizationFa';
-import ClientContractNavigation from '@/components/common/ClientContractNavigation';
-import clientRemoveVisaFile from '@/functions/client/clientRemoveVisaFile';
+import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import UploadVisaModal from '@/components/modals/UploadVisaModal';
+import { timeFormatter } from '@/utils/timeFormatter';
+import setStatusLabel from '@/utils/setStatusLabel';
+import Button from '@mui/material/Button';
+import Download from '@mui/icons-material/Download';
+import ClientContractNavigation from '@/components/common/ClientContractNavigation';
+import clientRemoveTicketFile from '@/functions/client/clientRemoveTicketFile';
+import UploadTicketModal from '@/components/modals/UploadTicketModal';
 
-export default function ClientContractVisasPage({ contractNo }) {
-    const [visas, setVisas] = useState(null);
+export default function ClientContractPickupsPage({ contractNo }) {
+    const [pickups, setPickups] = useState(null);
     const [doReload, setDoReload] = useState(true);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -53,14 +56,13 @@ export default function ClientContractVisasPage({ contractNo }) {
         window.open(fileUrl, '_blank');
     };
 
-    const handleRemoveFile = (id, type) => {
+    const handleRemoveFile = (id) => {
         async function removeVisa() {
             const data = {
-                visaId: id,
-                type,
+                pickupId: id,
                 contractId: contract._id,
             };
-            await clientRemoveVisaFile(dispatch, enqueueSnackbar, data);
+            await clientRemoveTicketFile(dispatch, enqueueSnackbar, data);
             setDoReload(true);
         }
         removeVisa();
@@ -71,13 +73,13 @@ export default function ClientContractVisasPage({ contractNo }) {
             if (doReload) {
                 async function fetchData() {
                     const data = {
-                        type: 'visas',
+                        type: 'pickups',
                         contractId: contract._id,
                     };
                     await getContractDataByType(
                         dispatch,
                         enqueueSnackbar,
-                        setVisas,
+                        setPickups,
                         data
                     );
                 }
@@ -97,126 +99,112 @@ export default function ClientContractVisasPage({ contractNo }) {
             <ClientContractNavigation contractNo={contractNo} />
             <div className="contract-page-content">
                 <div className="contract-page-heading">
-                    <Typography variant="h4">ویزاها</Typography>
+                    <Typography variant="h4">پیکاپ ها</Typography>
                 </div>
 
-                {!visas ? (
+                {!pickups ? (
                     <OmProgress />
-                ) : visas && visas.length > 0 ? (
+                ) : pickups && pickups.length > 0 ? (
                     <div className="panel-inner-content">
                         <TableContainer component={Paper}>
-                            <Table aria-label="visas table">
+                            <Table aria-label="pickups table">
                                 <TableHead sx={{ backgroundColor: '#ccc' }}>
                                     <TableRow>
                                         <TableCell align="center">
                                             ردیف
                                         </TableCell>
                                         <TableCell align="center">
-                                            نوع ویزا
+                                            کشور مقصد
                                         </TableCell>
                                         <TableCell align="center">
-                                            تاریخ صدور ویزا
+                                            شهر مقصد
                                         </TableCell>
                                         <TableCell align="center">
-                                            تاریخ اتمام ویزا
+                                            تاریخ ورود به مقصد
                                         </TableCell>
                                         <TableCell align="center">
-                                            نوع دعوتنامه
+                                            زمان ورود به مقصد
                                         </TableCell>
                                         <TableCell align="center">
-                                            دعوتنامه توسط کارشناس
+                                            شهر مبدا
                                         </TableCell>
                                         <TableCell align="center">
-                                            ویزا توسط کارشناس
+                                            تعداد مسافران
                                         </TableCell>
                                         <TableCell align="center">
-                                            دعوتنامه توسط متقاضی
+                                            وضعیت
                                         </TableCell>
                                         <TableCell align="center">
-                                            ویزا توسط متقاضی
+                                            فایل بلیت
                                         </TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {(rowsPerPage > 0
-                                        ? visas.slice(
+                                        ? pickups.slice(
                                               page * rowsPerPage,
                                               page * rowsPerPage + rowsPerPage
                                           )
-                                        : visas
-                                    ).map((visa, index) => (
-                                        <TableRow key={visa._id}>
+                                        : pickups
+                                    ).map((pickup, index) => (
+                                        <TableRow key={pickup._id}>
                                             <TableCell align="center">
                                                 {index + 1}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {FA.visaType[visa.visaType]}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {dateFormatter(visa.issueDate)}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {dateFormatter(visa.expiryDate)}
-                                            </TableCell>
-                                            <TableCell align="center">
                                                 {
-                                                    FA.invLetterType[
-                                                        visa.invLetterType
-                                                    ]
+                                                    <Chip
+                                                        className="om-country-chip"
+                                                        avatar={
+                                                            <OmImage
+                                                                name={
+                                                                    pickup
+                                                                        .country
+                                                                        .flag
+                                                                }
+                                                                width={30}
+                                                                height={30}
+                                                                variant="rounded"
+                                                            />
+                                                        }
+                                                        label={
+                                                            pickup.country
+                                                                .nameFarsi
+                                                        }
+                                                        color="primary"
+                                                    />
                                                 }
                                             </TableCell>
                                             <TableCell align="center">
-                                                {visa.userInvLetterFile.url !==
-                                                '' ? (
-                                                    <Button
-                                                        variant="contained"
-                                                        color="secondary"
-                                                        size="small"
-                                                        onClick={() =>
-                                                            handleDownload(
-                                                                visa.userInvLetterFile
-                                                            )
-                                                        }
-                                                    >
-                                                        <Download />
-                                                        دانلود
-                                                    </Button>
-                                                ) : (
-                                                    '-'
+                                                {pickup.pickupLocation}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                {dateFormatter(
+                                                    pickup.dateOfArival
                                                 )}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {visa.userVisaFile.url !==
-                                                '' ? (
-                                                    <Button
-                                                        variant="contained"
-                                                        color="secondary"
-                                                        size="small"
-                                                        onClick={() =>
-                                                            handleDownload(
-                                                                visa.userVisaFile
-                                                            )
-                                                        }
-                                                    >
-                                                        <Download />
-                                                        دانلود
-                                                    </Button>
-                                                ) : (
-                                                    '-'
-                                                )}
+                                                {pickup.timeOfArival}
                                             </TableCell>
                                             <TableCell align="center">
-                                                {visa.clientInvLetterFile
-                                                    .url === '' ? (
-                                                    <UploadVisaModal
-                                                        data={visa}
+                                                {pickup.originLocation}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                {pickup.numberOfPassengers}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                {setStatusLabel(pickup.status)}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                {pickup.ticket.url === '' ? (
+                                                    <UploadTicketModal
+                                                        data={pickup}
                                                         contractId={
                                                             contract._id
                                                         }
                                                         setDoReload={
                                                             setDoReload
                                                         }
-                                                        type="invLetter"
                                                     />
                                                 ) : (
                                                     <>
@@ -226,7 +214,7 @@ export default function ClientContractVisasPage({ contractNo }) {
                                                             size="small"
                                                             onClick={() =>
                                                                 handleDownload(
-                                                                    visa.clientInvLetterFile
+                                                                    pickup.ticket
                                                                 )
                                                             }
                                                         >
@@ -236,50 +224,7 @@ export default function ClientContractVisasPage({ contractNo }) {
                                                         <IconButton
                                                             onClick={() =>
                                                                 handleRemoveFile(
-                                                                    visa._id,
-                                                                    'invLetter'
-                                                                )
-                                                            }
-                                                            color="error"
-                                                        >
-                                                            <DeleteForeverIcon />
-                                                        </IconButton>
-                                                    </>
-                                                )}
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {visa.clientVisaFile.url ===
-                                                '' ? (
-                                                    <UploadVisaModal
-                                                        data={visa}
-                                                        contractId={
-                                                            contract._id
-                                                        }
-                                                        setDoReload={
-                                                            setDoReload
-                                                        }
-                                                        type="visa"
-                                                    />
-                                                ) : (
-                                                    <>
-                                                        <Button
-                                                            variant="contained"
-                                                            color="secondary"
-                                                            size="small"
-                                                            onClick={() =>
-                                                                handleDownload(
-                                                                    visa.clientVisaFile
-                                                                )
-                                                            }
-                                                        >
-                                                            <Download />
-                                                            دانلود
-                                                        </Button>
-                                                        <IconButton
-                                                            onClick={() =>
-                                                                handleRemoveFile(
-                                                                    visa._id,
-                                                                    'visa'
+                                                                    pickup._id
                                                                 )
                                                             }
                                                             color="error"
@@ -300,7 +245,7 @@ export default function ClientContractVisasPage({ contractNo }) {
                                     )}
                                 </TableBody>
                                 <OmTableFooter
-                                    rows={visas}
+                                    rows={pickups}
                                     rowsPerPage={rowsPerPage}
                                     page={page}
                                     colSpan={9}
