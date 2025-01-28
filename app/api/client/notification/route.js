@@ -47,9 +47,12 @@ export async function GET(req) {
             );
         }
 
-        client.notifications.sort(
-            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
+        client.notifications.sort((a, b) => {
+            if (a.isRead === b.isRead) {
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            }
+            return a.isRead ? 1 : -1;
+        });
 
         if (type === 'read') {
             const readNotifications = client.notifications.filter(

@@ -44,6 +44,15 @@ export default function setStatusLabel(status) {
                 />
             );
 
+        case 'completed':
+            return (
+                <Chip
+                    icon={<CheckCircleIcon />}
+                    label={FA.status.completed}
+                    color="success"
+                />
+            );
+
         case 'processing':
             return (
                 <Chip

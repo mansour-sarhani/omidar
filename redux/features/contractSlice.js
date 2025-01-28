@@ -528,6 +528,84 @@ export const REMOVE_PICKUP_FROM_CONTRACT = createAsyncThunk(
     }
 );
 
+export const ADD_PAYMENT_TO_CONTRACT = createAsyncThunk(
+    'contract/ADD_PAYMENT_TO_CONTRACT',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.post(
+                '/api/contract/payment?contractId=' + data.contractId,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const UPDATE_PAYMENT = createAsyncThunk(
+    'contract/UPDATE_PAYMENT',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.put(
+                '/api/contract/payment?contractId=' +
+                    data.contractId +
+                    '&action=update',
+                formData
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const REMOVE_PAYMENT_FROM_CONTRACT = createAsyncThunk(
+    'contract/REMOVE_PAYMENT_FROM_CONTRACT',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.put(
+                '/api/contract/payment?contractId=' +
+                    data.contractId +
+                    '&action=remove',
+                formData
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
 export const contractSlice = createSlice({
     name: 'contract',
     initialState,
@@ -600,6 +678,15 @@ export const contractSlice = createSlice({
 
         //REMOVE_PICKUP_FROM_CONTRACT
         handleAsyncActions(builder, REMOVE_PICKUP_FROM_CONTRACT);
+
+        //ADD_PAYMENT_TO_CONTRACT
+        handleAsyncActions(builder, ADD_PAYMENT_TO_CONTRACT);
+
+        //UPDATE_PAYMENT
+        handleAsyncActions(builder, UPDATE_PAYMENT);
+
+        //REMOVE_PAYMENT_FROM_CONTRACT
+        handleAsyncActions(builder, REMOVE_PAYMENT_FROM_CONTRACT);
     },
 });
 

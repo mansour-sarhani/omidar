@@ -1,6 +1,7 @@
 const FA = {
     status: {
         active: 'فعال',
+        completed: 'انجام شده',
         inactive: 'غیرفعال',
         banned: 'مسدود شده',
         pending: 'در انتظار متقاضی',

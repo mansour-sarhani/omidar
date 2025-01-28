@@ -63,7 +63,7 @@ const paymentSchema = new Schema(
         status: {
             type: String,
             enum: ['pending', 'completed', 'deleted'],
-            default: 'pending',
+            default: 'completed',
         },
         deleted: {
             type: Boolean,
