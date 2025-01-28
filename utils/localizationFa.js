@@ -1,10 +1,14 @@
 const FA = {
     status: {
         active: 'فعال',
+        completed: 'انجام شده',
         inactive: 'غیرفعال',
         banned: 'مسدود شده',
         pending: 'در انتظار متقاضی',
         processing: 'در حال اجرا',
+        left: 'مسافر مبدا رو ترک کرد',
+        arrived: 'مسافر به مقصد رسید',
+        pickedUp: 'مسافر به محل اقامت رسید',
         canceled: 'کنسل شده',
         done: 'انجام شده',
         approved: 'تایید شده',
@@ -49,6 +53,15 @@ const FA = {
         tourist: 'توریستی',
         business: 'تجاری',
         other: 'دیگر',
+    },
+    invLetterType: {
+        JW201: 'JW201',
+        JW202: 'JW202',
+        RussiaLetter: 'دعوتنامه روسیه',
+        RomaniaLetter: 'تاییدیه تحصیلی رومانی',
+        personal: 'شخصی',
+        tourist: 'توریستی',
+        commercial: 'تجاری',
     },
     fileType: {
         sound: 'فایل صوتی',

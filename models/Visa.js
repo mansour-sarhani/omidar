@@ -17,9 +17,17 @@ const visaSchema = new Schema(
         },
         invLetterType: {
             type: String,
-            enum: ['student', 'tourist', 'work', 'other'],
+            enum: [
+                'JW201',
+                'JW202',
+                'RussiaLetter',
+                'RomaniaLetter',
+                'personal',
+                'tourist',
+                'commercial',
+            ],
         },
-        invLetterFile: {
+        userInvLetterFile: {
             path: {
                 type: String,
                 default: '/assets/storage/visa/',
@@ -29,7 +37,7 @@ const visaSchema = new Schema(
                 default: '',
             },
         },
-        clientFile: {
+        clientInvLetterFile: {
             path: {
                 type: String,
                 default: '/assets/storage/visa/',
@@ -39,7 +47,17 @@ const visaSchema = new Schema(
                 default: '',
             },
         },
-        userFile: {
+        userVisaFile: {
+            path: {
+                type: String,
+                default: '/assets/storage/visa/',
+            },
+            url: {
+                type: String,
+                default: '',
+            },
+        },
+        clientVisaFile: {
             path: {
                 type: String,
                 default: '/assets/storage/visa/',

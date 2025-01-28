@@ -6,12 +6,12 @@ import { cookies } from 'next/headers';
 import { verifyToken } from '@/utils/verifyToken';
 import { v4 as uuidv4 } from 'uuid';
 import Contract from '@/models/Contract';
-import Document from '@/models/Document';
+import Visa from '@/models/Visa';
 import Client from '@/models/Client';
 import { notify } from '@/utils/notify';
 import { addActivity } from '@/utils/addActivity';
 
-//CLIENT UPLOAD DOCUMENT TO CONTRACT => "/api/client/document?contractId=123456789"
+//CLIENT UPLOAD VISA FILE TO CONTRACT => "/api/client/visa?contractId=123456789"
 export async function POST(req) {
     await dbConnect();
 
@@ -40,7 +40,8 @@ export async function POST(req) {
         const contractId = searchParams.get('contractId');
 
         const formData = await req.formData();
-        const documentId = formData.get('documentId');
+        const visaId = formData.get('visaId');
+        const type = formData.get('type');
 
         const client = await Client.findOne({ token: token });
         if (!client) {
@@ -58,12 +59,12 @@ export async function POST(req) {
             );
         }
 
-        const document = await Document.findById(documentId);
-        if (!document) {
+        const visa = await Visa.findById(visaId);
+        if (!visa) {
             return NextResponse.json(
                 {
                     success: false,
-                    message: 'چک فایل وجود ندارد.',
+                    message: 'ویزا وجود ندارد.',
                 },
                 { status: 400 }
             );
@@ -86,7 +87,7 @@ export async function POST(req) {
             const uniqueName = uuidv4() + path.extname(uploadedFile.name);
             const savePath = path.join(
                 process.cwd(),
-                'public/assets/storage/documents/',
+                'public/assets/storage/visas/',
                 uniqueName
             );
 
@@ -94,7 +95,7 @@ export async function POST(req) {
                 'public',
                 'public/assets',
                 'public/assets/storage',
-                'public/assets/storage/documents',
+                'public/assets/storage/visas',
             ];
 
             directories.forEach((dir) => {
@@ -106,19 +107,25 @@ export async function POST(req) {
             const buffer = Buffer.from(await uploadedFile.arrayBuffer());
             fs.writeFileSync(savePath, buffer);
 
-            document.file = {
-                path: '/assets/storage/documents/',
-                url: uniqueName,
-            };
-            document.markModified('file');
+            if (type === 'visa') {
+                visa.clientVisaFile = {
+                    path: '/assets/storage/visas/',
+                    url: uniqueName,
+                };
+                visa.markModified('clientVisaFile');
+            } else if (type === 'invLetter') {
+                visa.clientInvLetterFile = {
+                    path: '/assets/storage/visas/',
+                    url: uniqueName,
+                };
+                visa.markModified('clientInvLetterFile');
+            }
         }
 
-        document.status = 'underReview';
-        document.markModified('status');
-        await document.save();
+        await visa.save();
 
         const clientName = client.firstName + ' ' + client.lastName;
-        const message = `فایل جدید برای چک لیست با عنوان ${document.nameFarsi} توسط ${clientName} بارگذاری شد.`;
+        const message = `فایل جدید برای ویزا در قرارداد با شماره ${contract.contractNo} توسط ${clientName} بارگذاری شد.`;
 
         await notify({
             subject: 'اطلاعیه',
@@ -139,7 +146,7 @@ export async function POST(req) {
 
         return NextResponse.json({
             success: true,
-            data: document,
+            data: visa,
         });
     } catch (error) {
         return NextResponse.json(
@@ -149,7 +156,7 @@ export async function POST(req) {
     }
 }
 
-//REMOVE UPLOADED DOCUMENT FROM CHECKLIST => "/api/client/document?contractId=123456789"
+//REMOVE UPLOADED VISA FILE FROM CONTRACT => "/api/client/visa?contractId=123456789"
 export async function PUT(req) {
     await dbConnect();
 
@@ -178,7 +185,8 @@ export async function PUT(req) {
         const contractId = searchParams.get('contractId');
 
         const formData = await req.formData();
-        const documentId = formData.get('documentId');
+        const visaId = formData.get('visaId');
+        const type = formData.get('type');
 
         const client = await Client.findOne({ token: token });
         if (!client) {
@@ -196,25 +204,27 @@ export async function PUT(req) {
             );
         }
 
-        const document = await Document.findById(documentId);
+        const visa = await Visa.findById(visaId);
 
-        if (!document) {
+        if (!visa) {
             return NextResponse.json(
-                { success: false, message: 'فایل پیدا نشد.' },
+                { success: false, message: 'ویزا پیدا نشد.' },
                 { status: 404 }
             );
         }
 
-        document.file.url = '';
-        document.markModified('file');
+        if (type === 'visa') {
+            visa.clientVisaFile.url = '';
+            visa.markModified('clientVisaFile');
+        } else if (type === 'invLetter') {
+            visa.clientInvLetterFile.url = '';
+            visa.markModified('clientInvLetterFile');
+        }
 
-        document.status = 'pending';
-        document.markModified('status');
-
-        await document.save();
+        await visa.save();
 
         const clientName = client.firstName + ' ' + client.lastName;
-        const message = `فایل آپلود شده برای چک لیست با عنوان ${document.nameFarsi} توسط ${clientName} حذف شد.`;
+        const message = `فایل آپلود شده برای ویزا در قرارداد با شماره ${contract.contractNo} توسط ${clientName} حذف شد.`;
 
         await addActivity({
             action: 'delete',
@@ -224,7 +234,7 @@ export async function PUT(req) {
             contractId: contractId,
         });
 
-        return NextResponse.json({ success: true, data: document });
+        return NextResponse.json({ success: true, data: visa });
     } catch (error) {
         return NextResponse.json(
             { success: false, message: error.message },

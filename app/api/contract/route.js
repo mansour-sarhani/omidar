@@ -248,7 +248,12 @@ export async function GET(req) {
                 .populate('offers')
                 .populate('documents')
                 .populate('payments')
-                .populate('pickups')
+                .populate({
+                    path: 'pickups',
+                    populate: {
+                        path: 'country',
+                    },
+                })
                 .populate('visas')
                 .populate({
                     path: 'activities',

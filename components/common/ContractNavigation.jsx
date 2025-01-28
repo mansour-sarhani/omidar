@@ -3,10 +3,10 @@ import InfoIcon from '@mui/icons-material/Info';
 import PeopleIcon from '@mui/icons-material/People';
 import ArticleIcon from '@mui/icons-material/Article';
 import ApprovalIcon from '@mui/icons-material/Approval';
-import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import HistoryIcon from '@mui/icons-material/History';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
+import HailIcon from '@mui/icons-material/Hail';
 import { usePathname } from 'next/navigation';
 
 export default function ContractNavigation({ contractNo }) {
@@ -83,7 +83,7 @@ export default function ContractNavigation({ contractNo }) {
                         : ''
                 }
             >
-                <BusinessCenterIcon />
+                <HailIcon />
                 پیکاپ ها
             </Button>
             <Button

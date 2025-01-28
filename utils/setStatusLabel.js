@@ -44,11 +44,47 @@ export default function setStatusLabel(status) {
                 />
             );
 
+        case 'completed':
+            return (
+                <Chip
+                    icon={<CheckCircleIcon />}
+                    label={FA.status.completed}
+                    color="success"
+                />
+            );
+
         case 'processing':
             return (
                 <Chip
                     icon={<PendingIcon />}
                     label={FA.status.processing}
+                    color="warning"
+                />
+            );
+
+        case 'left':
+            return (
+                <Chip
+                    icon={<PendingIcon />}
+                    label={FA.status.left}
+                    color="warning"
+                />
+            );
+
+        case 'arrived':
+            return (
+                <Chip
+                    icon={<PendingIcon />}
+                    label={FA.status.arrived}
+                    color="warning"
+                />
+            );
+
+        case 'pickedUp':
+            return (
+                <Chip
+                    icon={<PendingIcon />}
+                    label={FA.status.pickedUp}
                     color="warning"
                 />
             );

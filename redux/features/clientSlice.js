@@ -186,6 +186,108 @@ export const CLIENT_REMOVE_FILE = createAsyncThunk(
     }
 );
 
+export const CLIENT_UPLOAD_VISA_FILE = createAsyncThunk(
+    'client/CLIENT_UPLOAD_VISA_FILE',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.post(
+                '/api/client/visa?contractId=' + data.contractId,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const CLIENT_REMOVE_VISA_FILE = createAsyncThunk(
+    'client/CLIENT_REMOVE_VISA_FILE',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.put(
+                '/api/client/visa?contractId=' + data.contractId,
+                formData
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const CLIENT_UPLOAD_TICKET_FILE = createAsyncThunk(
+    'client/CLIENT_UPLOAD_TICKET_FILE',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.post(
+                '/api/client/pickup?contractId=' + data.contractId,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const CLIENT_REMOVE_TICKET_FILE = createAsyncThunk(
+    'client/CLIENT_REMOVE_TICKET_FILE',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.put(
+                '/api/client/pickup?contractId=' + data.contractId,
+                formData
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
 export const clientSlice = createSlice({
     name: 'client',
     initialState,
@@ -229,6 +331,18 @@ export const clientSlice = createSlice({
 
         //CLIENT_REMOVE_FILE
         handleAsyncActions(builder, CLIENT_REMOVE_FILE);
+
+        //CLIENT_UPLOAD_VISA_FILE
+        handleAsyncActions(builder, CLIENT_UPLOAD_VISA_FILE);
+
+        //CLIENT_REMOVE_VISA_FILE
+        handleAsyncActions(builder, CLIENT_REMOVE_VISA_FILE);
+
+        //CLIENT_UPLOAD_TICKET_FILE
+        handleAsyncActions(builder, CLIENT_UPLOAD_TICKET_FILE);
+
+        //CLIENT_REMOVE_TICKET_FILE
+        handleAsyncActions(builder, CLIENT_REMOVE_TICKET_FILE);
     },
 });
 

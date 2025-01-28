@@ -6,12 +6,12 @@ import { cookies } from 'next/headers';
 import { verifyToken } from '@/utils/verifyToken';
 import { v4 as uuidv4 } from 'uuid';
 import Contract from '@/models/Contract';
-import Document from '@/models/Document';
 import Client from '@/models/Client';
 import { notify } from '@/utils/notify';
 import { addActivity } from '@/utils/addActivity';
+import Pickup from '@/models/Pickup';
 
-//CLIENT UPLOAD DOCUMENT TO CONTRACT => "/api/client/document?contractId=123456789"
+//CLIENT UPLOAD TICKET FILE TO CONTRACT => "/api/client/pickup?contractId=123456789"
 export async function POST(req) {
     await dbConnect();
 
@@ -40,7 +40,7 @@ export async function POST(req) {
         const contractId = searchParams.get('contractId');
 
         const formData = await req.formData();
-        const documentId = formData.get('documentId');
+        const pickupId = formData.get('pickupId');
 
         const client = await Client.findOne({ token: token });
         if (!client) {
@@ -58,12 +58,12 @@ export async function POST(req) {
             );
         }
 
-        const document = await Document.findById(documentId);
-        if (!document) {
+        const pickup = await Pickup.findById(pickupId);
+        if (!pickup) {
             return NextResponse.json(
                 {
                     success: false,
-                    message: 'چک فایل وجود ندارد.',
+                    message: 'پیکاپ وجود ندارد.',
                 },
                 { status: 400 }
             );
@@ -86,7 +86,7 @@ export async function POST(req) {
             const uniqueName = uuidv4() + path.extname(uploadedFile.name);
             const savePath = path.join(
                 process.cwd(),
-                'public/assets/storage/documents/',
+                'public/assets/storage/pickups/',
                 uniqueName
             );
 
@@ -94,7 +94,7 @@ export async function POST(req) {
                 'public',
                 'public/assets',
                 'public/assets/storage',
-                'public/assets/storage/documents',
+                'public/assets/storage/pickups',
             ];
 
             directories.forEach((dir) => {
@@ -106,19 +106,17 @@ export async function POST(req) {
             const buffer = Buffer.from(await uploadedFile.arrayBuffer());
             fs.writeFileSync(savePath, buffer);
 
-            document.file = {
-                path: '/assets/storage/documents/',
+            pickup.ticket = {
+                path: '/assets/storage/pickups/',
                 url: uniqueName,
             };
-            document.markModified('file');
+            pickup.markModified('ticket');
         }
 
-        document.status = 'underReview';
-        document.markModified('status');
-        await document.save();
+        await pickup.save();
 
         const clientName = client.firstName + ' ' + client.lastName;
-        const message = `فایل جدید برای چک لیست با عنوان ${document.nameFarsi} توسط ${clientName} بارگذاری شد.`;
+        const message = `بلیت جدید در قرارداد با شماره ${contract.contractNo} توسط ${clientName} بارگذاری شد.`;
 
         await notify({
             subject: 'اطلاعیه',
@@ -139,7 +137,7 @@ export async function POST(req) {
 
         return NextResponse.json({
             success: true,
-            data: document,
+            data: pickup,
         });
     } catch (error) {
         return NextResponse.json(
@@ -149,7 +147,7 @@ export async function POST(req) {
     }
 }
 
-//REMOVE UPLOADED DOCUMENT FROM CHECKLIST => "/api/client/document?contractId=123456789"
+//REMOVE UPLOADED TICKET FILE FROM CONTRACT => "/api/client/pickup?contractId=123456789"
 export async function PUT(req) {
     await dbConnect();
 
@@ -178,7 +176,7 @@ export async function PUT(req) {
         const contractId = searchParams.get('contractId');
 
         const formData = await req.formData();
-        const documentId = formData.get('documentId');
+        const pickupId = formData.get('pickupId');
 
         const client = await Client.findOne({ token: token });
         if (!client) {
@@ -196,25 +194,22 @@ export async function PUT(req) {
             );
         }
 
-        const document = await Document.findById(documentId);
+        const pickup = await Pickup.findById(pickupId);
 
-        if (!document) {
+        if (!pickup) {
             return NextResponse.json(
-                { success: false, message: 'فایل پیدا نشد.' },
+                { success: false, message: 'پیکاپ پیدا نشد.' },
                 { status: 404 }
             );
         }
 
-        document.file.url = '';
-        document.markModified('file');
+        pickup.ticket.url = '';
+        pickup.markModified('ticket');
 
-        document.status = 'pending';
-        document.markModified('status');
-
-        await document.save();
+        await pickup.save();
 
         const clientName = client.firstName + ' ' + client.lastName;
-        const message = `فایل آپلود شده برای چک لیست با عنوان ${document.nameFarsi} توسط ${clientName} حذف شد.`;
+        const message = `بلیت آپلود شده در قرارداد با شماره ${contract.contractNo} توسط ${clientName} حذف شد.`;
 
         await addActivity({
             action: 'delete',
@@ -224,7 +219,7 @@ export async function PUT(req) {
             contractId: contractId,
         });
 
-        return NextResponse.json({ success: true, data: document });
+        return NextResponse.json({ success: true, data: pickup });
     } catch (error) {
         return NextResponse.json(
             { success: false, message: error.message },
