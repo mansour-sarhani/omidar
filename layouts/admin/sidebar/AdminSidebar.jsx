@@ -110,6 +110,14 @@ export default function AdminSidebar({ user }) {
                             <div className="panel-sidebar-separator">
                                 <Typography variant="h6">پنل کاربر</Typography>
                             </div>
+                            <li
+                                className={getMenuItemClass(
+                                    path,
+                                    '/admin/profile'
+                                )}
+                            >
+                                <Link href="/admin/profile">حساب کاربری</Link>
+                            </li>
 
                             <li
                                 className={getMenuItemClass(

@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
 import AddIcon from '@mui/icons-material/Add';
+import FA from '@/utils/localizationFa';
 
 const initialValues = {
     title: '',
@@ -90,24 +91,57 @@ export default function AddPaymentForm(props) {
                                 <option value="">
                                     نوع سند پرداخت را انتخاب نمایید
                                 </option>
+                                <option value={'initialPayment'}>
+                                    {FA.paymentType.initialPayment}
+                                </option>
+                                <option value={'paymentCompletion'}>
+                                    {FA.paymentType.paymentCompletion}
+                                </option>
                                 <option value={'appilicationFee'}>
-                                    هزینه اپلیکیشن
+                                    {FA.paymentType.appilicationFee}
                                 </option>
-                                <option value={'visaFee'}>هزینه ویزا</option>
+                                <option value={'visaFee'}>
+                                    {FA.paymentType.visaFee}
+                                </option>
                                 <option value={'contractFee'}>
-                                    مبلغ قرارداد
-                                </option>
-                                <option value={'translationFee'}>
-                                    هزینه ترجمه
-                                </option>
-                                <option value={'languageCourseFee'}>
-                                    هزینه دوره زبان
+                                    {FA.paymentType.contractFee}
                                 </option>
                                 <option value={'tuitionFee'}>
-                                    شهریه دانشگاه
+                                    {FA.paymentType.tuitionFee}
                                 </option>
-                                <option value={'otherFee'}>دیگر</option>
-                                <option value={'returned'}>عودت وجه</option>
+                                <option value={'translationFee'}>
+                                    {FA.paymentType.translationFee}
+                                </option>
+                                <option value={'languageCourseFee'}>
+                                    {FA.paymentType.languageCourseFee}
+                                </option>
+                                <option value={'leaderService'}>
+                                    {FA.paymentType.leaderFee}
+                                </option>
+                                <option value={'russianVisa'}>
+                                    {FA.paymentType.russianVisa}
+                                </option>
+                                <option value={'deliveryFee'}>
+                                    {FA.paymentType.deliveryFee}
+                                </option>
+                                <option value={'blueDiploma'}>
+                                    {FA.paymentType.blueDiploma}
+                                </option>
+                                <option value={'tomerFee'}>
+                                    {FA.paymentType.tomerFee}
+                                </option>
+                                <option value={'tolkFee'}>
+                                    {FA.paymentType.tolkFee}
+                                </option>
+                                <option value={'HSKFee'}>
+                                    {FA.paymentType.HSKFee}
+                                </option>
+                                <option value={'otherFee'}>
+                                    {FA.paymentType.otherFee}
+                                </option>
+                                <option value={'returned'}>
+                                    {FA.paymentType.returned}
+                                </option>
                             </NativeSelect>
                         </FormControl>
                     </div>
@@ -167,8 +201,15 @@ export default function AddPaymentForm(props) {
                                 <option value="">
                                     نحوه پرداخت را انتخاب نمایید
                                 </option>
-                                <option value={'direct'}>پرداخت نقدی</option>
-                                <option value={'deposit'}>واریز به حساب</option>
+                                <option value={'direct'}>
+                                    {FA.paymentMethod.direct}
+                                </option>
+                                <option value={'deposit'}>
+                                    {FA.paymentMethod.deposit}
+                                </option>
+                                <option value={'POS'}>
+                                    {FA.paymentMethod.POS}
+                                </option>
                             </NativeSelect>
                         </FormControl>
                         <OmDatePicker

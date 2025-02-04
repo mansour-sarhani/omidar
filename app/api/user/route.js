@@ -7,6 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { authMiddleware } from '@/utils/authMiddleware';
+import { hashPassword } from '@/utils/hashPassword';
 
 //GET CURRENT USER BY TOKEN => "/api/user"
 export async function GET(req) {
@@ -38,7 +39,7 @@ export async function GET(req) {
                 { status: 401 }
             );
         }
-        const user = await User.findOne({ token: token });
+        const user = await User.findOne({ token });
         if (!user) {
             return NextResponse.json(
                 { success: false, message: 'کاربر پیدا نشد.' },
@@ -101,6 +102,7 @@ export async function PUT(req) {
             );
         }
 
+        const formData = await req.formData();
         const firstName = formData.get('firstName');
         const lastName = formData.get('lastName');
         const nationalId = formData.get('nationalId');
@@ -108,7 +110,7 @@ export async function PUT(req) {
         const email = formData.get('email');
         const mobile = formData.get('mobile');
 
-        const user = await User.findOne({ token: token });
+        const user = await User.findOne({ token });
         if (!user) {
             return NextResponse.json(
                 { success: false, message: 'کاربر پیدا نشد.' },
@@ -129,7 +131,8 @@ export async function PUT(req) {
             user.markModified('nationalId');
         }
         if (password) {
-            user.password = password;
+            const hashedPassword = await hashPassword(password);
+            user.password = hashedPassword;
             user.markModified('password');
         }
         if (email) {

@@ -29,7 +29,7 @@ const userSchema = new Schema(
             required: true,
         },
         nationalId: {
-            type: Number,
+            type: String,
             required: true,
         },
         email: {

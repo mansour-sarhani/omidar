@@ -35,10 +35,10 @@ const clientSchema = new Schema(
             type: String,
         },
         nationalId: {
-            type: Number,
+            type: String,
             required: true,
         },
-        sex: {
+        gender: {
             type: String,
             enum: ['male', 'female'],
         },

@@ -40,7 +40,7 @@ export async function GET(request) {
                 fatherName: client.fatherName,
                 motherName: client.motherName,
                 nationalId: client.nationalId,
-                sex: client.sex,
+                gender: client.gender,
                 dateOfBirth: client.dateOfBirth,
                 email: client.email,
                 mobile: client.mobile,

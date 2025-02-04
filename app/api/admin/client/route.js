@@ -92,7 +92,7 @@ export async function GET(req) {
             fatherName: client.fatherName,
             motherName: client.motherName,
             nationalId: client.nationalId,
-            sex: client.sex,
+            gender: client.gender,
             dateOfBirth: client.dateOfBirth,
             email: client.email,
             mobile: client.mobile,
@@ -168,7 +168,7 @@ export async function PUT(req) {
         const mobile = formData.get('mobile');
         const fatherName = formData.get('fatherName');
         const motherName = formData.get('motherName');
-        const sex = formData.get('sex');
+        const gender = formData.get('gender');
         const dateOfBirth = formData.get('dateOfBirth');
         const address = formData.get('address');
         const zipCode = formData.get('zipCode');
@@ -202,9 +202,9 @@ export async function PUT(req) {
             client.motherName = motherName;
             client.markModified('motherName');
         }
-        if (sex !== null || sex === '') {
-            client.sex = sex;
-            client.markModified('sex');
+        if (gender !== null || gender === '') {
+            client.gender = gender;
+            client.markModified('gender');
         }
         if (dateOfBirth !== null || dateOfBirth === '') {
             client.dateOfBirth = dateOfBirth;

@@ -15,6 +15,8 @@ import PasswordIcon from '@mui/icons-material/Password';
 import adminUpdateClient from '@/functions/admin/clients/adminUpdateClient';
 import adminUpdateUser from '@/functions/admin/users/adminUpdateUser';
 import OmPasswordInput from '../inputs/OmPasswordInput';
+import userUpdateProfile from '@/functions/user/userUpdateProfile';
+import clientUpdateProfile from '@/functions/client/clientUpdateProfile';
 
 const initialValues = {
     password: '',
@@ -70,7 +72,7 @@ function ChangePasswordModal(props) {
     const [open, setOpen] = useState(false);
     const [user, setUser] = useState();
 
-    const { data, type, setDoReload } = props;
+    const { data, type, setDoReload, mode } = props;
 
     const { dispatch, enqueueSnackbar } = useCommonHooks();
 
@@ -143,33 +145,54 @@ function ChangePasswordModal(props) {
                                     values,
                                     { setSubmitting, resetForm }
                                 ) => {
-                                    if (type === 'client') {
-                                        const data = {
-                                            password: values.password,
-                                            confirmPassword:
-                                                values.confirmPassword,
-                                            clientId: user._id,
-                                        };
+                                    if (mode === 'self') {
+                                        if (type === 'user') {
+                                            const data = {
+                                                password: values.password,
+                                            };
 
-                                        await adminUpdateClient(
-                                            dispatch,
-                                            enqueueSnackbar,
-                                            data
-                                        );
+                                            await userUpdateProfile(
+                                                dispatch,
+                                                enqueueSnackbar,
+                                                data
+                                            );
+                                        } else {
+                                            const data = {
+                                                password: values.password,
+                                            };
+
+                                            await clientUpdateProfile(
+                                                dispatch,
+                                                enqueueSnackbar,
+                                                data
+                                            );
+                                        }
                                     } else {
-                                        const data = {
-                                            password: values.password,
-                                            confirmPassword:
-                                                values.confirmPassword,
-                                            userId: user._id,
-                                        };
+                                        if (type === 'client') {
+                                            const data = {
+                                                password: values.password,
+                                                clientId: user._id,
+                                            };
 
-                                        await adminUpdateUser(
-                                            dispatch,
-                                            enqueueSnackbar,
-                                            data
-                                        );
+                                            await adminUpdateClient(
+                                                dispatch,
+                                                enqueueSnackbar,
+                                                data
+                                            );
+                                        } else {
+                                            const data = {
+                                                password: values.password,
+                                                userId: user._id,
+                                            };
+
+                                            await adminUpdateUser(
+                                                dispatch,
+                                                enqueueSnackbar,
+                                                data
+                                            );
+                                        }
                                     }
+
                                     setSubmitting(false);
                                     resetForm();
                                     handleClose();

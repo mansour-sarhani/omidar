@@ -76,8 +76,8 @@ export default function ClientContractOverviewPage({ contractNo }) {
                                 متقاضی:
                             </label>
                             <span className="contract-info-value">
-                                {contract.client.sex &&
-                                    (contract.client.sex === 'male'
+                                {contract.client.gender &&
+                                    (contract.client.gender === 'male'
                                         ? 'آقای'
                                         : 'خانم')}{' '}
                                 {contract.client.firstName}{' '}
