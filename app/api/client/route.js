@@ -6,6 +6,7 @@ import { verifyToken } from '@/utils/verifyToken';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { hashPassword } from '@/utils/hashPassword';
 
 //GET CURRENT CLIENT BY TOKEN => "/api/client"
 export async function GET() {
@@ -32,7 +33,7 @@ export async function GET() {
                 { status: 401 }
             );
         }
-        const client = await Client.findOne({ token: token });
+        const client = await Client.findOne({ token });
         if (!client) {
             return NextResponse.json(
                 { success: false, message: 'متقاضی پیدا نشد.' },
@@ -49,7 +50,7 @@ export async function GET() {
             fatherName: client.fatherName,
             motherName: client.motherName,
             nationalId: client.nationalId,
-            sex: client.sex,
+            gender: client.gender,
             dateOfBirth: client.dateOfBirth,
             email: client.email,
             mobile: client.mobile,
@@ -98,12 +99,13 @@ export async function PUT(req) {
             );
         }
 
+        const formData = await req.formData();
         const firstName = formData.get('firstName');
         const lastName = formData.get('lastName');
         const nationalId = formData.get('nationalId');
         const fatherName = formData.get('fatherName');
         const motherName = formData.get('motherName');
-        const sex = formData.get('sex');
+        const gender = formData.get('gender');
         const dateOfBirth = formData.get('dateOfBirth');
         const address = formData.get('address');
         const zipCode = formData.get('zipCode');
@@ -111,7 +113,7 @@ export async function PUT(req) {
         const email = formData.get('email');
         const mobile = formData.get('mobile');
 
-        const client = await Client.findOne({ token: token });
+        const client = await Client.findOne({ token });
         if (!client) {
             return NextResponse.json(
                 { success: false, message: 'متقاضی پیدا نشد.' },
@@ -135,9 +137,9 @@ export async function PUT(req) {
             client.motherName = motherName;
             client.markModified('motherName');
         }
-        if (sex) {
-            client.sex = sex;
-            client.markModified('sex');
+        if (gender) {
+            client.gender = gender;
+            client.markModified('gender');
         }
         if (dateOfBirth) {
             client.dateOfBirth = dateOfBirth;
@@ -156,7 +158,8 @@ export async function PUT(req) {
             client.markModified('nationalId');
         }
         if (password) {
-            client.password = password;
+            const hashedPassword = await hashPassword(password);
+            client.password = hashedPassword;
             client.markModified('password');
         }
         if (email) {

@@ -1,13 +1,13 @@
 import useCommonHooks from '@/hooks/useCommonHooks';
-import adminUpdateClient from '@/functions/admin/clients/adminUpdateClient';
 import OmTextInput from '@/components/inputs/OmTextInput';
-import OmDatePicker from '@/components/inputs/OmDatePicker';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import Button from '@mui/material/Button';
+import Check from '@mui/icons-material/Check';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
-import Check from '@mui/icons-material/Check';
+import clientUpdateProfile from '@/functions/client/clientUpdateProfile';
+import OmDatePicker from '../inputs/OmDatePicker';
 import OmImage from '../common/OmIamge';
 import FileUploader from '../inputs/FileUploader';
 import OmAvatar from '../common/OmAvatar';
@@ -15,17 +15,15 @@ import OmAvatar from '../common/OmAvatar';
 const initialValues = {
     firstName: '',
     lastName: '',
-    username: '',
     nationalId: '',
     fatherName: '',
     motherName: '',
-    zipCode: '',
-    address: '',
     gender: '',
     dateOfBirth: '',
     email: '',
     mobile: '',
-    status: '',
+    address: '',
+    zipCode: '',
     avatar: null,
 };
 
@@ -33,12 +31,11 @@ const validationSchema = Yup.object({
     nationalId: Yup.string().required('وارد کردن کد ملی ضروری است'),
     firstName: Yup.string().required('وارد کردن نام ضروری است'),
     lastName: Yup.string().required('وارد کردن نام خانوادگی ضروری است'),
-    username: Yup.string().required('وارد کردن نام کاربری ضروری است'),
     email: Yup.string().required('وارد کردن ایمیل ضروری است'),
     mobile: Yup.string().required('وارد کردن شماره موبایل ضروری است'),
 });
 
-export default function AdminUpdateClientForm(props) {
+export default function ClientUpdateProfileForm(props) {
     const { handleClose, setDoReload, currentData } = props;
 
     const { dispatch, enqueueSnackbar } = useCommonHooks();
@@ -72,21 +69,9 @@ export default function AdminUpdateClientForm(props) {
                         values.lastName !== currentData.lastName
                             ? values.lastName
                             : null,
-                    username:
-                        values.username !== currentData.username
-                            ? values.username
-                            : null,
                     nationalId:
                         values.nationalId !== currentData.nationalId
                             ? values.nationalId
-                            : null,
-                    email:
-                        values.email !== currentData.email
-                            ? values.email
-                            : null,
-                    mobile:
-                        values.mobile !== currentData.mobile
-                            ? values.mobile
                             : null,
                     fatherName:
                         values.fatherName !== currentData.fatherName
@@ -96,25 +81,29 @@ export default function AdminUpdateClientForm(props) {
                         values.motherName !== currentData.motherName
                             ? values.motherName
                             : null,
-                    zipCode:
-                        values.zipCode !== currentData.zipCode
-                            ? values.zipCode
-                            : null,
-                    address:
-                        values.address !== currentData.address
-                            ? values.address
+                    gender:
+                        values.gender !== currentData.gender
+                            ? values.gender
                             : null,
                     dateOfBirth:
                         values.dateOfBirth !== currentData.dateOfBirth
                             ? values.dateOfBirth
                             : null,
-                    gender:
-                        values.gender !== currentData.gender
-                            ? values.gender
+                    address:
+                        values.address !== currentData.address
+                            ? values.address
                             : null,
-                    status:
-                        values.status !== currentData.status
-                            ? values.status
+                    zipCode:
+                        values.zipCode !== currentData.zipCode
+                            ? values.zipCode
+                            : null,
+                    email:
+                        values.email !== currentData.email
+                            ? values.email
+                            : null,
+                    mobile:
+                        values.mobile !== currentData.mobile
+                            ? values.mobile
                             : null,
                     avatar: values.newAvatar ? values.newAvatar[0] : null,
                 };
@@ -133,10 +122,9 @@ export default function AdminUpdateClientForm(props) {
 
                 const finalData = {
                     ...filtered,
-                    clientId: currentData._id,
                 };
 
-                await adminUpdateClient(dispatch, enqueueSnackbar, finalData);
+                await clientUpdateProfile(dispatch, enqueueSnackbar, finalData);
                 setSubmitting(false);
                 resetForm();
                 setDoReload(true);
@@ -145,31 +133,7 @@ export default function AdminUpdateClientForm(props) {
         >
             {({ values, handleChange, setFieldValue, isSubmitting }) => (
                 <Form className="om-form panel-form">
-                    <FormControl className="om-form-control">
-                        <label htmlFor="status-select" className="om-label">
-                            وضعیت*
-                        </label>
-                        <NativeSelect
-                            defaultValue={values.status}
-                            inputProps={{
-                                name: 'status',
-                                id: 'status-select',
-                            }}
-                            onChange={(e) => {
-                                handleChange(e);
-                                setFieldValue('status', e.target.value);
-                            }}
-                            className="om-select"
-                        >
-                            <option value="active">فعال</option>
-                            <option value="inactive">غیر فعال</option>
-                            <option value="banned">مسدود شده</option>
-                        </NativeSelect>
-                    </FormControl>
-                    <div className="panel-grid-two">
-                        <OmTextInput name="nationalId" label="کد ملی*" />
-                        <OmTextInput name="username" label="نام کاربری*" />
-                    </div>
+                    <OmTextInput name="nationalId" label="کد ملی*" />
                     <div className="panel-grid-two">
                         <OmTextInput name="firstName" label="نام*" />
                         <OmTextInput name="lastName" label="نام خانوادگی*" />
@@ -213,6 +177,7 @@ export default function AdminUpdateClientForm(props) {
                             </NativeSelect>
                         </FormControl>
                     </div>
+
                     <OmTextInput name="zipCode" label="کد پستی" />
                     <OmTextInput name="address" label="آدرس" />
 
@@ -233,7 +198,7 @@ export default function AdminUpdateClientForm(props) {
                         style={{ marginTop: '1rem' }}
                     >
                         <Check />
-                        به روزرسانی متقاضی
+                        به روزرسانی
                     </Button>
                 </Form>
             )}

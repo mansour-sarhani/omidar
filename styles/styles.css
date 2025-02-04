@@ -1137,4 +1137,35 @@ input::-webkit-inner-spin-button {
   justify-content: center;
 }
 
+.profile-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  background: var(--white-color);
+  margin: 0 auto;
+  border-radius: var(--border-radius-large);
+  padding: 30px;
+  position: relative;
+}
+.profile-wrapper .profile-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.profile-wrapper .profile-info .profile-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.profile-wrapper .profile-info .profile-row .profile-item {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 5px;
+}
+.profile-wrapper .profile-info .profile-row .profile-item label {
+  font-weight: 600;
+}
+
 /*# sourceMappingURL=styles.css.map */

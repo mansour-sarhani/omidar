@@ -22,11 +22,20 @@ const paymentSchema = new Schema(
         type: {
             type: String,
             enum: [
+                'initialPayment',
+                'paymentCompletion',
                 'appilicationFee',
                 'visaFee',
                 'contractFee',
                 'translationFee',
                 'languageCourseFee',
+                'leaderService',
+                'russianVisa',
+                'deliveryFee',
+                'blueDiploma',
+                'tomerFee',
+                'tolkFee',
+                'HSKFee',
                 'tuitionFee',
                 'otherFee',
                 'returned',
@@ -47,7 +56,7 @@ const paymentSchema = new Schema(
         },
         paymentMethod: {
             type: String,
-            enum: ['direct', 'deposit'],
+            enum: ['direct', 'deposit', 'POS'],
             required: true,
         },
         receipt: {

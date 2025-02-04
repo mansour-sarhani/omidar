@@ -8,6 +8,7 @@ import WysiwygIcon from '@mui/icons-material/Wysiwyg';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import MessageIcon from '@mui/icons-material/Message';
+import PasswordIcon from '@mui/icons-material/Password';
 
 function ModalTableButton(props) {
     const { icon, tooltipTitle, handleClickOpen, buttonLabel, variant } = props;
@@ -26,6 +27,8 @@ function ModalTableButton(props) {
                 return <ChangeCircleIcon />;
             case 'action':
                 return <MoreHorizIcon />;
+            case 'password':
+                return <PasswordIcon />;
             case 'info':
                 return <WysiwygIcon />;
             default:
@@ -41,7 +44,13 @@ function ModalTableButton(props) {
                 onClick={handleClickOpen}
                 variant={variant ? variant : 'contained'}
                 size="small"
-                color={icon === 'edit' ? 'info' : 'primary'}
+                color={
+                    icon === 'edit'
+                        ? 'info'
+                        : icon === 'password'
+                        ? 'error'
+                        : 'primary'
+                }
             >
                 {buttonIcon}
                 {buttonLabel}

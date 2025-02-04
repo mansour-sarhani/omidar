@@ -1248,3 +1248,38 @@ input::-webkit-inner-spin-button {
     display: flex;
     justify-content: center;
 }
+
+.profile-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    background: var(--white-color);
+    margin: 0 auto;
+    border-radius: var(--border-radius-large);
+    padding: 30px;
+    position: relative;
+
+    .profile-info {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .profile-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .profile-item {
+                display: flex;
+                align-items: center;
+                flex: 1;
+                gap: 5px;
+
+                label {
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+}
