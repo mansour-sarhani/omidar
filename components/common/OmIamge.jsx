@@ -44,6 +44,8 @@ export default function OmImage({
                             ? '0'
                             : '4px',
                     display: isLoading ? 'none' : 'block',
+                    minWidth: width,
+                    minHeight: height,
                 }}
                 onLoad={() => setIsLoading(false)}
                 onError={() => setIsLoading(false)}

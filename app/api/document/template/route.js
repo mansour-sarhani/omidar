@@ -178,7 +178,6 @@ export async function PUT(req) {
         const status = formData.get('status');
 
         if (refNo !== null) {
-            console.log('refNo:', refNo);
             docTemplate.refNo = refNo;
             docTemplate.markModified('refNo');
         }

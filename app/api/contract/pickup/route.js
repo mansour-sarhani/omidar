@@ -50,7 +50,7 @@ export async function POST(req) {
             pickupLocation,
             client: contract.client,
             country,
-            status: 'ongoing',
+            status: 'processing',
             contractId,
         };
 

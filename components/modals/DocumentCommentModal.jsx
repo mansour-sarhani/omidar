@@ -25,7 +25,10 @@ export default function DocumentCommentModal(props) {
     const { document } = props;
 
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = (event, reason) => {
+        if (reason && reason == 'backdropClick' && 'escapeKeyDown') return;
+        setOpen(false);
+    };
 
     return (
         <div className="panel-modal">

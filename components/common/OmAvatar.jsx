@@ -13,6 +13,8 @@ export default function OmAvatar({ person, width = 50, height = 50 }) {
                     height={height}
                     style={{
                         borderRadius: '50%',
+                        minWidth: width,
+                        minHeight: height,
                     }}
                 />
             ) : (

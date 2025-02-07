@@ -67,7 +67,7 @@ export default function UpdateDocumentForm(props) {
                             : null,
                     isCheckList:
                         values.isCheckList !== isCheckList ? isCheckList : null,
-                    comment: values.comment,
+                    comment: values.comment ? values.comment : null,
                     sample: values.newSample ? values.newSample[0] : null,
                     file: values.newFile ? values.newFile[0] : null,
                 };

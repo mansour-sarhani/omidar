@@ -23,7 +23,10 @@ export default function DeleteModal(props) {
     const { data, handleRemoveItem } = props;
 
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = (event, reason) => {
+        if (reason && reason == 'backdropClick' && 'escapeKeyDown') return;
+        setOpen(false);
+    };
 
     return (
         <div className="panel-modal">

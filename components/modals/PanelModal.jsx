@@ -64,7 +64,8 @@ function PanelModal(props) {
         setCurrentData(data);
     };
 
-    const handleClose = () => {
+    const handleClose = (event, reason) => {
+        if (reason && reason == 'backdropClick' && 'escapeKeyDown') return;
         setOpen(false);
     };
 
@@ -83,6 +84,8 @@ function PanelModal(props) {
                 aria-labelledby="panel-modal-title"
                 open={open}
                 fullScreen={fullScreen === 'true'}
+                disableEscapeKeyDown={true}
+                disableBackdropClick={true}
             >
                 <div
                     className="bg-black"

@@ -6,7 +6,6 @@ import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
 import Check from '@mui/icons-material/Check';
-import updateVisa from '@/functions/contract/updateVisa';
 import OmDatePicker from '../inputs/OmDatePicker';
 import updatePayment from '@/functions/contract/updatePayment';
 import OmTextInput from '../inputs/OmTextInput';
@@ -269,7 +268,7 @@ export default function UpdatePaymentForm(props) {
                         />
                         <FileUploader
                             title="فایل دعوتنامه"
-                            name="newReceiptFile"
+                            name="newReceipt"
                             number={1}
                         />
                     </div>
