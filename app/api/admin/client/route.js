@@ -253,7 +253,7 @@ export async function PUT(req) {
             const uniqueName = uuidv4() + path.extname(avatarFile.name);
             const savePath = path.join(
                 process.cwd(),
-                'public/assets/storage/clients/',
+                'public/assets/storage/users/',
                 uniqueName
             );
 
@@ -262,7 +262,7 @@ export async function PUT(req) {
                 'public/assets',
                 'public/assets',
                 'public/assets/storage',
-                'public/assets/storage/clients',
+                'public/assets/storage/users',
             ];
 
             directories.forEach((dir) => {
@@ -277,7 +277,7 @@ export async function PUT(req) {
             if (client.avatar.url) {
                 const oldImagePath = path.join(
                     process.cwd(),
-                    'public/assets/storage/clients/',
+                    'public/assets/storage/users/',
                     client.avatar.url
                 );
                 if (fs.existsSync(oldImagePath)) {

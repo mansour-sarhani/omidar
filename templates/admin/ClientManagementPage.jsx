@@ -200,6 +200,7 @@ export default function ClientManagementPage() {
                                                     icon="edit"
                                                     tooltipTitle="ویرایش متقاضی"
                                                     variant="outlined"
+                                                    fullScreen={'true'}
                                                 >
                                                     <AdminUpdateClientForm
                                                         setDoReload={

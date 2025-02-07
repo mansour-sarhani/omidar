@@ -112,7 +112,8 @@ function UploadModal(props) {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const handleClose = (event, reason) => {
+        if (reason && reason == 'backdropClick' && 'escapeKeyDown') return;
         setOpen(false);
     };
 

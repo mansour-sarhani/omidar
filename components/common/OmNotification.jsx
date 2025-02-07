@@ -9,7 +9,6 @@ const NotificationComponent = () => {
 
         socket.on('notification', (notification) => {
             console.log('New notification:', notification);
-            // Display the notification to the user
         });
 
         return () => {

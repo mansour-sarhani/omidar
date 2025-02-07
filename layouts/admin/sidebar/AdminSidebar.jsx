@@ -5,30 +5,22 @@ import FA from '@/utils/localizationFa';
 import { getMenuItemClass } from '@/utils/getMenuItemClass';
 import OmImage from '@/components/common/OmIamge';
 import Typography from '@mui/material/Typography';
+import OmAvatar from '@/components/common/OmAvatar';
 
 export default function AdminSidebar({ user }) {
     const path = usePathname();
+
+    const isValid =
+        user.role === 'admin' ||
+        user.role === 'consultant' ||
+        user.role === 'executive' ||
+        user.role === 'chief_executive';
 
     return (
         <div className="panel-sidebar-container">
             <div className="panel-sidebar-top">
                 <div className="panel-sidebar-avatar">
-                    {user.avatar.url === '' ? (
-                        <Image
-                            src="/assets/images/misc/avatar.png"
-                            alt="user-avatar"
-                            width={50}
-                            height={50}
-                            style={{ borderRadius: '50%' }}
-                        />
-                    ) : (
-                        <OmImage
-                            name={user.avatar}
-                            variant="circle"
-                            width={50}
-                            height={50}
-                        />
-                    )}
+                    <OmAvatar person={user} />
                 </div>
                 <div className="panel-sidebar-top-text">
                     <Typography variant="h6">
@@ -39,7 +31,7 @@ export default function AdminSidebar({ user }) {
             </div>
             <div className="panel-sidebar-menu">
                 <ul>
-                    {user.role === 'admin' && (
+                    {isValid && (
                         <>
                             <div className="panel-sidebar-separator">
                                 <Typography variant="h6">پنل مدیریت</Typography>
