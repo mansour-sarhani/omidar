@@ -31,6 +31,7 @@ import Download from '@mui/icons-material/Download';
 import InfoIcon from '@mui/icons-material/Info';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import clientRemoveFile from '@/functions/client/clientRemoveFile';
+import { handleDownload } from '@/utils/createDownloadLink';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -81,11 +82,6 @@ export default function ClientContractDocumentsPage({ contractNo }) {
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
-    };
-
-    const handleDownload = (data) => {
-        const fileUrl = `${data.path}${data.url}`;
-        window.open(fileUrl, '_blank');
     };
 
     const handleRemoveFile = (id) => {

@@ -26,6 +26,7 @@ import removeVisaFromContract from '@/functions/contract/removeVisaFromContract'
 import AddVisaForm from '@/components/forms/AddVisaForm';
 import UpdateVisaForm from '@/components/forms/UpdateVisaForm';
 import FA from '@/utils/localizationFa';
+import { handleDownload } from '@/utils/createDownloadLink';
 
 export default function ContractVisasPage({ contractNo }) {
     const [visas, setVisas] = useState(null);
@@ -47,11 +48,6 @@ export default function ContractVisasPage({ contractNo }) {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 20));
         setPage(0);
-    };
-
-    const handleDownload = (data) => {
-        const fileUrl = `${data.path}${data.url}`;
-        window.open(fileUrl, '_blank');
     };
 
     const handleRemoveVisa = (id) => {

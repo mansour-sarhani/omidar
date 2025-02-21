@@ -33,6 +33,9 @@ export default function PanelSidebar({ client }) {
                     <li className={getMenuItemClass(path, '/panel/profile')}>
                         <Link href="/panel/profile">حساب کاربری</Link>
                     </li>
+                    <li className={getMenuItemClass(path, '/panel/ticket')}>
+                        <Link href="/panel/ticket">تیکت های پشتیبانی</Link>
+                    </li>
                     <li
                         className={getMenuItemClass(
                             path,

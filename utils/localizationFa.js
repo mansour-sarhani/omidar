@@ -80,9 +80,9 @@ const FA = {
         document: 'سند',
     },
     priority: {
-        high: 'بالا',
+        high: 'زیاد',
         medium: 'متوسط',
-        low: 'پایین',
+        low: 'کم',
     },
 };
 

@@ -29,6 +29,7 @@ import { timeFormatter } from '@/utils/timeFormatter';
 import setStatusLabel from '@/utils/setStatusLabel';
 import Button from '@mui/material/Button';
 import Download from '@mui/icons-material/Download';
+import { handleDownload } from '@/utils/createDownloadLink';
 
 export default function ContractPickupsPage({ contractNo }) {
     const [pickups, setPickups] = useState(null);
@@ -50,11 +51,6 @@ export default function ContractPickupsPage({ contractNo }) {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 20));
         setPage(0);
-    };
-
-    const handleDownload = (data) => {
-        const fileUrl = `${data.path}${data.url}`;
-        window.open(fileUrl, '_blank');
     };
 
     const handleRemovePickup = (id) => {

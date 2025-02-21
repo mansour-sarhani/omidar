@@ -1,20 +1,27 @@
 import { Schema, model, models } from 'mongoose';
 
-const messageSchema = new Schema(
+export const messageSchema = new Schema(
     {
-        Id: {
-            type: Number,
+        author: {
+            firstName: { type: String, required: true },
+            lastName: { type: String, required: true },
+            _id: {
+                type: Schema.Types.ObjectId,
+                refPath: 'authorModel',
+                required: true,
+            },
+            avatar: {
+                path: {
+                    type: String,
+                    default: '/assets/storage/users/',
+                },
+                url: {
+                    type: String,
+                    default: '',
+                },
+            },
         },
-        ticketId: {
-            type: Schema.Types.ObjectId,
-            ref: 'Ticket',
-        },
-        createdBy: {
-            type: Schema.Types.ObjectId,
-            refPath: 'createdByModel',
-            required: true,
-        },
-        createdByModel: {
+        authorModel: {
             type: String,
             required: true,
             enum: ['User', 'Client'],
@@ -27,18 +34,16 @@ const messageSchema = new Schema(
             type: Boolean,
             default: false,
         },
-        attachments: [
-            {
-                path: {
-                    type: String,
-                    default: '/assets/storage/attachments/',
-                },
-                url: {
-                    type: String,
-                    default: '',
-                },
+        attachment: {
+            path: {
+                type: String,
+                default: '/assets/storage/attachments/',
             },
-        ],
+            url: {
+                type: String,
+                default: '',
+            },
+        },
     },
     { timestamps: true }
 );

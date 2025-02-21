@@ -5,7 +5,7 @@ export const metadata = {
     title: 'امیدار | پروفایل کاربری',
 };
 
-export default function UserProfile() {
+export default function ClientProfile() {
     return (
         <Suspense
             fallback={<div className="suspense">در حال بارگذاری ...</div>}

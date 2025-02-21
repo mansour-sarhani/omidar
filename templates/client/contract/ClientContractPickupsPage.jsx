@@ -28,6 +28,7 @@ import Download from '@mui/icons-material/Download';
 import ClientContractNavigation from '@/components/common/ClientContractNavigation';
 import clientRemoveTicketFile from '@/functions/client/clientRemoveTicketFile';
 import UploadTicketModal from '@/components/modals/UploadTicketModal';
+import { handleDownload } from '@/utils/createDownloadLink';
 
 export default function ClientContractPickupsPage({ contractNo }) {
     const [pickups, setPickups] = useState(null);
@@ -49,11 +50,6 @@ export default function ClientContractPickupsPage({ contractNo }) {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 20));
         setPage(0);
-    };
-
-    const handleDownload = (data) => {
-        const fileUrl = `${data.path}${data.url}`;
-        window.open(fileUrl, '_blank');
     };
 
     const handleRemoveFile = (id) => {
