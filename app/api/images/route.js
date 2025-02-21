@@ -26,15 +26,19 @@ export async function GET(req) {
                 headers: { 'Content-Type': 'image/svg+xml' },
             });
         } else {
-            return new NextResponse(readStream);
-        }
+            // return new NextResponse(readStream);
+            const readStream = fs.createReadStream(imagePath);
+            const contentType = urlValue.endsWith('.svg')
+                ? 'image/svg+xml'
+                : urlValue.endsWith('.png')
+                ? 'image/png'
+                : urlValue.endsWith('.jpg') || urlValue.endsWith('.jpeg')
+                ? 'image/jpeg'
+                : 'application/octet-stream';
 
-        // const readStream = fs.createReadStream(imagePath);
-        // const contentType = urlValue.endsWith('.svg')
-        //     ? 'image/svg+xml'
-        //     : 'application/octet-stream';
-        // return new NextResponse(readStream, {
-        //     headers: { 'Content-Type': contentType },
-        // });
+            return new NextResponse(readStream, {
+                headers: { 'Content-Type': contentType },
+            });
+        }
     }
 }
