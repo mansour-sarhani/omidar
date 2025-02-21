@@ -1168,4 +1168,121 @@ input::-webkit-inner-spin-button {
   font-weight: 600;
 }
 
+.tickets-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.tickets-wrapper .ticket-item {
+  background-color: var(--white-color);
+  padding: 15px;
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--box-shadow);
+}
+.tickets-wrapper .ticket-item .ticket-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tickets-wrapper .ticket-item .ticket-item-header .ticket-item-date {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.tickets-wrapper .ticket-item .ticket-item-header .ticket-item-date .ticket-item-date-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+}
+.tickets-wrapper .ticket-item .ticket-item-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tickets-wrapper .ticket-item .ticket-item-body .ticket-item-body-text {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.tickets-wrapper .ticket-item .ticket-item-body .ticket-item-body-cta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.tickets-wrapper .ticket-item.on-user {
+  border-right: 5px solid var(--warning-color);
+}
+.tickets-wrapper .ticket-item.on-client {
+  border-right: 5px solid var(--info-color);
+}
+.tickets-wrapper .ticket-item.closed {
+  border-right: 5px solid var(--error-color);
+}
+
+.ticket-view-wrapper .ticket-view-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--white-color);
+  padding: 15px;
+  border-radius: var(--border-radius-medium);
+  margin-bottom: 20px;
+}
+.ticket-view-wrapper .ticket-view-meta .ticket-view-dates {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ticket-view-wrapper .ticket-view-meta .ticket-view-status {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.ticket-view-wrapper .ticket-messages-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  position: relative;
+  width: 100%;
+}
+.ticket-view-wrapper .ticket-messages-container .ticket-message {
+  width: 40%;
+}
+.ticket-view-wrapper .ticket-messages-container .ticket-message .ticket-message-body {
+  padding: 15px;
+  background-color: var(--card-color);
+  border-radius: var(--border-radius-large);
+  margin-bottom: 10px;
+}
+.ticket-view-wrapper .ticket-messages-container .ticket-message .ticket-message-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+.ticket-view-wrapper .ticket-messages-container .ticket-message .ticket-message-info .ticket-message-author {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.ticket-view-wrapper .ticket-messages-container .ticket-message.receiver {
+  align-self: flex-end;
+}
+.ticket-view-wrapper .ticket-messages-container .ticket-message.receiver .ticket-message-body {
+  background-color: var(--info-color);
+  color: var(--white-color);
+}
+
+.ticket-closed-message {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: var(--white-color);
+  padding: 15px;
+  border-radius: var(--border-radius-small);
+  color: var(--error-color);
+}
+
 /*# sourceMappingURL=styles.css.map */

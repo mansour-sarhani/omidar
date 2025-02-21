@@ -44,12 +44,39 @@ export default function setStatusLabel(status) {
                 />
             );
 
+        case 'closed':
+            return (
+                <Chip
+                    icon={<BlockIcon />}
+                    label={FA.status.closed}
+                    color="success"
+                />
+            );
+
         case 'completed':
             return (
                 <Chip
                     icon={<CheckCircleIcon />}
                     label={FA.status.completed}
                     color="success"
+                />
+            );
+
+        case 'waitingOnClient':
+            return (
+                <Chip
+                    icon={<PendingIcon />}
+                    label={FA.status.waitingOnClient}
+                    color="info"
+                />
+            );
+
+        case 'waitingOnUser':
+            return (
+                <Chip
+                    icon={<PendingIcon />}
+                    label={FA.status.waitingOnUser}
+                    color="warning"
                 />
             );
 

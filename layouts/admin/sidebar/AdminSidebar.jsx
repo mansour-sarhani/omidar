@@ -76,6 +76,16 @@ export default function AdminSidebar({ user }) {
                                     مدیریت قراردادها
                                 </Link>
                             </li>
+                            <li
+                                className={getMenuItemClass(
+                                    path,
+                                    '/admin/ticket'
+                                )}
+                            >
+                                <Link href="/admin/ticket">
+                                    تیکت های پشتیبانی
+                                </Link>
+                            </li>
                             {user.role === 'admin' && (
                                 <li
                                     className={getMenuItemClass(

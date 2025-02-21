@@ -288,6 +288,96 @@ export const CLIENT_REMOVE_TICKET_FILE = createAsyncThunk(
     }
 );
 
+export const CLIENT_CREATE_TICKET = createAsyncThunk(
+    'client/CLIENT_CREATE_TICKET',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.post(
+                '/api/client/ticket/new',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const CLIENT_REPLY_TO_TICKET = createAsyncThunk(
+    'client/CLIENT_REPLY_TO_TICKET',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.post(
+                '/api/client/ticket/?ticketId=' + data.ticketId,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const GET_CLIENT_TICKETS = createAsyncThunk(
+    'client/GET_CLIENT_TICKETS',
+    async (data, { rejectWithValue }) => {
+        try {
+            const response = await http.get(
+                `/api/client/ticket?status=${data.status}&page=${data.page}&limit=${data.limit}`
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const CLIENT_GET_TICKET_BY_NUMBER = createAsyncThunk(
+    'client/CLIENT_GET_TICKET_BY_NUMBER',
+    async (ticketNo, { rejectWithValue }) => {
+        try {
+            const response = await http.get(
+                `/api/client/ticket?ticketNo=${ticketNo}`
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
 export const clientSlice = createSlice({
     name: 'client',
     initialState,
@@ -343,6 +433,18 @@ export const clientSlice = createSlice({
 
         //CLIENT_REMOVE_TICKET_FILE
         handleAsyncActions(builder, CLIENT_REMOVE_TICKET_FILE);
+
+        //CLIENT_CREATE_TICKET
+        handleAsyncActions(builder, CLIENT_CREATE_TICKET);
+
+        //CLIENT_REPLY_TO_TICKET
+        handleAsyncActions(builder, CLIENT_REPLY_TO_TICKET);
+
+        //GET_CLIENT_TICKETS
+        handleAsyncActions(builder, GET_CLIENT_TICKETS);
+
+        //CLIENT_GET_TICKET_BY_NUMBER
+        handleAsyncActions(builder, CLIENT_GET_TICKET_BY_NUMBER);
     },
 });
 

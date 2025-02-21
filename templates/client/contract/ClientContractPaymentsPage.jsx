@@ -22,6 +22,7 @@ import Download from '@mui/icons-material/Download';
 import FA from '@/utils/localizationFa';
 import ClientContractNavigation from '@/components/common/ClientContractNavigation';
 import setStatusLabel from '@/utils/setStatusLabel';
+import { handleDownload } from '@/utils/createDownloadLink';
 
 export default function ClientContractPaymentsPage({ contractNo }) {
     const [payments, setPayments] = useState(null);
@@ -43,11 +44,6 @@ export default function ClientContractPaymentsPage({ contractNo }) {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 20));
         setPage(0);
-    };
-
-    const handleDownload = (data) => {
-        const fileUrl = `${data.path}${data.url}`;
-        window.open(fileUrl, '_blank');
     };
 
     useEffect(() => {

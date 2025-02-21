@@ -1,4 +1,5 @@
 import { Schema, model, models } from 'mongoose';
+import { messageSchema } from './Message';
 
 const ticketSchema = new Schema(
     {
@@ -15,7 +16,7 @@ const ticketSchema = new Schema(
         },
         status: {
             type: String,
-            enum: ['active', 'waitingOnClient', 'waitingOnUser', 'closed'],
+            enum: ['waitingOnClient', 'waitingOnUser', 'closed'],
             default: 'active',
             required: true,
         },
@@ -26,14 +27,32 @@ const ticketSchema = new Schema(
             required: true,
         },
         createdBy: {
-            type: Schema.Types.ObjectId,
-            refPath: 'createdByModel',
-            required: true,
+            firstName: { type: String, required: true },
+            lastName: { type: String, required: true },
+            _id: {
+                type: Schema.Types.ObjectId,
+                refPath: 'createdByModel',
+                required: true,
+            },
+            avatar: {
+                path: {
+                    type: String,
+                    default: '/assets/storage/users/',
+                },
+                url: {
+                    type: String,
+                    default: '',
+                },
+            },
         },
         createdByModel: {
             type: String,
             required: true,
             enum: ['User', 'Client'],
+        },
+        clientId: {
+            type: Schema.Types.ObjectId,
+            ref: 'Client',
         },
         assignedTo: {
             type: Schema.Types.ObjectId,
@@ -43,16 +62,7 @@ const ticketSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'Contract',
         },
-        client: {
-            type: Schema.Types.ObjectId,
-            ref: 'Client',
-        },
-        messages: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'Message',
-            },
-        ],
+        messages: [messageSchema],
     },
     { timestamps: true }
 );

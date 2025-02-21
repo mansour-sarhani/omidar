@@ -28,5 +28,13 @@ export async function GET(req) {
         } else {
             return new NextResponse(readStream);
         }
+
+        // const readStream = fs.createReadStream(imagePath);
+        // const contentType = urlValue.endsWith('.svg')
+        //     ? 'image/svg+xml'
+        //     : 'application/octet-stream';
+        // return new NextResponse(readStream, {
+        //     headers: { 'Content-Type': contentType },
+        // });
     }
 }

@@ -120,6 +120,92 @@ export const USER_READ_NOTIFICATION = createAsyncThunk(
     }
 );
 
+export const USER_CREATE_TICKET = createAsyncThunk(
+    'user/USER_CREATE_TICKET',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.post('/api/user/ticket/new', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const USER_REPLY_TO_TICKET = createAsyncThunk(
+    'user/USER_REPLY_TO_TICKET',
+    async (data, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+
+            const response = await http.post(
+                '/api/user/ticket/?ticketId=' + data.ticketId,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const USER_GET_ALL_TICKETS = createAsyncThunk(
+    'user/USER_GET_ALL_TICKETS',
+    async (data, { rejectWithValue }) => {
+        try {
+            const response = await http.get(
+                `/api/user/ticket?status=${data.status}&page=${data.page}&limit=${data.limit}`
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const USER_GET_TICKET_BY_NUMBER = createAsyncThunk(
+    'user/USER_GET_TICKET_BY_NUMBER',
+    async (ticketNo, { rejectWithValue }) => {
+        try {
+            const response = await http.get(
+                `/api/user/ticket?ticketNo=${ticketNo}`
+            );
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
 export const userSlice = createSlice({
     name: 'user',
     initialState,
@@ -154,6 +240,18 @@ export const userSlice = createSlice({
 
         //USER_READ_NOTIFICATION
         handleAsyncActions(builder, USER_READ_NOTIFICATION);
+
+        //USER_CREATE_TICKET
+        handleAsyncActions(builder, USER_CREATE_TICKET);
+
+        //USER_REPLY_TO_TICKET
+        handleAsyncActions(builder, USER_REPLY_TO_TICKET);
+
+        //USER_GET_ALL_TICKETS
+        handleAsyncActions(builder, USER_GET_ALL_TICKETS);
+
+        //USER_GET_TICKET_BY_NUMBER
+        handleAsyncActions(builder, USER_GET_TICKET_BY_NUMBER);
     },
 });
 

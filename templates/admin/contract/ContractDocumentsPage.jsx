@@ -32,6 +32,7 @@ import Box from '@mui/material/Box';
 import Popover from '@mui/material/Popover';
 import Download from '@mui/icons-material/Download';
 import InfoIcon from '@mui/icons-material/Info';
+import { handleDownload } from '@/utils/createDownloadLink';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -82,11 +83,6 @@ export default function ContractDocumentsPage({ contractNo }) {
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
-    };
-
-    const handleDownload = (data) => {
-        const fileUrl = `${data.path}${data.url}`;
-        window.open(fileUrl, '_blank');
     };
 
     const handleRemoveFile = (id) => {

@@ -25,6 +25,7 @@ import clientRemoveVisaFile from '@/functions/client/clientRemoveVisaFile';
 import IconButton from '@mui/material/IconButton';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import UploadVisaModal from '@/components/modals/UploadVisaModal';
+import { handleDownload } from '@/utils/createDownloadLink';
 
 export default function ClientContractVisasPage({ contractNo }) {
     const [visas, setVisas] = useState(null);
@@ -46,11 +47,6 @@ export default function ClientContractVisasPage({ contractNo }) {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 20));
         setPage(0);
-    };
-
-    const handleDownload = (data) => {
-        const fileUrl = `${data.path}${data.url}`;
-        window.open(fileUrl, '_blank');
     };
 
     const handleRemoveFile = (id, type) => {

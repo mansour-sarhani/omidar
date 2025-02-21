@@ -1,0 +1,26 @@
+import { GET_CLIENT_TICKETS } from '@/redux/features/clientSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
+
+async function getClientTickets(
+    dispatch,
+    enqueueSnackbar,
+    setState,
+    setTotal,
+    data
+) {
+    try {
+        const result = await dispatch(GET_CLIENT_TICKETS(data));
+        const response = unwrapResult(result);
+
+        setState(response.data);
+        setTotal(response.total);
+    } catch (err) {
+        const errorMessage = err.message;
+
+        enqueueSnackbar(errorMessage || 'متاسفانه مشکلی پیش آمده است.', {
+            variant: 'error',
+        });
+    }
+}
+
+export default getClientTickets;
