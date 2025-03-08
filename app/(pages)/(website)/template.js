@@ -7,11 +7,11 @@ import { useMediaQuery } from '@mui/system';
 import FrontHeader from '@/layouts/front/header/FrontHeader';
 
 export default function WebsiteTemplate({ children }) {
-    const { dispatch } = useCommonHooks();
-
     const isDesktop = useMediaQuery('(min-width:992px)');
     const isTablet = useMediaQuery('(min-width:768px) and (max-width:991px)');
     const isMobile = useMediaQuery('(max-width:480px)');
+
+    const { dispatch } = useCommonHooks();
 
     useEffect(() => {
         if (isDesktop) {

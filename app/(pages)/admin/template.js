@@ -30,6 +30,7 @@ export default function AdminTemplate({ children }) {
                     await getCurrentUser(dispatch, enqueueSnackbar, setUser);
                 } catch (error) {
                     setUser(false);
+                    Cookies.remove('om_token');
                 } finally {
                     setIsLoading(false);
                 }

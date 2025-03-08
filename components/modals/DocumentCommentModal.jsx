@@ -83,6 +83,16 @@ export default function DocumentCommentModal(props) {
                             </Typography>
                         )}
                     </div>
+
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        color="error"
+                        onClick={handleClose}
+                        sx={{ marginTop: '20px' }}
+                    >
+                        بستن
+                    </Button>
                 </Box>
             </Modal>
         </div>

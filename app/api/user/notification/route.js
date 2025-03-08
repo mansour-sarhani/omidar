@@ -23,7 +23,7 @@ export async function GET(req) {
         if (!token) {
             return NextResponse.json(
                 { success: false, message: 'توکن وجود ندارد.' },
-                { status: 401 }
+                { status: 403 }
             );
         }
 
@@ -119,7 +119,7 @@ export async function PUT(req) {
         if (!token) {
             return NextResponse.json(
                 { success: false, message: 'توکن وجود ندارد.' },
-                { status: 401 }
+                { status: 403 }
             );
         }
 

@@ -79,12 +79,20 @@ export default function AdminSidebar({ user }) {
                             <li
                                 className={getMenuItemClass(
                                     path,
-                                    '/admin/ticket'
+                                    '/admin/document'
                                 )}
                             >
-                                <Link href="/admin/ticket">
-                                    تیکت های پشتیبانی
+                                <Link href="/admin/document">
+                                    مدارک و فایل ها
                                 </Link>
+                            </li>
+                            <li
+                                className={getMenuItemClass(
+                                    path,
+                                    '/admin/visa'
+                                )}
+                            >
+                                <Link href="/admin/visa">ویزاها</Link>
                             </li>
                             {user.role === 'admin' && (
                                 <li
@@ -108,7 +116,16 @@ export default function AdminSidebar({ user }) {
                                     نمونه قالب فایل ها
                                 </Link>
                             </li>
-
+                            <li
+                                className={getMenuItemClass(
+                                    path,
+                                    '/admin/ticket'
+                                )}
+                            >
+                                <Link href="/admin/ticket">
+                                    تیکت های پشتیبانی
+                                </Link>
+                            </li>
                             <div className="panel-sidebar-separator">
                                 <Typography variant="h6">پنل کاربر</Typography>
                             </div>

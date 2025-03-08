@@ -5,6 +5,7 @@ import { useSocket } from '@/providers/SocketProvider';
 import clientLogout from '@/functions/client/clientLogout';
 import useCommonHooks from '@/hooks/useCommonHooks';
 import WebPanelHeader from '@/layouts/panel/header/_webPanelHeader';
+import MobilePanelHeader from './_mobilePanelHeader';
 
 export default function PanelHeader({ client }) {
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -89,7 +90,7 @@ export default function PanelHeader({ client }) {
         );
     } else {
         return (
-            <WebPanelHeader
+            <MobilePanelHeader
                 client={client}
                 isDarkMode={isDarkMode}
                 toggleDarkMode={toggleDarkMode}

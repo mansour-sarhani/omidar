@@ -50,7 +50,7 @@ export default function UserProfilePage() {
                         mode="self"
                     />
                     <PanelModal
-                        buttonLabel="ویرایش حساب کاربری"
+                        buttonLabel="ویرایش "
                         modalHeader="ویرایش حساب کاربری"
                         icon="edit"
                         data={userData}

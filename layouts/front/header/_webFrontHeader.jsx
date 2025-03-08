@@ -48,7 +48,7 @@ export default function WebFrontHeader(props) {
                     <div className="header-menu front-menu left-menu">
                         <nav className="header-nav">
                             <ul>
-                                <li
+                                {/* <li
                                     className="menu-item button-item"
                                     style={{ marginLeft: 0 }}
                                 >
@@ -69,7 +69,7 @@ export default function WebFrontHeader(props) {
                                             )}
                                         </Button>
                                     </Tooltip>
-                                </li>
+                                </li> */}
                             </ul>
                         </nav>
                     </div>
