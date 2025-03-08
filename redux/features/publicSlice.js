@@ -7,6 +7,21 @@ const initialState = {
     status: 'idle',
 };
 
+export const CHECK_USER_ENTITY = createAsyncThunk(
+    'public/CHECK_USER_ENTITY',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await http.post('/api/auth/check');
+            return response.data;
+        } catch (err) {
+            if (!err.response) {
+                throw err;
+            }
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
 export const GET_ALL_COUNTRIES = createAsyncThunk(
     'public/GET_ALL_COUNTRIES',
     async (_, { rejectWithValue }) => {
@@ -200,6 +215,9 @@ export const publicSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder;
+
+        //CHECK_USER_ENTITY
+        handleAsyncActions(builder, CHECK_USER_ENTITY);
 
         //GET_ALL_COUNTRIES
         handleAsyncActions(builder, GET_ALL_COUNTRIES);

@@ -36,9 +36,36 @@ export async function GET(req) {
                 ? 'image/jpeg'
                 : 'application/octet-stream';
 
+            // const contentType = getContentType(urlValue);
+
             return new NextResponse(readStream, {
                 headers: { 'Content-Type': contentType },
             });
         }
+    }
+}
+
+function getContentType(url) {
+    const extension = path.extname(url).toLowerCase();
+    switch (extension) {
+        case '.svg':
+            return 'image/svg+xml';
+        case '.png':
+            return 'image/png';
+        case '.jpg':
+        case '.jpeg':
+            return 'image/jpeg';
+        case '.pdf':
+            return 'application/pdf';
+        case '.zip':
+            return 'application/zip';
+        case '.rar':
+            return 'application/vnd.rar';
+        case '.xls':
+            return 'application/vnd.ms-excel';
+        case '.xlsx':
+            return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        default:
+            return 'application/octet-stream';
     }
 }

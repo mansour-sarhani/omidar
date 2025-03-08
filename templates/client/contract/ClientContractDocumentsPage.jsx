@@ -138,7 +138,14 @@ export default function ClientContractDocumentsPage({ contractNo }) {
         <div className="contract-page">
             <ClientContractNavigation contractNo={contractNo} />
             <div className="contract-page-content">
-                <Tabs value={value} onChange={handleChange} centered>
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    centered
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    allowScrollButtonsMobile
+                >
                     <Tab label="چک لیست  مدارک برای متقاضی" />
                     <Tab label="مدارک آپلود شده توسط کارشناس" />
                 </Tabs>

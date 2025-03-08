@@ -105,7 +105,7 @@ export default function WebAdminHeader(props) {
                             </Tooltip>
                         </li>
 
-                        <li
+                        {/* <li
                             className="menu-item button-item"
                             style={{ marginLeft: 0 }}
                         >
@@ -124,7 +124,7 @@ export default function WebAdminHeader(props) {
                                     )}
                                 </Button>
                             </Tooltip>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
             </div>

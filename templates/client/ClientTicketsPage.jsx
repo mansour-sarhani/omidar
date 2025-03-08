@@ -110,7 +110,13 @@ export default function ClientTicketsPage() {
                     تیکت جدید
                 </Button>
             </div>
-            <Tabs value={value} onChange={handleChange}>
+            <Tabs
+                value={value}
+                onChange={handleChange}
+                variant="scrollable"
+                scrollButtons="auto"
+                allowScrollButtonsMobile
+            >
                 <Tab
                     icon={<ChatIcon />}
                     iconPosition="start"

@@ -5,11 +5,12 @@ import useCommonHooks from '@/hooks/useCommonHooks';
 import { useSocket } from '@/providers/SocketProvider';
 import userLogout from '@/functions/user/userLogout';
 import WebAdminHeader from '@/layouts/admin/header/_webAdminHeader';
+import MobileAdminHeader from '@/layouts/admin/header/_mobileAdminHeader';
 
 export default function AdminHeader({ user }) {
     const [isDarkMode, setIsDarkMode] = useState(false);
 
-    const viewPort = useSelector((state) => state.public.viewPort);
+    const viewPort = useSelector((state) => state.settings.viewPort);
 
     const { dispatch, enqueueSnackbar, router } = useCommonHooks();
 
@@ -88,7 +89,7 @@ export default function AdminHeader({ user }) {
         );
     } else {
         return (
-            <WebAdminHeader
+            <MobileAdminHeader
                 user={user}
                 isDarkMode={isDarkMode}
                 toggleDarkMode={toggleDarkMode}

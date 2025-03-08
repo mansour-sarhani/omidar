@@ -9,10 +9,11 @@ async function userLogin(dispatch, enqueueSnackbar, router, data) {
 
         const userData = {
             om_token: response.token,
+            refresh_token: response.refreshToken,
         };
         for (let key in userData) {
             Cookies.set(key, userData[key], {
-                expires: 30,
+                expires: key === 'refresh_token' ? 60 : 30,
                 secure: true,
                 sameSite: 'Lax',
             });

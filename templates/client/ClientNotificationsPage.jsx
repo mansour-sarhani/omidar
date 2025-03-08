@@ -108,7 +108,13 @@ export default function ClientNotificationsPage() {
                 </div>
             </div>
 
-            <Tabs value={value} onChange={handleChange}>
+            <Tabs
+                value={value}
+                onChange={handleChange}
+                variant="scrollable"
+                scrollButtons="auto"
+                allowScrollButtonsMobile
+            >
                 <Tab
                     icon={<NotificationsNoneIcon />}
                     iconPosition="start"

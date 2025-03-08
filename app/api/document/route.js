@@ -194,54 +194,6 @@ export async function POST(req) {
     }
 }
 
-export async function GET() {
-    await dbConnect();
-
-    function documentDetails(document) {
-        return {
-            _id: document._id,
-            Id: document.Id,
-            documentNo: document.documentNo,
-            nameFarsi: document.nameFarsi,
-            nameEnglish: document.nameEnglish,
-            isCheckList: document.isCheckList,
-            type: document.type,
-            format: document.format,
-            description: document.description,
-            uploadBy: document.uploadBy,
-            uploadByModel: document.uploadByModel,
-            contractId: document.contractId,
-            file: document.file,
-            sample: document.sample,
-            comments: document.comments,
-            status: document.status,
-            createdAt: document.createdAt,
-            updatedAt: document.updated,
-        };
-    }
-
-    try {
-        //GET ALL DOCUMENTS => "/api/document"
-        const documents = await Document.find({});
-
-        const filteredDocuments = documents
-            .filter(
-                (document) => !document.deleted && document.status === 'active'
-            )
-            .map(documentDetails);
-
-        return NextResponse.json(
-            { success: true, data: filteredDocuments },
-            { status: 200 }
-        );
-    } catch (error) {
-        return NextResponse.json(
-            { success: false, error: error.message },
-            { status: 500 }
-        );
-    }
-}
-
 //UPDATE DOCUMENT => "/api/document?documentId=66bf44d3d02d846c4368ced0"
 export async function PUT(req) {
     await dbConnect();

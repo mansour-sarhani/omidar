@@ -13,7 +13,7 @@ export async function authMiddleware(req) {
     if (!token) {
         return NextResponse.json(
             { success: false, message: 'توکن وجود ندارد.' },
-            { status: 401 }
+            { status: 403 }
         );
     }
 
@@ -33,7 +33,8 @@ export async function authMiddleware(req) {
                 { status: 404 }
             );
         }
-        req.user = user;
+        req.type = 'user';
+        req.refId = user._id;
     }
 
     if (validToken.type === 'client') {
@@ -44,7 +45,8 @@ export async function authMiddleware(req) {
                 { status: 404 }
             );
         }
-        req.client = client;
+        req.type = 'client';
+        req.refId = client._id;
     }
     return null;
 }

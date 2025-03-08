@@ -34,7 +34,7 @@ export async function POST(req) {
                         success: false,
                         message: 'حساب کاربری شما مسدود شده است.',
                     },
-                    { status: 401 }
+                    { status: 403 }
                 );
             }
 
@@ -50,7 +50,11 @@ export async function POST(req) {
                 );
             }
 
-            return NextResponse.json({ success: true, token: user.token });
+            return NextResponse.json({
+                success: true,
+                token: user.token,
+                refreshToken: user.refreshToken,
+            });
         } else if (type === 'client') {
             const client = await Client.findOne({ username });
             if (!client) {
@@ -69,7 +73,7 @@ export async function POST(req) {
                         success: false,
                         message: 'حساب کاربری شما مسدود شده است.',
                     },
-                    { status: 401 }
+                    { status: 403 }
                 );
             }
 
@@ -82,7 +86,11 @@ export async function POST(req) {
                 );
             }
 
-            return NextResponse.json({ success: true, token: client.token });
+            return NextResponse.json({
+                success: true,
+                token: client.token,
+                refreshToken: client.refreshToken,
+            });
         }
     } catch (error) {
         return NextResponse.json(

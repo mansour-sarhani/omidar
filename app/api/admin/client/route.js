@@ -5,7 +5,7 @@ import Counter from '@/models/Counter';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import generateToken from '@/utils/jwt';
+import { generateRefreshToken, generateToken } from '@/utils/jwt';
 import { hashPassword } from '@/utils/hashPassword';
 import { authMiddleware } from '@/utils/authMiddleware';
 
@@ -57,7 +57,9 @@ export async function POST(req) {
         client.Id = counter.seq;
 
         const token = generateToken('client');
+        const refreshToken = generateRefreshToken('client');
         client.token = token;
+        client.refreshToken = refreshToken;
 
         await client.save();
 

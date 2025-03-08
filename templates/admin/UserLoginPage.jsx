@@ -33,6 +33,12 @@ export default function UserLoginPage() {
 
         if (token) {
             const decoded = jwtDecode(token);
+
+            if (decoded.exp * 1000 < Date.now()) {
+                Cookies.remove('om_token');
+                router.replace('/auth/admin/login');
+            }
+
             if (decoded.type === 'user') {
                 router.replace('/admin/dashboard');
             }

@@ -3,13 +3,41 @@ import { useSelector } from 'react-redux';
 import { toggleTheme } from '@/redux/features/settingsSlice';
 import useCommonHooks from '@/hooks/useCommonHooks';
 import WebFrontHeader from '@/layouts/front/header/_webFrontHeader';
+import MobileFrontHeader from '@/layouts/front/header/_mobileFrontHeader';
+import Cookies from 'js-cookie';
+import checkUserEntity from '@/functions/checkUserEntity';
 
 export default function FrontHeader() {
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [type, setType] = useState(null);
 
-    const { dispatch } = useCommonHooks();
+    const { dispatch, enqueueSnackbar, router } = useCommonHooks();
 
-    const viewPort = useSelector((state) => state.public.viewPort);
+    const token = Cookies.get('om_token');
+
+    useEffect(() => {
+        if (token) {
+            async function verify() {
+                await checkUserEntity(dispatch, enqueueSnackbar, setType);
+            }
+            verify();
+        }
+    }, [dispatch, enqueueSnackbar, token]);
+
+    useEffect(() => {
+        if (type === 'user') {
+            router.push('/admin/dashboard');
+        }
+        if (type === 'client') {
+            router.push('/panel/dashboard');
+        }
+        if (type === false || type === undefined) {
+            Cookies.remove('om_token');
+            return;
+        }
+    }, [router, type]);
+
+    const viewPort = useSelector((state) => state.settings.viewPort);
 
     const toggleDarkMode = () => {
         setIsDarkMode((prevMode) => !prevMode);
@@ -48,7 +76,7 @@ export default function FrontHeader() {
         );
     } else {
         return (
-            <WebFrontHeader
+            <MobileFrontHeader
                 isDarkMode={isDarkMode}
                 toggleDarkMode={toggleDarkMode}
             />

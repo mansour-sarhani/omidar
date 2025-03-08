@@ -6,7 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { authMiddleware } from '@/utils/authMiddleware';
-import generateToken from '@/utils/jwt';
+import { generateRefreshToken, generateToken } from '@/utils/jwt';
 import { hashPassword } from '@/utils/hashPassword';
 
 //ADMIN REGISTERS USER => "/api/admin/user"
@@ -61,7 +61,10 @@ export async function POST(req) {
         newUser.Id = counter.seq;
 
         const token = generateToken('user');
+        const refreshToken = generateRefreshToken('user');
+
         newUser.token = token;
+        newUser.refreshToken = refreshToken;
 
         await newUser.save();
 

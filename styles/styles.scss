@@ -1211,6 +1211,102 @@ input::-webkit-inner-spin-button {
     }
 }
 
+.documents-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .document-row {
+        display: flex;
+        align-items: center;
+        background-color: var(--white-color);
+        padding: 15px;
+        border-radius: var(--border-radius-medium);
+        box-shadow: var(--box-shadow);
+        gap: 40px;
+
+        .document-row-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .document-row-item {
+            display: flex;
+            gap: 5px;
+        }
+
+        .document-row-utils {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 20px;
+        }
+    }
+
+    .document-row.pending {
+        border-right: 5px solid var(--secondary-color);
+    }
+
+    .document-row.approved {
+        border-right: 5px solid var(--success-color);
+    }
+
+    .document-row.rejected {
+        border-right: 5px solid var(--error-color);
+    }
+
+    .document-row.underReview {
+        border-right: 5px solid var(--info-color);
+    }
+}
+
+.visas-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .visa-row {
+        display: flex;
+        align-items: center;
+        background-color: var(--white-color);
+        padding: 15px;
+        border-radius: var(--border-radius-medium);
+        box-shadow: var(--box-shadow);
+        gap: 40px;
+
+        .visa-row-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .visa-row-item {
+            display: flex;
+            gap: 5px;
+        }
+
+        .visa-row-utils {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 20px;
+        }
+    }
+
+    .visa-row.pending {
+        border-right: 5px solid var(--secondary-color);
+    }
+
+    .visa-row.approved {
+        border-right: 5px solid var(--success-color);
+    }
+
+    .visa-row.rejected {
+        border-right: 5px solid var(--error-color);
+    }
+}
+
 .notifications-wrapper {
     display: flex;
     flex-direction: column;
@@ -1226,6 +1322,11 @@ input::-webkit-inner-spin-button {
             display: flex;
             align-items: center;
             justify-content: space-between;
+
+            .notification-item-utils {
+                display: flex;
+                gap: 10px;
+            }
         }
     }
 
@@ -1402,8 +1503,8 @@ input::-webkit-inner-spin-button {
             align-self: flex-end;
 
             .ticket-message-body {
-                background-color: var(--info-color);
-                color: var(--white-color);
+                background-color: #b5b5b5;
+                color: var(--text-color);
             }
             
         }
@@ -1419,4 +1520,278 @@ input::-webkit-inner-spin-button {
     padding: 15px;
     border-radius: var(--border-radius-small);
     color: var(--error-color);
+}
+
+.panel-dashboard-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px;
+
+    .panel-dashboard-box {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background-color: var(--white-color);
+        padding: 15px;
+        border-radius: var(--border-radius-medium);
+        box-shadow: var(--box-shadow);
+
+        .panel-dashboard-box-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .panel-dashboard-box-stats {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            .panel-dashboard-box-item {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                align-items: center;
+                background-color: var(--card-color);
+                border-radius: var(--border-radius-small);
+                padding: 10px 5px;
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .home-intro {
+        text-align: center;
+        
+        h4 {
+            line-height: 2.5rem;
+        }
+    }
+
+    .home-login-form {
+        max-width: 100%;
+    }
+
+    .header {
+        .header-container {
+            .header-logo {
+                margin-top: 0;
+                width: max-content;
+                align-items: center;
+                gap: 15px;
+
+                h1 {
+                    font-size: 24px;
+                    color: var(--white-color);
+                }
+            }
+
+            .mobile-header-toolbar {
+                padding: 10px 10px 10px 30px;
+                justify-content: space-between;
+            }
+
+            .mobile-header-util {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+
+                svg {
+                    color: var(--white-color) !important;
+                }
+            }
+
+            
+        }
+    }
+
+    .mobile-header-nav {
+        width: 100%;
+        min-height: 100vh;
+        padding: 20px;
+
+        .menu-item.link-item {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            a {
+                display: flex;
+                align-items: center;
+            }
+        } 
+
+        .panel-sidebar-container {
+            margin-bottom: 30px;
+            border-bottom: 5px solid var(--border-color);
+        }
+    }
+
+    .panel-page-wrapper {
+        padding-right: 0;
+
+        .panel-content {
+            padding-left: 30px;
+            padding-right: 30px;
+            margin-top: 20px;
+        }
+    }
+
+    .panel-dashboard-wrapper {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+
+        .panel-dashboard-box-stats {
+            flex-direction: column;
+
+            .panel-dashboard-box-item {
+                width: 100%;
+            }
+        }
+    }
+
+    .panel-inner-header {
+        flex-direction: column;
+        gap: 15px;
+        border-right: none;
+        border-top: 5px solid var(--primary-color);
+    }
+
+    .om-table-actions {
+        flex-direction: column;
+        gap: 15px;
+        width: 170px;
+    }
+
+    .bg-black {
+        width: 100%;
+        max-width: 100% !important;
+    }
+
+    .panel-grid-two {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    .panel-grid-three {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    .panel-new-img-container {
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .contract-info-wrapper {
+        .contract-info-row {
+            flex-direction: column;
+
+            .contract-info-line {
+                width: 100%;
+            }
+        }
+    }
+
+    .contract-page-heading {
+        flex-direction: column;
+        gap: 10px;
+
+        h4 {
+            font-size: 20px;
+        }
+    }
+
+    th.MuiTableCell-head {
+        min-width: 140px;
+    }
+
+    .mui-s0w8ce {
+        width: 320px !important;
+    }
+
+    .documents-wrapper {
+        .document-row {
+            gap: 10px;
+            flex-direction: column;
+
+            .document-column {
+                width: 100%;
+            }
+        }
+    }
+
+    .visas-wrapper {
+        .visa-row {
+            gap: 10px;
+            flex-direction: column;
+
+            .visa-column {
+                width: 100%;
+            }
+        }
+    }
+
+    .profile-wrapper {
+        flex-direction: column;
+
+        .profile-row {
+            flex-direction: column;
+        }
+    }
+
+    .notification-item-body {
+        margin-top: 10px;
+    }
+
+    .tickets-wrapper {
+        .ticket-item {
+            .ticket-item-header {
+                flex-direction: column;
+                align-items: flex-start;
+
+                .ticket-item-date {
+                    width: 100%;
+                    flex-direction: column;
+                    gap: 5px;
+                    align-items: flex-start;
+                    margin-bottom: 10px;
+
+                    span {
+                        display: none;
+                    }
+                }
+            }
+
+            .ticket-item-body {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+
+                .ticket-item-body-cta {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 10px;
+                }
+            }
+        }
+    }
+
+    .ticket-view-wrapper {
+        .ticket-view-meta {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ticket-messages-container {
+            .ticket-message {
+                width: 100%;
+            }
+        }
+    }
+
+    .ticket-reply-wrapper {
+        margin-top: 30px;
+    }
 }
