@@ -12,7 +12,7 @@ import { useMediaQuery } from '@mui/system';
 
 export default function AdminTemplate({ children }) {
     const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
     const { router, pathname, dispatch, enqueueSnackbar } = useCommonHooks();
 
@@ -38,7 +38,6 @@ export default function AdminTemplate({ children }) {
             fetchUser();
         } else {
             setUser(false);
-            setIsLoading(false);
         }
     }, [currentToken, dispatch, enqueueSnackbar]);
 
