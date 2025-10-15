@@ -24,7 +24,7 @@ export default function WebFrontHeader(props) {
                                 <li className="menu-item link-item">
                                     <Link href="/">
                                         <HomeOutlinedIcon />
-                                        خانه
+                                        صفحه اصلی
                                     </Link>
                                 </li>
                                 <li className="menu-item link-item">
