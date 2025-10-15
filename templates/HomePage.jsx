@@ -15,7 +15,7 @@ export default function HomePage() {
                                 component="h1"
                                 gutterBottom
                             >
-                                گروه مهاجرتی امیدار
+                                گروه مهاجرتی Vista
                             </Typography>
                             <Typography
                                 variant="h4"
