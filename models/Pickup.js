@@ -1,5 +1,4 @@
 import { Schema, model, models } from 'mongoose';
-import { string } from 'yup';
 
 const pickupSchema = new Schema(
     {
@@ -56,7 +55,7 @@ const pickupSchema = new Schema(
                 'done',
                 'deleted',
             ],
-            default: 'ongoing',
+            default: 'processing',
             required: true,
         },
         deleted: {

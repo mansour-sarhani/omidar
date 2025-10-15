@@ -2,24 +2,19 @@
 
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { usePathname, useRouter } from 'next/navigation';
-import { useSnackbar } from 'notistack';
 import { setViewPort } from '@/redux/features/settingsSlice';
 import IsLoading from '@/components/common/IsLoading';
 import { useMediaQuery } from '@mui/system';
 import getCurrentClient from '@/functions/client/getCurrentClient';
 import PanelHeader from '@/layouts/panel/header/PanelHeader';
 import PanelSidebar from '@/layouts/panel/sidebar/PanelSidebar';
+import useCommonHooks from '@/hooks/useCommonHooks';
 
 export default function ClientTemplate({ children }) {
     const [client, setClient] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const router = useRouter();
-    const pathname = usePathname();
-    const dispatch = useDispatch();
-    const { enqueueSnackbar } = useSnackbar();
+    const { router, pathname, dispatch, enqueueSnackbar } = useCommonHooks();
 
     const isDesktop = useMediaQuery('(min-width:992px)');
     const isTablet = useMediaQuery('(min-width:768px) and (max-width:991px)');
@@ -39,6 +34,7 @@ export default function ClientTemplate({ children }) {
                     );
                 } catch (error) {
                     setClient(false);
+                    Cookies.remove('om_token');
                 } finally {
                     setIsLoading(false);
                 }
@@ -46,7 +42,6 @@ export default function ClientTemplate({ children }) {
             fetchClient();
         } else {
             setClient(false);
-            setIsLoading(false);
         }
     }, [currentToken, dispatch, enqueueSnackbar]);
 
@@ -62,7 +57,7 @@ export default function ClientTemplate({ children }) {
 
     useEffect(() => {
         if (client === false && pathname.startsWith('/panel/')) {
-            router.push('/panel/login');
+            router.push('/');
         }
     }, [client, pathname, router]);
 
