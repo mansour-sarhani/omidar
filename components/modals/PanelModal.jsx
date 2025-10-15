@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { memo, useState, useCallback } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
 import ModalTableButton from '@/components/modals/ModalTableButton';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -20,7 +20,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     },
 }));
 
-function BootstrapDialogTitle(props) {
+const BootstrapDialogTitle = memo(function BootstrapDialogTitle(props) {
     const { children, onClose, ...other } = props;
 
     return (
@@ -42,9 +42,9 @@ function BootstrapDialogTitle(props) {
             ) : null}
         </DialogTitle>
     );
-}
+});
 
-function PanelModal(props) {
+const PanelModal = memo(function PanelModal(props) {
     const [open, setOpen] = useState(false);
     const [currentData, setCurrentData] = useState();
 
@@ -59,15 +59,15 @@ function PanelModal(props) {
         fullScreen = 'false',
     } = props;
 
-    const handleClickOpen = () => {
+    const handleClickOpen = useCallback(() => {
         setOpen(true);
         setCurrentData(data);
-    };
+    }, [data]);
 
-    const handleClose = (event, reason) => {
+    const handleClose = useCallback((event, reason) => {
         if (reason && reason == 'backdropClick' && 'escapeKeyDown') return;
         setOpen(false);
-    };
+    }, []);
 
     return (
         <div className="panel-modal">
@@ -114,6 +114,6 @@ function PanelModal(props) {
             </BootstrapDialog>
         </div>
     );
-}
+});
 
 export default PanelModal;

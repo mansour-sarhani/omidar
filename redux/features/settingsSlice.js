@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 
 const initialState = {
     status: 'idle',
@@ -14,12 +14,21 @@ export const settingsSlice = createSlice({
         toggleTheme: (state, action) => {
             const theme = action.payload.theme;
             state.theme = theme;
-            localStorage.setItem('theme', theme);
+            // Use try-catch for localStorage to handle SSR
+            try {
+                localStorage.setItem('theme', theme);
+            } catch (error) {
+                console.warn('localStorage not available:', error);
+            }
         },
         toggleLanguage: (state, action) => {
             const lang = action.payload.lang;
             state.lang = lang;
-            localStorage.setItem('lang', lang);
+            try {
+                localStorage.setItem('lang', lang);
+            } catch (error) {
+                console.warn('localStorage not available:', error);
+            }
         },
         setViewPort: (state, action) => {
             const viewPort = action.payload.viewPort;
@@ -27,6 +36,27 @@ export const settingsSlice = createSlice({
         },
     },
 });
+
+// Memoized selectors for better performance
+export const selectTheme = createSelector(
+    [(state) => state.settings],
+    (settings) => settings.theme
+);
+
+export const selectLanguage = createSelector(
+    [(state) => state.settings],
+    (settings) => settings.lang
+);
+
+export const selectViewPort = createSelector(
+    [(state) => state.settings],
+    (settings) => settings.viewPort
+);
+
+export const selectStatus = createSelector(
+    [(state) => state.settings],
+    (settings) => settings.status
+);
 
 export const { toggleTheme, toggleLanguage, setViewPort } =
     settingsSlice.actions;
