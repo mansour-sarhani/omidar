@@ -15,7 +15,7 @@ export default function HomePage() {
                                 component="h1"
                                 gutterBottom
                             >
-                                گروه مهاجرتی omidar01
+                                گروه مهاجرتی 
                             </Typography>
                             <Typography
                                 variant="h4"
