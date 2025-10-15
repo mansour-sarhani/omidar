@@ -16,11 +16,7 @@ export default function WebFrontHeader(props) {
                     <div className="header-menu front-menu">
                         <div className="header-logo">
                             <Link href={'/'}>
-                                <Logo
-                                    color={isDarkMode ? 'white' : 'black'}
-                                    width={60}
-                                    height={60}
-                                />
+                                <Logo color={'white'} width={60} height={60} />
                             </Link>
                         </div>
                         <nav className="header-nav">
