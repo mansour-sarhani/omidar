@@ -15,11 +15,7 @@ export default function HomePage() {
                                 component="h1"
                                 gutterBottom
                             >
-<<<<<<< HEAD
-                                گروه مهاجرتی Vista new11
-=======
                                 گروه مهاجرتی ویستا
->>>>>>> main
                             </Typography>
                             <Typography
                                 variant="h4"
