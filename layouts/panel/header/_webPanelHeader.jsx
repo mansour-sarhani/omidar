@@ -69,11 +69,7 @@ export default function WebPanelHeader(props) {
                 </div>
                 <div className="header-logo">
                     <Link href={'/'}>
-                        <Logo
-                            color={isDarkMode ? 'white' : 'black'}
-                            width={60}
-                            height={60}
-                        />
+                        <Logo width={60} height={60} />
                     </Link>
                 </div>
                 <div className="header-menu panel-menu left-menu">
