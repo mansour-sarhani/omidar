@@ -1,8 +1,34 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Prerequisites
+
+### MongoDB Setup
+
+This project requires MongoDB. You can use either:
+
+1. **Local MongoDB (Recommended for Development)**
+
+    - See `MONGODB_SETUP_GUIDE.md` for detailed instructions
+    - Quick setup: Run `.\setup-local-mongodb.ps1` in PowerShell (as Administrator)
+
+2. **MongoDB Atlas (Cloud)**
+    - Use your existing MongoDB Atlas connection
+
+### Environment Configuration
+
+Create a `.env.local` file in the project root:
+
+```env
+# Local MongoDB
+MONGO_URI=mongodb://localhost:27017/omidar
+
+# OR for MongoDB Atlas
+# MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/omidar
+```
+
 ## Getting Started
 
-First, run the development server:
+First, ensure MongoDB is running, then start the development server:
 
 ```bash
 npm run dev
