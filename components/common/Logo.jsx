@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import Image from 'next/image';
 
-export default function Logo({ color, width = 60, height = 60 }) {
+const Logo = memo(function Logo({ color, width = 60, height = 60, priority = false }) {
     return (
         <Image
             src={
@@ -12,6 +13,10 @@ export default function Logo({ color, width = 60, height = 60 }) {
             height={height}
             alt="امیدار"
             className="logo"
+            priority={priority}
+            sizes="(max-width: 768px) 40px, 60px"
         />
     );
-}
+});
+
+export default Logo;

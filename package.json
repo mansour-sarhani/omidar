@@ -6,9 +6,12 @@
     "scripts": {
         "dev": "cross-env PORT=7007 node server.js",
         "build": "next build",
+        "build:analyze": "cross-env ANALYZE=true next build",
         "start": "cross-env NODE_ENV=production node server.js",
         "lint": "next lint",
-        "sass": "sass --watch styles/styles.scss:styles/styles.css"
+        "sass": "sass --watch styles/styles.scss:styles/styles.css",
+        "perf:audit": "lighthouse http://localhost:7007 --output=json --output-path=./lighthouse-report.json",
+        "perf:bundle": "npm run build:analyze"
     },
     "dependencies": {
         "@emotion/cache": "^11.13.1",
@@ -48,6 +51,7 @@
         "yup": "^1.4.0"
     },
     "devDependencies": {
+        "@next/bundle-analyzer": "^14.2.15",
         "cross-env": "^7.0.3",
         "eslint": "^8",
         "eslint-config-next": "14.2.15",
