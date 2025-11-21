@@ -8,7 +8,8 @@
         "build": "next build",
         "start": "cross-env NODE_ENV=production node server.js",
         "lint": "next lint",
-        "sass": "sass --watch styles/styles.scss:styles/styles.css"
+        "sass": "sass --watch styles/styles.scss:styles/styles.css",
+        "seed:admin": "node seedAdmin.js"
     },
     "dependencies": {
         "@emotion/cache": "^11.13.1",
