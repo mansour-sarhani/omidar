@@ -5,6 +5,9 @@ function verifyToken(token, secretKey) {
         const result = verify(token, secretKey);
         return {
             type: result.type,
+            userId: result.userId,
+            iat: result.iat,
+            exp: result.exp,
         };
     } catch (e) {
         return false;

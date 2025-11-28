@@ -1,26 +1,28 @@
 'use client';
 
-import Cookies from 'js-cookie';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import useCommonHooks from '@/hooks/useCommonHooks';
 import UserLoginForm from '@/components/forms/UserLoginForm';
 import { jwtDecode } from 'jwt-decode';
 import IsLoading from '@/components/common/IsLoading';
 import { Typography } from '@mui/material';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, usePathname } from 'next/navigation';
+import { getAuthCookie, removeAuthCookie } from '@/utils/cookieUtils';
 
 export default function UserLoginPage() {
-    const [token, setToken] = useState(null);
     const { enqueueSnackbar, router } = useCommonHooks();
+    const pathname = usePathname();
+    const hasRedirected = useRef(false);
 
     const searchParams = useSearchParams();
-
     const logout = searchParams.get('logout');
 
-    const currentToken = Cookies.get('om_token');
+    const currentToken = getAuthCookie('om_token');
 
+    // Handle logout message
     useEffect(() => {
         if (logout === 'success') {
+            hasRedirected.current = false; // Reset on logout
             router.replace('/auth/admin/login');
             enqueueSnackbar('خروج از حساب کاربری', {
                 variant: 'info',
@@ -28,26 +30,41 @@ export default function UserLoginPage() {
         }
     }, [enqueueSnackbar, logout, router, searchParams]);
 
-    useEffect(() => {
-        setToken(currentToken);
-
-        if (token) {
-            const decoded = jwtDecode(token);
-
-            if (decoded.exp * 1000 < Date.now()) {
-                Cookies.remove('om_token');
-                router.replace('/auth/admin/login');
-            }
-
-            if (decoded.type === 'user') {
-                router.replace('/admin/dashboard');
-            }
+    // Validate token and redirect if authenticated
+    const tokenValidation = useMemo(() => {
+        if (!currentToken) {
+            hasRedirected.current = false;
+            return { isValid: false, shouldRedirect: false };
         }
-    }, [currentToken, router, token]);
 
-    if (token === null) {
-        return <IsLoading isLoading={true} />;
-    }
+        try {
+            const decoded = jwtDecode(currentToken);
+
+            // Check if token type matches user
+            if (decoded.type === 'user') {
+                return { isValid: true, shouldRedirect: true, type: 'user' };
+            }
+
+            return { isValid: false, shouldRedirect: false };
+        } catch (error) {
+            // Token is malformed, remove it
+            removeAuthCookie('om_token');
+            hasRedirected.current = false;
+            return { isValid: false, shouldRedirect: false };
+        }
+    }, [currentToken]);
+
+    // Redirect if user is already authenticated (only once, prevent loops)
+    useEffect(() => {
+        if (
+            tokenValidation.shouldRedirect &&
+            !hasRedirected.current &&
+            pathname === '/auth/admin/login'
+        ) {
+            hasRedirected.current = true;
+            router.replace('/admin/dashboard');
+        }
+    }, [tokenValidation.shouldRedirect, router, pathname]);
 
     return (
         <div className="inner-page auth-page admin-auth">

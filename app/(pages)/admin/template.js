@@ -1,6 +1,5 @@
 'use client';
 
-import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { setViewPort } from '@/redux/features/settingsSlice';
 import useCommonHooks from '@/hooks/useCommonHooks';
@@ -9,6 +8,7 @@ import AdminHeader from '@/layouts/admin/header/AdminHeader';
 import AdminSidebar from '@/layouts/admin/sidebar/AdminSidebar';
 import IsLoading from '@/components/common/IsLoading';
 import { useMediaQuery } from '@mui/system';
+import { getAuthCookie, removeAllAuthCookies } from '@/utils/cookieUtils';
 
 export default function AdminTemplate({ children }) {
     const [user, setUser] = useState(null);
@@ -20,7 +20,7 @@ export default function AdminTemplate({ children }) {
     const isTablet = useMediaQuery('(min-width:768px) and (max-width:991px)');
     const isMobile = useMediaQuery('(max-width:480px)');
 
-    const currentToken = Cookies.get('om_token');
+    const currentToken = getAuthCookie('om_token');
 
     useEffect(() => {
         if (currentToken) {
@@ -29,14 +29,17 @@ export default function AdminTemplate({ children }) {
                 try {
                     await getCurrentUser(dispatch, enqueueSnackbar, setUser);
                 } catch (error) {
+                    // Token is invalid or user fetch failed
+                    // Remove invalid token and set user to false
+                    removeAllAuthCookies();
                     setUser(false);
-                    Cookies.remove('om_token');
                 } finally {
                     setIsLoading(false);
                 }
             }
             fetchUser();
         } else {
+            // No token, user is not authenticated
             setUser(false);
         }
     }, [currentToken, dispatch, enqueueSnackbar]);
@@ -52,8 +55,15 @@ export default function AdminTemplate({ children }) {
     }, [isDesktop, isTablet, isMobile, dispatch]);
 
     useEffect(() => {
-        if (user === false && pathname.startsWith('/admin/')) {
-            router.push('/auth/admin/login');
+        // Only redirect if user is explicitly false (not null/loading) and we're on an admin page
+        // Use replace to avoid adding to history and prevent loops
+        // Don't redirect if we're already on the login page
+        if (
+            user === false &&
+            pathname.startsWith('/admin/') &&
+            !pathname.includes('/auth/')
+        ) {
+            router.replace('/auth/admin/login');
         }
     }, [user, pathname, router]);
 

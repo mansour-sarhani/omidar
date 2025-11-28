@@ -1,12 +1,8 @@
-import Cookies from 'js-cookie';
+import { removeAllAuthCookies } from '@/utils/cookieUtils';
 
 async function userLogout(enqueueSnackbar, router) {
     try {
-        const cookieKeys = ['om_token'];
-
-        cookieKeys.forEach((key) => {
-            Cookies.remove(key);
-        });
+        removeAllAuthCookies();
 
         router.push('/auth/admin/login?logout=success');
     } catch (err) {

@@ -1,6 +1,5 @@
 'use client';
 
-import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { setViewPort } from '@/redux/features/settingsSlice';
 import IsLoading from '@/components/common/IsLoading';
@@ -9,6 +8,7 @@ import getCurrentClient from '@/functions/client/getCurrentClient';
 import PanelHeader from '@/layouts/panel/header/PanelHeader';
 import PanelSidebar from '@/layouts/panel/sidebar/PanelSidebar';
 import useCommonHooks from '@/hooks/useCommonHooks';
+import { getAuthCookie, removeAllAuthCookies } from '@/utils/cookieUtils';
 
 export default function ClientTemplate({ children }) {
     const [client, setClient] = useState(null);
@@ -20,7 +20,7 @@ export default function ClientTemplate({ children }) {
     const isTablet = useMediaQuery('(min-width:768px) and (max-width:991px)');
     const isMobile = useMediaQuery('(max-width:480px)');
 
-    const currentToken = Cookies.get('om_token');
+    const currentToken = getAuthCookie('om_token');
 
     useEffect(() => {
         if (currentToken) {
@@ -33,14 +33,17 @@ export default function ClientTemplate({ children }) {
                         setClient
                     );
                 } catch (error) {
+                    // Token is invalid or client fetch failed
                     setClient(false);
-                    Cookies.remove('om_token');
+                    // TEMPORARILY COMMENTED OUT FOR DEBUGGING
+                    // removeAllAuthCookies();
                 } finally {
                     setIsLoading(false);
                 }
             }
             fetchClient();
         } else {
+            // No token, client is not authenticated
             setClient(false);
         }
     }, [currentToken, dispatch, enqueueSnackbar]);
@@ -57,9 +60,10 @@ export default function ClientTemplate({ children }) {
 
     useEffect(() => {
         if (client === false && pathname.startsWith('/panel/')) {
-            router.push('/');
+            // TEMPORARILY COMMENTED OUT FOR DEBUGGING - Redirect to homepage
+            // router.push('/');
         }
-    }, [client, pathname, router]);
+    }, [client, pathname, router, currentToken]);
 
     return isLoading || client === null ? (
         <IsLoading isLoading={true} />

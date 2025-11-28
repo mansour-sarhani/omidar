@@ -1,6 +1,6 @@
 import { USER_LOGIN } from '@/redux/features/userSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
-import Cookies from 'js-cookie';
+import { setAuthCookies } from '@/utils/cookieUtils';
 
 async function userLogin(dispatch, enqueueSnackbar, router, data) {
     try {
@@ -11,13 +11,11 @@ async function userLogin(dispatch, enqueueSnackbar, router, data) {
             om_token: response.token,
             refresh_token: response.refreshToken,
         };
-        for (let key in userData) {
-            Cookies.set(key, userData[key], {
-                expires: key === 'refresh_token' ? 60 : 30,
-                secure: true,
-                sameSite: 'Lax',
-            });
-        }
+
+        setAuthCookies(userData, {
+            om_token: 30,
+            refresh_token: 60,
+        });
 
         router.push('/admin/dashboard?login=success');
     } catch (err) {

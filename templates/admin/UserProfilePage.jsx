@@ -75,9 +75,7 @@ export default function UserProfilePage() {
                             </div>
                             <div className="profile-item">
                                 <label>وضعیت:</label>
-                                <Typography variant="body1">
-                                    {setStatusLabel(userData.status)}
-                                </Typography>
+                                {setStatusLabel(userData.status)}
                             </div>
                         </div>
                         <div className="profile-row">

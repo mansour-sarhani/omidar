@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/utils/dbConnect';
 import { verifyPassword } from '@/utils/verifyPassword';
+import { generateToken, generateRefreshToken } from '@/utils/jwt';
 import Client from '@/models/Client';
 import User from '@/models/User';
 
@@ -50,10 +51,19 @@ export async function POST(req) {
                 );
             }
 
+            // Generate fresh tokens on login
+            const token = generateToken('user', user._id.toString());
+            const refreshToken = generateRefreshToken('user', user._id.toString());
+
+            // Update tokens in database for reference (optional)
+            user.token = token;
+            user.refreshToken = refreshToken;
+            await user.save();
+
             return NextResponse.json({
                 success: true,
-                token: user.token,
-                refreshToken: user.refreshToken,
+                token,
+                refreshToken,
             });
         } else if (type === 'client') {
             const client = await Client.findOne({ username });
@@ -86,10 +96,19 @@ export async function POST(req) {
                 );
             }
 
+            // Generate fresh tokens on login
+            const token = generateToken('client', client._id.toString());
+            const refreshToken = generateRefreshToken('client', client._id.toString());
+
+            // Update tokens in database for reference (optional)
+            client.token = token;
+            client.refreshToken = refreshToken;
+            await client.save();
+
             return NextResponse.json({
                 success: true,
-                token: client.token,
-                refreshToken: client.refreshToken,
+                token,
+                refreshToken,
             });
         }
     } catch (error) {

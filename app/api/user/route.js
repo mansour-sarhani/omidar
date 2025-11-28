@@ -39,7 +39,9 @@ export async function GET(req) {
                 { status: 401 }
             );
         }
-        const user = await User.findOne({ token });
+        
+        // Use userId from token instead of looking up by token value
+        const user = await User.findById(validToken.userId);
         if (!user) {
             return NextResponse.json(
                 { success: false, message: 'کاربر پیدا نشد.' },
@@ -110,7 +112,8 @@ export async function PUT(req) {
         const email = formData.get('email');
         const mobile = formData.get('mobile');
 
-        const user = await User.findOne({ token });
+        // Use userId from token instead of looking up by token value
+        const user = await User.findById(validToken.userId);
         if (!user) {
             return NextResponse.json(
                 { success: false, message: 'کاربر پیدا نشد.' },
