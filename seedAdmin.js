@@ -1,3 +1,5 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
 import dbConnect from './utils/dbConnect.js';
 import User from './models/User.js';
 import Counter from './models/Counter.js';
@@ -5,8 +7,11 @@ import { hashPassword } from './utils/hashPassword.js';
 import { generateToken, generateRefreshToken } from './utils/jwt.js';
 import dotenv from 'dotenv';
 
-// Load environment variables
-dotenv.config({ path: '.env.local' });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load environment variables from absolute path to avoid cwd issues
+dotenv.config({ path: path.join(__dirname, '.env.local') });
 
 async function seedAdmin() {
     try {
@@ -23,9 +28,9 @@ async function seedAdmin() {
 
         // Default admin credentials (can be customized)
         const adminData = {
-            firstName: 'Admin',
-            lastName: 'User',
-            nationalId: '0000000000',
+            firstName: 'admin',
+            lastName: 'user',
+            nationalId: '0323260624',
             username: 'admin',
             email: 'admin@omidar.com',
             mobile: '09123456789',
@@ -79,4 +84,3 @@ async function seedAdmin() {
 }
 
 seedAdmin();
-
