@@ -1,6 +1,5 @@
-import { generateRefreshToken } from '@/utils/jwt';
 import axios from 'axios';
-import Cookies from 'js-cookie';
+import { getAuthCookie, removeAllAuthCookies, setAuthCookie } from '@/utils/cookieUtils';
 
 const baseURL = '/';
 
@@ -10,7 +9,7 @@ const http = axios.create({
 
 http.interceptors.request.use(
     (config) => {
-        const token = Cookies.get('om_token');
+        const token = getAuthCookie('om_token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -27,40 +26,35 @@ http.interceptors.response.use(
     },
     async (error) => {
         const originalRequest = error.config;
-        if (error.response.status === 401 && !originalRequest._retry) {
-            Cookies.remove('om_token');
-            Cookies.remove('refresh_token');
+        
+        // Handle 401 Unauthorized errors
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            removeAllAuthCookies();
             window.location.href = '/';
 
+            // TODO: Uncomment and fix token refresh logic if needed
             // originalRequest._retry = true;
             // try {
-            //     const refreshToken = Cookies.get('refresh_token');
-            //     const response = await axios.post('/api/auth/refresh', {
-            //         token: refreshToken,
-            //     });
-            //     if (response.data.success) {
-            //         const newToken = response.data.token;
-            //         Cookies.set('om_token', newToken, {
-            //             expires: 30,
-            //             secure: true,
-            //             sameSite: 'Lax',
+            //     const refreshToken = getAuthCookie('refresh_token');
+            //     if (refreshToken) {
+            //         const response = await axios.post('/api/auth/refresh', {
+            //             token: refreshToken,
             //         });
-
-            //         const newRefreshToken = generateRefreshToken('user');
-            //         Cookies.set('refresh_token', newRefreshToken, {
-            //             expires: 60,
-            //             secure: true,
-            //             sameSite: 'Lax',
-            //         });
-
-            //         originalRequest.headers.Authorization = `Bearer ${newToken}`;
-
-            //         return http(originalRequest);
+            //         if (response.data.success) {
+            //             const newToken = response.data.token;
+            //             setAuthCookie('om_token', newToken, 30);
+            //             
+            //             // Note: Refresh token refresh would need to be implemented
+            //             // const newRefreshToken = generateRefreshToken('user');
+            //             // setAuthCookie('refresh_token', newRefreshToken, 60);
+            //             
+            //             originalRequest.headers.Authorization = `Bearer ${newToken}`;
+            //             return http(originalRequest);
+            //         }
             //     }
             // } catch (err) {
             //     console.error('Token refresh failed:', err);
-            //     Cookies.remove('om_token');
-            //     Cookies.remove('refresh_token');
+            //     removeAllAuthCookies();
             //     window.location.href = '/';
             // }
         }

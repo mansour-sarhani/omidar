@@ -1,5 +1,5 @@
 import { verify, sign } from 'jsonwebtoken';
-import Cookies from 'js-cookie';
+import { setAuthCookie } from '@/utils/cookieUtils';
 
 export function refreshTokenCheck(refreshToken, secretKey) {
     const decoded = verify(refreshToken, secretKey);
@@ -7,11 +7,7 @@ export function refreshTokenCheck(refreshToken, secretKey) {
         expiresIn: '30d',
     });
 
-    Cookies.set('om_token', newToken, {
-        expires: 30,
-        secure: true,
-        sameSite: 'Lax',
-    });
+    setAuthCookie('om_token', newToken, 30);
 
     return newToken;
 }

@@ -1,25 +1,24 @@
 'use client';
 
-import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import ClientLoginForm from '@/components/forms/ClientLoginForm';
 import useCommonHooks from '@/hooks/useCommonHooks';
 import IsLoading from '@/components/common/IsLoading';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
+import { getAuthCookie, removeAuthCookie } from '@/utils/cookieUtils';
 
 export default function ClientLoginPage() {
-    const [token, setToken] = useState(null);
     const { enqueueSnackbar, router } = useCommonHooks();
 
     const searchParams = useSearchParams();
-
     const logout = searchParams.get('logout');
 
-    const currentToken = Cookies.get('om_token');
+    const currentToken = getAuthCookie('om_token');
 
+    // Handle logout message
     useEffect(() => {
         if (logout === 'success') {
             router.replace('/auth/client/login');
@@ -29,20 +28,37 @@ export default function ClientLoginPage() {
         }
     }, [enqueueSnackbar, logout, router, searchParams]);
 
-    useEffect(() => {
-        setToken(currentToken);
-
-        if (token) {
-            const decoded = jwtDecode(token);
-            if (decoded.type === 'client') {
-                router.replace('/panel/dashboard');
-            }
+    // Validate token and redirect if authenticated
+    // NOTE: We don't check expiration here - let the API handle that
+    // The login page should only check if a token exists and redirect if it does
+    const tokenValidation = useMemo(() => {
+        if (!currentToken) {
+            return { isValid: false, shouldRedirect: false };
         }
-    }, [currentToken, router, token]);
 
-    if (token === null) {
-        return <IsLoading isLoading={true} />;
-    }
+        try {
+            const decoded = jwtDecode(currentToken);
+
+            // Only check token type, not expiration
+            // Expiration will be handled by the API
+            if (decoded.type === 'client') {
+                return { isValid: true, shouldRedirect: true, type: 'client' };
+            }
+
+            return { isValid: false, shouldRedirect: false };
+        } catch (error) {
+            // Token is malformed, remove it
+            removeAuthCookie('om_token');
+            return { isValid: false, shouldRedirect: false };
+        }
+    }, [currentToken]);
+
+    // Redirect if user is already authenticated
+    useEffect(() => {
+        if (tokenValidation.shouldRedirect) {
+            router.replace('/panel/dashboard');
+        }
+    }, [tokenValidation.shouldRedirect, router]);
 
     return (
         <div className="inner-page auth-page client-auth">

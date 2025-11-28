@@ -4,7 +4,7 @@ import { toggleTheme } from '@/redux/features/settingsSlice';
 import useCommonHooks from '@/hooks/useCommonHooks';
 import WebFrontHeader from '@/layouts/front/header/_webFrontHeader';
 import MobileFrontHeader from '@/layouts/front/header/_mobileFrontHeader';
-import Cookies from 'js-cookie';
+import { getAuthCookie, removeAuthCookie } from '@/utils/cookieUtils';
 import checkUserEntity from '@/functions/checkUserEntity';
 
 export default function FrontHeader() {
@@ -13,7 +13,7 @@ export default function FrontHeader() {
 
     const { dispatch, enqueueSnackbar, router } = useCommonHooks();
 
-    const token = Cookies.get('om_token');
+    const token = getAuthCookie('om_token');
 
     useEffect(() => {
         if (token) {
@@ -32,10 +32,11 @@ export default function FrontHeader() {
             router.push('/panel/dashboard');
         }
         if (type === false || type === undefined) {
-            Cookies.remove('om_token');
+            // TEMPORARILY COMMENTED OUT FOR DEBUGGING - Token removal
+            // removeAuthCookie('om_token');
             return;
         }
-    }, [router, type]);
+    }, [router, type, token]);
 
     const viewPort = useSelector((state) => state.settings.viewPort);
 

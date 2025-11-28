@@ -1,25 +1,29 @@
 import jwt from 'jsonwebtoken';
 
-export const generateToken = (type) => {
+export const generateToken = (type, userId) => {
     const payload = {
         type,
+        userId,
         iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
     };
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET);
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: '30d',
+    });
 
     return token;
 };
 
-export const generateRefreshToken = (type) => {
+export const generateRefreshToken = (type, userId) => {
     const payload = {
         type,
+        userId,
         iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + 60 * 24 * 60 * 60,
     };
 
-    const refreshToken = jwt.sign(payload, process.env.JWT_SECRET);
+    const refreshToken = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: '60d',
+    });
 
     return refreshToken;
 };
